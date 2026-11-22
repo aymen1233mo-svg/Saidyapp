@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useLocation } from 'wouter';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import {
@@ -320,6 +320,22 @@ export default function RestaurantPage() {
   const [showReviewsList, setShowReviewsList] = useState(false);
   const [showStoreClosed, setShowStoreClosed] = useState(false);
   const [storeClosedMsg, setStoreClosedMsg] = useState('');
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrollY(window.scrollY);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const { addItem, removeItem, getItemQuantity } = useCart();
   const { toast } = useToast();
@@ -488,41 +504,103 @@ export default function RestaurantPage() {
   const rating = Number(restaurant.rating) || 4;
   const currencySymbol = t('currency_symbol');
 
+  const maxBannerHeight = 180;
+  const bannerHeight = Math.max(0, maxBannerHeight - scrollY);
+  const bannerOpacity = Math.max(0, 1 - scrollY / 140);
+  const bannerScale = Math.max(0.85, 1 - (scrollY / 180) * 0.15);
+
   return (
     <div className="min-h-screen bg-[#F4F8FF] pb-28" dir={dir}>
 
-      {/* ── Sticky Top App Bar: Back button + Name (always pinned) ── */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-blue-100 shadow-[0_2px_12px_rgba(11,94,215,0.05)]">
-        <div className="flex items-center gap-3 px-3.5 py-2.5 max-w-5xl mx-auto">
-          <button
-            onClick={() => setLocation('/')}
-            className="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50 hover:bg-blue-100 active:scale-95 transition flex-shrink-0 text-[#0B5ED7]"
-          >
-            {isRTL ? <ArrowRight className="h-4 w-4" /> : <ArrowLeft className="h-4 w-4" />}
-          </button>
-          <h1 className="flex-1 text-[#003B99] text-base font-black truncate">
-            {restaurant.name}
-          </h1>
-        </div>
+      {/* ── Sticky Top App Bar: Always pinned at top (h-14, z-40) ── */}
+      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-blue-100 shadow-[0_2px_12px_rgba(11,94,215,0.06)] h-14">
+        <div className="flex items-center justify-between gap-3 px-3.5 h-full max-w-5xl mx-auto">
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+            <button
+              onClick={() => setLocation('/')}
+              className="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50 hover:bg-blue-100 active:scale-95 transition flex-shrink-0 text-[#0B5ED7]"
+              title={t('back_to_home')}
+            >
+              {isRTL ? <ArrowRight className="h-4 w-4" /> : <ArrowLeft className="h-4 w-4" />}
+            </button>
+            <div className="min-w-0 flex-1">
+              <h1 className="text-[#003B99] text-base font-black truncate leading-tight">
+                {restaurant.name}
+              </h1>
+              {/* Compact details visible when banner is compressed */}
+              <div
+                className={`flex items-center gap-2 text-[11px] font-bold text-slate-500 transition-all duration-200 ${
+                  scrollY > 60 ? 'opacity-100 max-h-5' : 'opacity-0 max-h-0 overflow-hidden'
+                }`}
+              >
+                <span className="flex items-center gap-0.5 text-amber-500 font-black">
+                  <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                  {(Number(rating) || 0).toFixed(1)}
+                </span>
+                <span>•</span>
+                <span className={status.isOpen ? 'text-emerald-600 font-black' : 'text-slate-500'}>
+                  {status.isOpen ? t('open_status') : t('closed_status')}
+                </span>
+                <span>•</span>
+                <span className="text-slate-400">
+                  {restaurant.deliveryTime || '40 - 60'} {t('minutes_unit')}
+                </span>
+              </div>
+            </div>
+          </div>
 
-        {/* Restaurant banner image - naturally scrolls up and collapses out of view */}
-        {restaurant.image ? (
-          <div className="w-full h-40 sm:h-48 overflow-hidden transition-all duration-300">
-            <img
-              src={restaurant.image}
-              alt={restaurant.name}
-              className="w-full h-full object-cover"
-            />
+          {/* Quick actions in top bar */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            <button
+              onClick={toggleRestFav}
+              className={`w-9 h-9 flex items-center justify-center rounded-xl border transition active:scale-95 ${
+                isRestFav
+                  ? 'bg-orange-50 border-orange-200 text-[#FF6B00]'
+                  : 'bg-blue-50/60 border-blue-100 text-slate-400 hover:text-[#FF6B00]'
+              }`}
+              title={t('favorite')}
+            >
+              <Heart className={`h-4 w-4 ${isRestFav ? 'fill-[#FF6B00]' : ''}`} />
+            </button>
+            <button
+              onClick={() => setShowReviewsList(true)}
+              className="h-9 px-2.5 flex items-center gap-1 rounded-xl bg-amber-50 border border-amber-200/70 text-amber-700 text-xs font-bold active:scale-95 transition"
+              title={language === 'ar' ? 'عرض التقييمات' : 'View reviews'}
+            >
+              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+              <span>{(Number(rating) || 0).toFixed(1)}</span>
+            </button>
           </div>
-        ) : (
-          <div className="w-full h-28 bg-gradient-to-br from-blue-100/60 to-blue-50 flex items-center justify-center">
-            <UtensilsCrossed className="h-10 w-10 text-[#0B5ED7]/40" />
-          </div>
-        )}
+        </div>
       </div>
 
-      {/* ── Info Card (Scrolls naturally under top bar) ── */}
-      <div className="mx-3.5 md:mx-auto max-w-5xl -mt-3 bg-white rounded-3xl shadow-[0_8px_24px_rgba(11,94,215,0.08)] border border-blue-100/80 p-4 z-10 relative">
+      {/* ── Compressible Restaurant Banner Image ── */}
+      <div
+        style={{
+          height: `${bannerHeight}px`,
+          opacity: bannerOpacity,
+          transform: `scale(${bannerScale})`,
+          transformOrigin: 'top center',
+          willChange: 'height, opacity, transform',
+        }}
+        className="w-full overflow-hidden transition-[height] duration-75 ease-out relative select-none"
+      >
+        {restaurant.image ? (
+          <img
+            src={restaurant.image}
+            alt={restaurant.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-blue-100 via-blue-50 to-white flex items-center justify-center">
+            <UtensilsCrossed className="h-12 w-12 text-[#0B5ED7]/40" />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
+      </div>
+
+      {/* ── Info Card (Scrolls smoothly upwards over compressed banner) ── */}
+      <div className="mx-3.5 md:mx-auto max-w-5xl -mt-4 bg-white rounded-3xl shadow-[0_8px_24px_rgba(11,94,215,0.08)] border border-blue-100/80 p-4 z-10 relative">
         {/* Rating row - clickable */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-1.5">
@@ -604,9 +682,9 @@ export default function RestaurantPage() {
         </div>
       )}
 
-      {/* ── Section Tabs (Sticky pinned below top app bar) ── */}
+      {/* ── Section Tabs (Sticky pinned below top app bar at top-14 = 56px) ── */}
       {displaySections.length > 0 && (
-        <div className="mt-3 bg-white/95 backdrop-blur-md border-b border-blue-100 sticky top-[57px] sm:top-[61px] z-30 shadow-sm">
+        <div className="sticky top-14 z-30 bg-white/95 backdrop-blur-md border-b border-blue-100 shadow-xs">
           <div className="flex items-center gap-2 px-3.5 py-2.5 overflow-x-auto no-scrollbar max-w-5xl mx-auto">
             <button
               onClick={() => setSelectedSection('all')}
