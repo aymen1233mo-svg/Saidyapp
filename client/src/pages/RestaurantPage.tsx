@@ -491,7 +491,7 @@ export default function RestaurantPage() {
   return (
     <div className="min-h-screen bg-[#F4F8FF] pb-28" dir={dir}>
 
-      {/* ── Sticky Header - back button + name only ── */}
+      {/* ── Sticky Top App Bar: Back button + Name (always pinned) ── */}
       <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-blue-100 shadow-[0_2px_12px_rgba(11,94,215,0.05)]">
         <div className="flex items-center gap-3 px-3.5 py-2.5 max-w-5xl mx-auto">
           <button
@@ -505,9 +505,9 @@ export default function RestaurantPage() {
           </h1>
         </div>
 
-        {/* Restaurant hero image */}
+        {/* Restaurant banner image - naturally scrolls up and collapses out of view */}
         {restaurant.image ? (
-          <div className="w-full h-44 overflow-hidden">
+          <div className="w-full h-40 sm:h-48 overflow-hidden transition-all duration-300">
             <img
               src={restaurant.image}
               alt={restaurant.name}
@@ -515,13 +515,13 @@ export default function RestaurantPage() {
             />
           </div>
         ) : (
-          <div className="w-full h-32 bg-gradient-to-br from-blue-100/60 to-blue-50 flex items-center justify-center">
-            <UtensilsCrossed className="h-12 w-12 text-[#0B5ED7]/40" />
+          <div className="w-full h-28 bg-gradient-to-br from-blue-100/60 to-blue-50 flex items-center justify-center">
+            <UtensilsCrossed className="h-10 w-10 text-[#0B5ED7]/40" />
           </div>
         )}
       </div>
 
-      {/* ── Info Card ── */}
+      {/* ── Info Card (Scrolls naturally under top bar) ── */}
       <div className="mx-3.5 md:mx-auto max-w-5xl -mt-3 bg-white rounded-3xl shadow-[0_8px_24px_rgba(11,94,215,0.08)] border border-blue-100/80 p-4 z-10 relative">
         {/* Rating row - clickable */}
         <div className="flex items-center justify-between mb-3">
@@ -604,9 +604,9 @@ export default function RestaurantPage() {
         </div>
       )}
 
-      {/* ── Section Tabs ── */}
+      {/* ── Section Tabs (Sticky pinned below top app bar) ── */}
       {displaySections.length > 0 && (
-        <div className="mt-3 bg-white/95 backdrop-blur-md border-b border-blue-100 sticky top-[52px] z-30 shadow-sm">
+        <div className="mt-3 bg-white/95 backdrop-blur-md border-b border-blue-100 sticky top-[57px] sm:top-[61px] z-30 shadow-sm">
           <div className="flex items-center gap-2 px-3.5 py-2.5 overflow-x-auto no-scrollbar max-w-5xl mx-auto">
             <button
               onClick={() => setSelectedSection('all')}
@@ -618,9 +618,7 @@ export default function RestaurantPage() {
             >
               <span>{t('all_categories')}</span>
               {discountOffers.length > 0 && (
-                <span className={`px-1.5 py-0.2 text-[10px] rounded-full font-black ${
-                  selectedSection === 'all' ? 'bg-[#FF6B00] text-white' : 'bg-[#FF6B00] text-white'
-                }`}>
+                <span className={`px-1.5 py-0.2 text-[10px] rounded-full font-black bg-[#FF6B00] text-white`}>
                   {t('offers_tag')}
                 </span>
               )}
