@@ -12,26 +12,41 @@ import { NotificationProvider } from "./context/NotificationContext";
 import { LocationPermissionModal } from "./components/LocationPermissionModal";
 import Layout from "./components/Layout";
 import FloatingCartNotification from "./components/FloatingCartNotification";
-import AdminLoginPage from "./pages/admin/AdminLoginPage";
-import DriverLoginPage from "./pages/driver/DriverLoginPage";
-import AdminApp from "./pages/AdminApp";
-import DriverAppPage from "./pages/driver/DriverApp";
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useSettingsSync } from "./hooks/useSettingsSync";
 import { prefetchBootstrap } from "./lib/bootstrap";
 import HomePage from "./pages/HomePage";
-import RestaurantPage from "./pages/RestaurantPage";
-import Cart from "./pages/Cart";
-import Profile from "./pages/Profile";
-import Location from "./pages/Location";
-import OrderTrackingPage from "./pages/OrderTrackingPage";
-import OrdersPage from "./pages/OrdersPage";
-import TrackOrdersPage from "./pages/TrackOrdersPage";
-import Settings from "./pages/Settings";
-import Privacy from "./pages/Privacy";
-import SearchPage from "./pages/SearchPage";
-// Admin pages removed - now handled separately
+import CustomerAuthPage from "./pages/CustomerAuthPage";
 import NotFound from "@/pages/not-found";
+
+const AdminLoginPage = lazy(() => import("./pages/admin/AdminLoginPage"));
+const DriverLoginPage = lazy(() => import("./pages/driver/DriverLoginPage"));
+const AdminApp = lazy(() => import("./pages/AdminApp"));
+const DriverAppPage = lazy(() => import("./pages/driver/DriverApp"));
+const RestaurantPage = lazy(() => import("./pages/RestaurantPage"));
+const Cart = lazy(() => import("./pages/Cart"));
+const Profile = lazy(() => import("./pages/Profile"));
+const Location = lazy(() => import("./pages/Location"));
+const OrderTrackingPage = lazy(() => import("./pages/OrderTrackingPage"));
+const OrdersPage = lazy(() => import("./pages/OrdersPage"));
+const TrackOrdersPage = lazy(() => import("./pages/TrackOrdersPage"));
+const Settings = lazy(() => import("./pages/Settings"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const SearchPage = lazy(() => import("./pages/SearchPage"));
+const CategoryPage = lazy(() => import("./pages/CategoryPage"));
+const ProductDetails = lazy(() => import("./pages/ProductDetails"));
+const Favorites = lazy(() => import("./pages/Favorites"));
+const CustomerAddresses = lazy(() => import("./pages/CustomerAddresses"));
+const WasalniPage = lazy(() => import("./pages/WasalniPage"));
+const PaymentMethodsPage = lazy(() => import("./pages/PaymentMethodsPage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const GlobalAlternativeMapModal = lazy(() => import("./components/maps/GlobalAlternativeMapModal"));
+
+const RouteLoader = () => (
+  <div className="min-h-[45vh] flex items-center justify-center">
+    <div className="w-8 h-8 rounded-full border-[3px] border-[#0B5ED7]/25 border-t-[#0B5ED7] animate-spin" />
+  </div>
+);
 
 import SplashScreen from "./components/SplashScreen";
 import CitySelectionModal from "./components/CitySelectionModal";
@@ -159,21 +174,21 @@ function MainApp() {
 
   // Handle login pages first (without layout)
   if (currentLocation === '/admin-login') {
-    return <AdminLoginPage />;
+    return <Suspense fallback={<RouteLoader />}><AdminLoginPage /></Suspense>;
   }
   
   if (currentLocation === '/driver-login') {
-    return <DriverLoginPage />;
+    return <Suspense fallback={<RouteLoader />}><DriverLoginPage /></Suspense>;
   }
 
   // Handle admin routes - AdminApp handles its own AdminLayout internally
   if (currentLocation.startsWith('/admin')) {
-    return <AdminApp />;
+    return <Suspense fallback={<RouteLoader />}><AdminApp /></Suspense>;
   }
 
   // Handle driver routes
   if (currentLocation.startsWith('/driver')) {
-    return <DriverAppPage />;
+    return <Suspense fallback={<RouteLoader />}><DriverAppPage /></Suspense>;
   }
 
   // Default customer app
@@ -207,15 +222,6 @@ function MainApp() {
   );
 }
 
-import CategoryPage from "./pages/CategoryPage";
-import ProductDetails from "./pages/ProductDetails";
-import CustomerAuthPage from "./pages/CustomerAuthPage";
-import Favorites from "./pages/Favorites";
-import CustomerAddresses from "./pages/CustomerAddresses";
-import WasalniPage from "./pages/WasalniPage";
-import PaymentMethodsPage from "./pages/PaymentMethodsPage";
-import AboutPage from "./pages/AboutPage";
-
 function Router() {
   // Check UiSettings for page visibility
   const { isFeatureEnabled } = useUiSettings();
@@ -223,38 +229,39 @@ function Router() {
   const showTrackOrdersPage = isFeatureEnabled('show_track_orders_page');
 
   return (
-    <Switch>
-      <Route path="/" component={HomePage} />
-      <Route path="/search" component={SearchPage} />
-      <Route path="/category/:slug" component={CategoryPage} />
-      <Route path="/product/:id" component={ProductDetails} />
-      <Route path="/restaurant/:id" component={RestaurantPage} />
-      <Route path="/cart" component={Cart} />
-      <Route path="/profile" component={Profile} />
-      <Route path="/auth" component={CustomerAuthPage} />
-      <Route path="/favorites" component={Favorites} />
-      <Route path="/addresses" component={Location} />
-      <Route path="/orders" component={OrdersPage} />
-      <Route path="/orders/:orderId" component={OrderTrackingPage} />
-      {showTrackOrdersPage && <Route path="/track-orders" component={TrackOrdersPage} />}
-      <Route path="/my-addresses" component={() => <CustomerAddresses userId="" />} />
-      <Route path="/settings" component={Settings} />
-      <Route path="/privacy" component={Privacy} />
-      <Route path="/wasalni" component={WasalniPage} />
-      <Route path="/payment-methods" component={PaymentMethodsPage} />
-      <Route path="/about" component={AboutPage} />
-      
-      {/* Authentication Routes */}
-      <Route path="/admin-login" component={AdminLoginPage} />
-      <Route path="/driver-login" component={DriverLoginPage} />
-      
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={<RouteLoader />}>
+      <Switch>
+        <Route path="/" component={HomePage} />
+        <Route path="/search" component={SearchPage} />
+        <Route path="/category/:slug" component={CategoryPage} />
+        <Route path="/product/:id" component={ProductDetails} />
+        <Route path="/restaurant/:id" component={RestaurantPage} />
+        <Route path="/cart" component={Cart} />
+        <Route path="/profile" component={Profile} />
+        <Route path="/auth" component={CustomerAuthPage} />
+        <Route path="/favorites" component={Favorites} />
+        <Route path="/addresses" component={Location} />
+        <Route path="/orders" component={OrdersPage} />
+        <Route path="/orders/:orderId" component={OrderTrackingPage} />
+        {showTrackOrdersPage && <Route path="/track-orders" component={TrackOrdersPage} />}
+        <Route path="/my-addresses" component={() => <CustomerAddresses userId="" />} />
+        <Route path="/settings" component={Settings} />
+        <Route path="/privacy" component={Privacy} />
+        <Route path="/wasalni" component={WasalniPage} />
+        <Route path="/payment-methods" component={PaymentMethodsPage} />
+        <Route path="/about" component={AboutPage} />
+        
+        {/* Authentication Routes */}
+        <Route path="/admin-login" component={AdminLoginPage} />
+        <Route path="/driver-login" component={DriverLoginPage} />
+        
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 
 import { LanguageProvider } from "./context/LanguageContext";
-import GlobalAlternativeMapModal from "./components/maps/GlobalAlternativeMapModal";
 
 function App() {
   return (
@@ -268,7 +275,9 @@ function App() {
                   <CartProvider>
                     <NotificationProvider>
                       <Toaster />
-                      <GlobalAlternativeMapModal />
+                      <Suspense fallback={null}>
+                        <GlobalAlternativeMapModal />
+                      </Suspense>
                       <MainApp />
                     </NotificationProvider>
                   </CartProvider>

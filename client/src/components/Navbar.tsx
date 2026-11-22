@@ -14,12 +14,12 @@ export const Navbar: React.FC = () => {
 
   const displayCategories = categories.filter(c => c.isActive !== false).sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
-  if (location === '/') {
+  if (!location.startsWith('/category/')) {
     return null;
   }
 
   return (
-    <nav className="bg-white/90 backdrop-blur-md border-b border-blue-100 overflow-x-auto whitespace-nowrap no-scrollbar sticky top-[96px] md:top-[68px] z-30 transition-all">
+    <nav className="bg-white/95 border-b border-blue-100 overflow-x-auto whitespace-nowrap no-scrollbar sticky top-[56px] md:top-[61px] z-30 transition-all">
       <div className="container mx-auto px-4">
         <ul className="flex items-center justify-start md:justify-center gap-2.5 md:gap-4 py-2.5">
           <li>

@@ -9,8 +9,8 @@ interface SplashScreenProps {
   onFinish: (action: 'guest' | 'login') => void;
 }
 
-const LOADING_DURATION_MS = 2200;
-const MAX_BOOTSTRAP_MS = 1800;
+const LOADING_DURATION_MS = 1050;
+const MAX_BOOTSTRAP_MS = 1200;
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
   const { getSetting } = useUiSettings();
@@ -110,6 +110,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
         <img
           src={logoUrl}
           alt={splashTitle}
+          decoding="async"
           className="h-28 sm:h-36 w-auto object-contain drop-shadow-[0_12px_24px_rgba(11,94,215,0.22)]"
           data-testid="img-splash-logo"
         />

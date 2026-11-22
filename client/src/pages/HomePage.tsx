@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo, lazy, Suspense } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
 import {
@@ -10,6 +10,8 @@ import {
   Clock,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
+  ChevronDown,
   MapPin,
   Navigation,
   AlertCircle,
@@ -37,9 +39,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import MapComponent from '@/components/maps/MapComponent';
-import OutOfDeliveryZoneModal from '@/components/OutOfDeliveryZoneModal';
-import { OrderChatModal } from '@/components/OrderChatModal';
+const MapComponent = lazy(() => import('@/components/maps/MapComponent'));
+const OutOfDeliveryZoneModal = lazy(() => import('@/components/OutOfDeliveryZoneModal'));
+const OrderChatModal = lazy(() =>
+  import('@/components/OrderChatModal').then((m) => ({ default: m.OrderChatModal }))
+);
 import { useUiSettings } from '@/context/UiSettingsContext';
 import { useUserLocation } from '@/context/LocationContext';
 import { useLanguage } from '@/context/LanguageContext';
@@ -166,6 +170,7 @@ export default function HomePage() {
   const [isOutsideZone, setIsOutsideZone] = useState(false);
   const [showOutOfZoneModal, setShowOutOfZoneModal] = useState(false);
   const [outOfZoneReason, setOutOfZoneReason] = useState('');
+  const [wasalniExpanded, setWasalniExpanded] = useState(false);
 
   // Order Tracking & History State
   const [trackSearch, setTrackSearch] = useState('');
@@ -722,6 +727,7 @@ export default function HomePage() {
                     <img
                       src="/assets/saidi-courier-hero.jpg"
                       alt="مندوب الصايدي توصيل"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-1.5 left-1.5 w-6 h-6 rounded-full bg-[#FF6B00] text-white flex items-center justify-center shadow">
@@ -731,23 +737,68 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Order Type Selector + Delivery Form Card */}
-              <form
-                onSubmit={handleQuickSubmit}
-                className="bg-white rounded-[28px] border border-blue-100/90 shadow-[0_8px_28px_rgba(11,94,215,0.06)] p-4 sm:p-5 space-y-4"
-              >
-                {/* Section Header: اختر نوع الطلب */}
-                <div className="flex items-center justify-between">
-                  <h2 className="text-sm font-black text-[#003B99] flex items-center gap-2">
-                    <span className="w-7 h-7 rounded-xl bg-blue-50 text-[#0B5ED7] flex items-center justify-center">
-                      <Package className="h-4 w-4" />
-                    </span>
-                    اختر نوع الطلب
-                  </h2>
-                  <span className="text-xs font-bold text-[#FF6B00]">
-                    {ORDER_TYPES.find((i) => i.value === quickOrderType)?.label}
+              {/* Collapsible 'خدمة وصل لي' Card (Hidden 'اختر نوع الطلب' until expanded) */}
+              <div className="bg-white rounded-[28px] border border-blue-100/90 shadow-[0_8px_28px_rgba(11,94,215,0.06)] overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => setWasalniExpanded((prev) => !prev)}
+                  aria-expanded={wasalniExpanded}
+                  data-testid="button-toggle-wasalni-service"
+                  className="w-full p-4 sm:p-5 flex items-center justify-between gap-3 text-right hover:bg-[#F8FBFF] transition-colors"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#0B5ED7] to-[#0046B8] text-white flex items-center justify-center shadow-sm shrink-0">
+                      <Bike className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <h2 className="text-sm sm:text-base font-black text-[#003B99] flex items-center gap-2">
+                        <span>خدمة وصل لي</span>
+                        {wasalniExpanded && (
+                          <span className="text-[11px] font-bold text-[#FF6B00] bg-orange-50 px-2 py-0.5 rounded-full">
+                            {ORDER_TYPES.find((i) => i.value === quickOrderType)?.label}
+                          </span>
+                        )}
+                      </h2>
+                      <p className="text-xs font-semibold text-slate-500 truncate mt-0.5">
+                        {wasalniExpanded
+                          ? 'حدد نوع الطلب وموقع التوصيل وأرسل طلبك'
+                          : 'اطلب توصيل طرود، مطاعم، مشتريات أو مشاوير بضغطة زر'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <span
+                    className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 transition-all duration-200 ${
+                      wasalniExpanded
+                        ? 'bg-[#FF6B00] text-white shadow-sm'
+                        : 'bg-[#EEF5FF] text-[#0B5ED7]'
+                    }`}
+                  >
+                    {wasalniExpanded ? (
+                      <ChevronDown className="h-5 w-5" />
+                    ) : (
+                      <ChevronUp className="h-5 w-5" />
+                    )}
                   </span>
-                </div>
+                </button>
+
+                {wasalniExpanded && (
+                  <form
+                    onSubmit={handleQuickSubmit}
+                    className="px-4 pb-4 sm:px-5 sm:pb-5 pt-3 border-t border-blue-50 space-y-4 animate-in fade-in slide-in-from-top-2 duration-200"
+                  >
+                    {/* Section Header: اختر نوع الطلب */}
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-black text-[#003B99] flex items-center gap-2">
+                        <span className="w-7 h-7 rounded-xl bg-blue-50 text-[#0B5ED7] flex items-center justify-center">
+                          <Package className="h-4 w-4" />
+                        </span>
+                        اختر نوع الطلب
+                      </h3>
+                      <span className="text-xs font-bold text-[#FF6B00]">
+                        {ORDER_TYPES.find((i) => i.value === quickOrderType)?.label}
+                      </span>
+                    </div>
 
                 {/* 6-Tile Order Type Grid (Matches 800a7534 & e7cf083a) */}
                 <div className="grid grid-cols-3 gap-2.5">
@@ -899,7 +950,9 @@ export default function HomePage() {
                     </>
                   )}
                 </Button>
-              </form>
+                  </form>
+                )}
+              </div>
             </div>
 
             {/* Storefront Browse Column (Preserves 100% of Categories, Offers & Restaurants) */}
@@ -911,6 +964,8 @@ export default function HomePage() {
                     <img
                       src={currentOffer.image}
                       alt={currentOffer.title}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -1045,7 +1100,7 @@ export default function HomePage() {
                             }`}
                           >
                             {cat.image ? (
-                              <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
+                              <img src={cat.image} alt={cat.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                             ) : cat.icon ? (
                               <i className={`${cat.icon} text-xl ${selectedCategory === cat.id ? 'text-[#0B5ED7]' : 'text-slate-500'}`} />
                             ) : (
@@ -1127,7 +1182,7 @@ export default function HomePage() {
                           <div className="shrink-0 flex flex-col items-center gap-1.5">
                             <div className="w-16 h-16 rounded-2xl overflow-hidden border border-blue-100 bg-[#F4F8FF] flex items-center justify-center">
                               {restaurant.image ? (
-                                <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover" />
+                                <img src={restaurant.image} alt={restaurant.name} loading="lazy" decoding="async" className="w-full h-full object-cover" />
                               ) : (
                                 <UtensilsCrossed className="h-6 w-6 text-blue-200" />
                               )}
@@ -1415,6 +1470,8 @@ export default function HomePage() {
                         <img
                           src="/assets/saidi-driver-avatar.jpg"
                           alt={displayedActiveOrder.driverName}
+                          loading="lazy"
+                          decoding="async"
                           className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm shrink-0"
                         />
                         <div className="min-w-0">
@@ -1588,6 +1645,8 @@ export default function HomePage() {
                       <img
                         src="/assets/saidi-parcel-badge.jpg"
                         alt={order.restaurantName || 'طلب توصيل'}
+                        loading="lazy"
+                        decoding="async"
                         className="w-14 h-14 rounded-2xl object-cover border border-blue-100 shrink-0"
                       />
                       <div className="min-w-0 space-y-1">
@@ -1642,14 +1701,25 @@ export default function HomePage() {
             </DialogTitle>
           </DialogHeader>
           <div className="h-[390px] w-full">
-            <MapComponent
-              center={[
-                deliveryCoords?.lat || userLat || 15.3694,
-                deliveryCoords?.lng || userLng || 44.191,
-              ]}
-              zoom={14}
-              onLocationSelect={handleMapSelect}
-            />
+            {isMapDialogOpen && (
+              <Suspense
+                fallback={
+                  <div className="h-full w-full flex items-center justify-center bg-[#F4F8FF] text-[#0B5ED7] text-xs font-bold gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>جاري تحميل الخريطة...</span>
+                  </div>
+                }
+              >
+                <MapComponent
+                  center={[
+                    deliveryCoords?.lat || userLat || 15.3694,
+                    deliveryCoords?.lng || userLng || 44.191,
+                  ]}
+                  zoom={14}
+                  onLocationSelect={handleMapSelect}
+                />
+              </Suspense>
+            )}
           </div>
           <div className="p-3 bg-white text-xs text-center text-slate-500 font-bold border-t border-blue-50">
             انقر على أي نقطة في الخريطة لتحديد موقع التوصيل وحساب التكلفة تلقائياً
@@ -1658,28 +1728,34 @@ export default function HomePage() {
       </Dialog>
 
       {/* Out of Delivery Zone Modal */}
-      <OutOfDeliveryZoneModal
-        isOpen={showOutOfZoneModal}
-        onClose={() => setShowOutOfZoneModal(false)}
-        onChangeLocation={() => {
-          setShowOutOfZoneModal(false);
-          setIsMapDialogOpen(true);
-        }}
-        reason={outOfZoneReason}
-      />
+      {showOutOfZoneModal && (
+        <Suspense fallback={null}>
+          <OutOfDeliveryZoneModal
+            isOpen={showOutOfZoneModal}
+            onClose={() => setShowOutOfZoneModal(false)}
+            onChangeLocation={() => {
+              setShowOutOfZoneModal(false);
+              setIsMapDialogOpen(true);
+            }}
+            reason={outOfZoneReason}
+          />
+        </Suspense>
+      )}
 
       {/* Driver Live Chat Modal */}
       {chatOrder && (
-        <OrderChatModal
-          isOpen={Boolean(chatOrder)}
-          onClose={() => setChatOrder(null)}
-          orderId={chatOrder.id}
-          orderNumber={chatOrder.orderNumber}
-          recipientName={chatOrder.driverName || 'مندوب التوصيل'}
-          recipientPhone={chatOrder.driverPhone || ''}
-          currentUserType="customer"
-          currentUserId={activeCustomerId || activePhone || 'customer_user'}
-        />
+        <Suspense fallback={null}>
+          <OrderChatModal
+            isOpen={Boolean(chatOrder)}
+            onClose={() => setChatOrder(null)}
+            orderId={chatOrder.id}
+            orderNumber={chatOrder.orderNumber}
+            recipientName={chatOrder.driverName || 'مندوب التوصيل'}
+            recipientPhone={chatOrder.driverPhone || ''}
+            currentUserType="customer"
+            currentUserId={activeCustomerId || activePhone || 'customer_user'}
+          />
+        </Suspense>
       )}
     </div>
   );

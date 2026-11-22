@@ -87,6 +87,8 @@ export function serveStatic(app: Express) {
 
   // تحديد أنواع MIME الصريحة للأيقونات والملفات الثابتة
   app.use(express.static(distPath, {
+    etag: true,
+    lastModified: true,
     setHeaders: (res, filePath) => {
       if (filePath.endsWith('.png')) {
         res.setHeader('Content-Type', 'image/png');
@@ -96,6 +98,14 @@ export function serveStatic(app: Express) {
         res.setHeader('Content-Type', 'image/svg+xml');
       } else if (filePath.endsWith('.webmanifest') || filePath.endsWith('manifest.json')) {
         res.setHeader('Content-Type', 'application/manifest+json');
+      }
+
+      if (filePath.endsWith('index.html')) {
+        res.setHeader('Cache-Control', 'no-cache');
+      } else if (/\.(js|css)$/i.test(filePath) && filePath.includes(`${path.sep}assets${path.sep}`)) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      } else if (/\.(png|jpe?g|webp|gif|svg|woff2?)$/i.test(filePath)) {
+        res.setHeader('Cache-Control', 'public, max-age=604800');
       }
     }
   }));

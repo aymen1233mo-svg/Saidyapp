@@ -171,7 +171,8 @@ export default function Layout({ children }: LayoutProps) {
       return res.json();
     },
     enabled: !!effectiveUserId,
-    refetchInterval: 4000,
+    refetchInterval: 15000,
+    staleTime: 10000,
   });
 
   const unreadChatCount = userConversationsData?.totalUnreadCount || 0;
@@ -195,7 +196,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="bg-[#F4F8FF] min-h-screen flex flex-col pb-20 md:pb-0" dir={dir}>
       <TopBar />
-      {location !== '/' && !location.startsWith('/restaurant/') && <Navbar />}
+      {location.startsWith('/category/') && <Navbar />}
 
       {/* App Closed Overlay - يظهر فقط عند تفعيل الإغلاق الطارئ */}
       {appStatus.isEmergencyClosed && (

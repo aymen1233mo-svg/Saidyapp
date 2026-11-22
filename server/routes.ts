@@ -54,8 +54,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Ensure uploads directory exists
   ensureUploadsDir();
 
-  // Serve uploaded images as static files
-  app.use('/uploads', express.static(UPLOADS_DIR));
+  // Serve uploaded images as static files with browser caching
+  app.use('/uploads', express.static(UPLOADS_DIR, {
+    maxAge: '7d',
+    etag: true,
+    lastModified: true,
+    setHeaders: (res) => {
+      res.setHeader('Cache-Control', 'public, max-age=604800');
+    },
+  }));
 
   // ✅ Serve TWA Digital Asset Links (.well-known) so the Android wrapper
   // verifies ownership and hides the browser top URL bar.
