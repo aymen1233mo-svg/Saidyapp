@@ -185,6 +185,15 @@ export function CustomerNotificationsPanel({ lightVariant = false }: { lightVari
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isOpen]);
 
+  useEffect(() => {
+    const handleOpenNotifs = () => {
+      setIsOpen(true);
+      refetch();
+    };
+    window.addEventListener('openCustomerNotifications', handleOpenNotifs);
+    return () => window.removeEventListener('openCustomerNotifications', handleOpenNotifs);
+  }, [refetch]);
+
   const getIcon = (type: string) => {
     if (type?.includes('order') || type?.includes('scheduled')) return <Package className="h-4 w-4 text-primary" />;
     if (type?.includes('cancel')) return <X className="h-4 w-4 text-red-500" />;

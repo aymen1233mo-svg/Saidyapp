@@ -113,9 +113,19 @@ function MainApp() {
   }, [showSplash, user?.id, user?.phone]);
 
   // Handle splash finish
-  const handleSplashFinish = () => {
+  const handleSplashFinish = (action: 'guest' | 'login' = 'guest') => {
     sessionStorage.setItem('splash_seen', 'true');
+    if (action === 'guest' && !isAuthenticated) {
+      localStorage.setItem('is_guest', 'true');
+      setIsGuest(true);
+      window.dispatchEvent(new Event('storage'));
+    }
     setShowSplash(false);
+    if (action === 'login' && !isAuthenticated) {
+      setLocation('/auth');
+    } else if (currentLocation === '/auth' && (action === 'guest' || isAuthenticated)) {
+      setLocation('/');
+    }
   };
 
   // If not authenticated and not guest, redirect to auth (unless already on auth or login pages)

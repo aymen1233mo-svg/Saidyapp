@@ -16,7 +16,7 @@ export default function CustomerAuthPage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showOnboarding, setShowOnboarding] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
 
   const [loginIdentifier, setLoginIdentifier] = useState('');

@@ -18,6 +18,7 @@ import {
   MapPin,
   PlusCircle,
   Clock,
+  Bell,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -174,6 +175,22 @@ export default function Layout({ children }: LayoutProps) {
   });
 
   const unreadChatCount = userConversationsData?.totalUnreadCount || 0;
+
+  const customerPhone = user?.phone || localStorage.getItem('customer_phone') || '';
+  const customerId = user?.id || '';
+  const { data: customerNotifications = [] } = useQuery<Array<{ isRead?: boolean }>>({
+    queryKey: ['/api/notifications/customer', customerPhone, customerId],
+    queryFn: async () => {
+      const qp = new URLSearchParams();
+      if (customerId) qp.set('customerId', customerId);
+      if (customerPhone) qp.set('phone', customerPhone);
+      const res = await fetch(`/api/notifications/customer?${qp.toString()}`);
+      if (!res.ok) return [];
+      return res.json();
+    },
+    refetchInterval: 20000,
+  });
+  const unreadNotifCount = customerNotifications.filter((n) => !n.isRead).length;
 
   return (
     <div className="bg-[#F4F8FF] min-h-screen flex flex-col pb-20 md:pb-0" dir={dir}>
@@ -426,75 +443,69 @@ export default function Layout({ children }: LayoutProps) {
         {children}
       </main>
 
-      {/* Mobile Bottom Navigation - Exact 5-item Al-Saidi design */}
+      {/* Mobile Bottom Navigation - Exact 4-tab Al-Saidi design matching 800a7534 & e7cf083a */}
       {bottomBarEnabled && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-blue-100 z-50 md:hidden flex items-center justify-around h-17 px-2 pb-1 shadow-[0_-6px_24px_rgba(11,94,215,0.10)]">
+        <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-blue-100 z-50 md:hidden grid grid-cols-4 items-center h-16 px-2 shadow-[0_-6px_24px_rgba(11,94,215,0.10)]">
           {/* 1. الرئيسية */}
           <button
+            type="button"
             onClick={() => setLocation('/')}
-            className={`flex flex-col items-center justify-center gap-0.5 transition-all duration-200 min-w-[58px] py-1.5 ${
+            className={`flex flex-col items-center justify-center gap-0.5 transition-colors min-h-[44px] py-1 ${
               location === '/' ? 'text-[#0B5ED7]' : 'text-slate-400 hover:text-slate-600'
             }`}
           >
-            <Home className={`h-5.5 w-5.5 ${location === '/' ? 'fill-current' : ''}`} />
-            <span className="text-[11px] font-black leading-tight">{t('home')}</span>
+            <Home className={`h-5 w-5 ${location === '/' ? 'fill-current' : ''}`} />
+            <span className="text-[11px] font-black leading-tight whitespace-nowrap">{t('home')}</span>
             {location === '/' && <div className="h-1 w-6 bg-[#0B5ED7] rounded-full mt-0.5" />}
           </button>
 
-          {/* 2. طلب جديد (Wasalni quick delivery) */}
+          {/* 2. طلباتي */}
           <button
-            onClick={() => setLocation('/wasalni')}
-            className={`flex flex-col items-center justify-center gap-0.5 transition-all duration-200 min-w-[58px] py-1.5 ${
-              location === '/wasalni' ? 'text-[#0B5ED7]' : 'text-slate-400 hover:text-slate-600'
-            }`}
-          >
-            <PlusCircle className={`h-5.5 w-5.5 ${location === '/wasalni' ? 'text-[#FF6B00]' : ''}`} />
-            <span className="text-[11px] font-black leading-tight">{t('quick_order')}</span>
-            {location === '/wasalni' && <div className="h-1 w-6 bg-[#FF6B00] rounded-full mt-0.5" />}
-          </button>
-
-          {/* 3. طلباتي */}
-          <button
+            type="button"
             onClick={() => setLocation('/orders')}
-            className={`flex flex-col items-center justify-center gap-0.5 transition-all duration-200 min-w-[58px] py-1.5 ${
-              location === '/orders' ? 'text-[#0B5ED7]' : 'text-slate-400 hover:text-slate-600'
+            className={`flex flex-col items-center justify-center gap-0.5 transition-colors min-h-[44px] py-1 ${
+              location === '/orders' || location.startsWith('/orders/') ? 'text-[#0B5ED7]' : 'text-slate-400 hover:text-slate-600'
             }`}
           >
-            <Receipt className={`h-5.5 w-5.5 ${location === '/orders' ? 'fill-current' : ''}`} />
-            <span className="text-[11px] font-black leading-tight">{t('orders')}</span>
-            {location === '/orders' && <div className="h-1 w-6 bg-[#0B5ED7] rounded-full mt-0.5" />}
-          </button>
-
-          {/* 4. متابعتي */}
-          <button
-            onClick={() => setLocation('/track-orders')}
-            className={`flex flex-col items-center justify-center gap-0.5 transition-all duration-200 min-w-[58px] py-1.5 ${
-              location.startsWith('/track-orders') || location.startsWith('/order-tracking')
-                ? 'text-[#0B5ED7]'
-                : 'text-slate-400 hover:text-slate-600'
-            }`}
-          >
-            <Clock className="h-5.5 w-5.5" />
-            <span className="text-[11px] font-black leading-tight">{t('track_nav')}</span>
-            {(location.startsWith('/track-orders') || location.startsWith('/order-tracking')) && (
+            <Receipt className={`h-5 w-5 ${location === '/orders' ? 'fill-current' : ''}`} />
+            <span className="text-[11px] font-black leading-tight whitespace-nowrap">{t('orders')}</span>
+            {(location === '/orders' || location.startsWith('/orders/')) && (
               <div className="h-1 w-6 bg-[#0B5ED7] rounded-full mt-0.5" />
             )}
           </button>
 
-          {/* 5. حسابي */}
+          {/* 3. الإشعارات */}
           <button
+            type="button"
+            onClick={() => window.dispatchEvent(new CustomEvent('openCustomerNotifications'))}
+            className="relative flex flex-col items-center justify-center gap-0.5 transition-colors min-h-[44px] py-1 text-slate-500 hover:text-[#0B5ED7]"
+          >
+            <div className="relative">
+              <Bell className="h-5 w-5" />
+              {unreadNotifCount > 0 && (
+                <span className="absolute -top-1.5 -right-2 bg-[#FF4D2D] text-white text-[10px] rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center font-black border border-white tabular-nums">
+                  {unreadNotifCount > 9 ? '9+' : unreadNotifCount}
+                </span>
+              )}
+            </div>
+            <span className="text-[11px] font-black leading-tight whitespace-nowrap">{t('notifications')}</span>
+          </button>
+
+          {/* 4. حسابي */}
+          <button
+            type="button"
             onClick={() => setLocation(user ? '/profile' : '/auth')}
-            className={`flex flex-col items-center justify-center gap-0.5 transition-all duration-200 min-w-[58px] py-1.5 ${
+            className={`flex flex-col items-center justify-center gap-0.5 transition-colors min-h-[44px] py-1 ${
               location === '/profile' || location === '/auth' ? 'text-[#0B5ED7]' : 'text-slate-400 hover:text-slate-600'
             }`}
           >
-            <User className={`h-5.5 w-5.5 ${location === '/profile' ? 'fill-current' : ''}`} />
-            <span className="text-[11px] font-black leading-tight">{t('account')}</span>
+            <User className={`h-5 w-5 ${location === '/profile' ? 'fill-current' : ''}`} />
+            <span className="text-[11px] font-black leading-tight whitespace-nowrap">{t('account')}</span>
             {(location === '/profile' || location === '/auth') && (
               <div className="h-1 w-6 bg-[#0B5ED7] rounded-full mt-0.5" />
             )}
           </button>
-        </div>
+        </nav>
       )}
 
       {/* Desktop Footer */}
