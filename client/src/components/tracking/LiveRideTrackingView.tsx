@@ -453,7 +453,7 @@ export default function LiveRideTrackingView({
           <div className="px-5 py-3.5 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-13 h-13 rounded-2xl bg-[#EEF5FF] border-2 border-[#0B5ED7]/30 p-0.5 shadow-sm overflow-hidden flex items-center justify-center">
+                <div className="w-[52px] h-[52px] rounded-2xl bg-[#EEF5FF] border-2 border-[#0B5ED7]/30 p-0.5 shadow-sm overflow-hidden flex items-center justify-center">
                   <img
                     src="/assets/saidi-driver-avatar.jpg"
                     alt={driverName}

@@ -228,7 +228,7 @@ export function CustomerNotificationsPanel({ lightVariant = false }: { lightVari
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 bg-[#FF4D2D] text-white text-[10px] rounded-full h-4.5 min-w-[18px] px-1 flex items-center justify-center font-black border-2 border-white shadow-sm">
+          <span className="absolute -top-0.5 -right-0.5 bg-[#FF4D2D] text-white text-[10px] rounded-full h-[18px] min-w-[18px] px-1 flex items-center justify-center font-black border-2 border-white shadow-sm">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}

@@ -6,14 +6,14 @@ interface AssistantMascotIconProps {
 }
 
 export const AssistantMascotIcon: React.FC<AssistantMascotIconProps> = ({ 
-  className = "w-14 h-14", 
+  className = "w-12 h-12", 
   size 
 }) => {
   const style = size ? { width: size, height: size } : undefined;
 
   return (
     <div 
-      className={`relative flex items-center justify-center rounded-full bg-gradient-to-tr from-[#003B99] via-[#0B5ED7] to-[#2F84FF] p-2.5 shadow-[0_8px_22px_rgba(11,94,215,0.42)] border-2 border-white/95 ring-4 ring-[#FF6B00]/25 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_10px_28px_rgba(11,94,215,0.55)] group-active:scale-95 ${className}`}
+      className={`relative shrink-0 overflow-hidden flex items-center justify-center rounded-full bg-gradient-to-tr from-[#003B99] via-[#0B5ED7] to-[#2F84FF] p-2 shadow-[0_8px_22px_rgba(11,94,215,0.42)] border-2 border-white/95 ring-4 ring-[#FF6B00]/25 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_10px_28px_rgba(11,94,215,0.55)] group-active:scale-95 ${className}`}
       style={style}
     >
       {/* Glossy top shine */}
@@ -22,9 +22,11 @@ export const AssistantMascotIcon: React.FC<AssistantMascotIconProps> = ({
       {/* SVG Icon: Modern Support Bot Mascot with Headset & Message Tail */}
       <svg 
         viewBox="0 0 48 48" 
+        width="100%"
+        height="100%"
         fill="none" 
         xmlns="http://www.w3.org/2000/svg" 
-        className="w-full h-full drop-shadow-sm select-none"
+        className="w-full h-full max-w-full max-h-full block drop-shadow-sm select-none"
       >
         {/* Headset Arc */}
         <path 

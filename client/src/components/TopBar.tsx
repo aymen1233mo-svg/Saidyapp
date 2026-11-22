@@ -50,7 +50,7 @@ export const TopBar: React.FC = () => {
   return (
     <header className="sticky top-0 z-50">
       {/* Desktop Header */}
-      <div className="hidden md:block bg-gradient-to-b from-[#DCEBFF] via-[#EEF5FF] to-white border-b border-blue-100 shadow-xs relative overflow-hidden">
+      <div className="hidden md:block bg-gradient-to-b from-[#DCEBFF] via-[#EEF5FF] to-white border-b border-blue-100 shadow-sm relative overflow-hidden">
         <div className="absolute top-0 right-0 w-44 h-1 bg-gradient-to-l from-[#0B5ED7] via-[#FF6B00] to-transparent" />
         <div className="max-w-6xl mx-auto px-4 py-2.5 flex items-center justify-between gap-6">
           <button
@@ -77,7 +77,7 @@ export const TopBar: React.FC = () => {
           <div className="flex-1 max-w-xl">
             <form onSubmit={handleSearch} className="relative">
               <Input
-                className="w-full pr-11 pl-4 h-10 bg-white border border-blue-200/80 focus:border-[#0B5ED7] focus:ring-2 focus:ring-blue-100 rounded-full shadow-2xs transition-all text-sm font-semibold text-slate-800 placeholder-slate-400"
+                className="w-full pr-11 pl-4 h-10 bg-white border border-blue-200/80 focus:border-[#0B5ED7] focus:ring-2 focus:ring-blue-100 rounded-full shadow-sm transition-all text-sm font-semibold text-slate-800 placeholder-slate-400"
                 placeholder={t('search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -87,7 +87,7 @@ export const TopBar: React.FC = () => {
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#0B5ED7] hover:text-[#FF6B00] transition-colors"
                 aria-label="search"
               >
-                <Search className="h-4.5 w-4.5" />
+                <Search className="h-[18px] w-[18px]" />
               </button>
             </form>
           </div>
@@ -98,19 +98,19 @@ export const TopBar: React.FC = () => {
             <button
               type="button"
               onClick={() => setLocation(user ? '/profile' : '/auth')}
-              className="h-10 w-10 flex items-center justify-center bg-white hover:bg-blue-50 border border-blue-100 rounded-full text-[#0B5ED7] transition-all active:scale-95 shadow-2xs"
+              className="h-10 w-10 flex items-center justify-center bg-white hover:bg-blue-50 border border-blue-100 rounded-full text-[#0B5ED7] transition-all active:scale-95 shadow-sm"
               aria-label="profile"
             >
-              <User className="h-4.5 w-4.5" />
+              <User className="h-[18px] w-[18px]" />
             </button>
 
             <button
               type="button"
               onClick={() => setLocation('/favorites')}
-              className="h-10 w-10 flex items-center justify-center bg-white hover:bg-blue-50 border border-blue-100 rounded-full text-[#0B5ED7] transition-all active:scale-95 shadow-2xs"
+              className="h-10 w-10 flex items-center justify-center bg-white hover:bg-blue-50 border border-blue-100 rounded-full text-[#0B5ED7] transition-all active:scale-95 shadow-sm"
               aria-label="favorites"
             >
-              <Heart className="h-4.5 w-4.5" />
+              <Heart className="h-[18px] w-[18px]" />
             </button>
 
             <button
@@ -119,7 +119,7 @@ export const TopBar: React.FC = () => {
               className="flex items-center gap-2 px-4 h-10 bg-gradient-to-r from-[#0B5ED7] to-[#0046B8] hover:from-[#0A53BE] hover:to-[#003B99] text-white rounded-full transition-all active:scale-95 shadow-sm whitespace-nowrap"
               aria-label="cart"
             >
-              <ShoppingCart className="h-4.5 w-4.5" />
+              <ShoppingCart className="h-[18px] w-[18px]" />
               <span className="text-xs font-black">{t('cart')}</span>
               {getItemCount() > 0 && (
                 <span className="bg-[#FF6B00] text-white text-[10px] rounded-full h-5 min-w-[20px] px-1.5 flex items-center justify-center font-black border border-white tabular-nums">
@@ -132,7 +132,7 @@ export const TopBar: React.FC = () => {
       </div>
 
       {/* Mobile Header matching Al-Saidi mockups 800a7534 & e7cf083a */}
-      <div className="md:hidden relative bg-gradient-to-b from-[#D7E9FF] via-[#EBF4FF] to-white border-b border-blue-100/80 shadow-xs overflow-hidden">
+      <div className="md:hidden relative bg-gradient-to-b from-[#D7E9FF] via-[#EBF4FF] to-white border-b border-blue-100/80 shadow-sm overflow-hidden">
         {/* Top-left sky/royal-blue swoosh */}
         <svg
           viewBox="0 0 220 40"
@@ -150,7 +150,7 @@ export const TopBar: React.FC = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 text-[#0B5ED7] bg-white hover:bg-blue-50 border border-blue-100 shrink-0 rounded-full shadow-2xs active:scale-95 transition-transform"
+                className="h-10 w-10 text-[#0B5ED7] bg-white hover:bg-blue-50 border border-blue-100 shrink-0 rounded-full shadow-sm active:scale-95 transition-transform"
                 onClick={() => window.history.length > 1 ? window.history.back() : setLocation('/')}
                 aria-label="back"
               >
@@ -160,7 +160,7 @@ export const TopBar: React.FC = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-10 w-10 text-[#0B5ED7] bg-white hover:bg-blue-50 border border-blue-100 shrink-0 rounded-full shadow-2xs active:scale-95 transition-transform"
+                className="h-10 w-10 text-[#0B5ED7] bg-white hover:bg-blue-50 border border-blue-100 shrink-0 rounded-full shadow-sm active:scale-95 transition-transform"
                 onClick={() => document.getElementById('sidebar-trigger')?.click()}
                 aria-label="menu"
               >
@@ -170,10 +170,10 @@ export const TopBar: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="h-10 w-10 flex items-center justify-center text-[#0B5ED7] bg-white hover:bg-blue-50 border border-blue-100 rounded-full shadow-2xs transition-all active:scale-95"
+              className="h-10 w-10 flex items-center justify-center text-[#0B5ED7] bg-white hover:bg-blue-50 border border-blue-100 rounded-full shadow-sm transition-all active:scale-95"
               aria-label="search"
             >
-              <Search className="h-4.5 w-4.5" />
+              <Search className="h-[18px] w-[18px]" />
             </button>
           </div>
 
@@ -205,8 +205,8 @@ export const TopBar: React.FC = () => {
                 className="h-10 w-10 flex items-center justify-center text-white bg-gradient-to-br from-[#0B5ED7] to-[#0046B8] rounded-full transition-all active:scale-95 relative shadow-sm"
                 aria-label="cart"
               >
-                <ShoppingCart className="h-4.5 w-4.5" />
-                <span className="absolute -top-1 -right-1 bg-[#FF6B00] text-white text-[10px] rounded-full h-4.5 min-w-[18px] px-1 flex items-center justify-center font-black border-2 border-white tabular-nums">
+                <ShoppingCart className="h-[18px] w-[18px]" />
+                <span className="absolute -top-1 -right-1 bg-[#FF6B00] text-white text-[10px] rounded-full h-[18px] min-w-[18px] px-1 flex items-center justify-center font-black border-2 border-white tabular-nums">
                   {getItemCount()}
                 </span>
               </button>
@@ -214,10 +214,10 @@ export const TopBar: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setLocation('/settings')}
-                className="h-10 w-10 flex items-center justify-center text-[#0B5ED7] bg-white hover:bg-blue-50 border border-blue-100 rounded-full shadow-2xs transition-all active:scale-95"
+                className="h-10 w-10 flex items-center justify-center text-[#0B5ED7] bg-white hover:bg-blue-50 border border-blue-100 rounded-full shadow-sm transition-all active:scale-95"
                 aria-label="settings"
               >
-                <SlidersHorizontal className="h-4.5 w-4.5" />
+                <SlidersHorizontal className="h-[18px] w-[18px]" />
               </button>
             )}
           </div>
@@ -229,7 +229,7 @@ export const TopBar: React.FC = () => {
             <form onSubmit={handleSearch} className="relative">
               <input
                 autoFocus
-                className="w-full bg-white text-slate-900 placeholder-slate-400 border border-blue-200 rounded-full px-4 py-2 pr-11 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#0B5ED7] shadow-xs"
+                className="w-full bg-white text-slate-900 placeholder-slate-400 border border-blue-200 rounded-full px-4 py-2 pr-11 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#0B5ED7] shadow-sm"
                 placeholder={t('search_placeholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

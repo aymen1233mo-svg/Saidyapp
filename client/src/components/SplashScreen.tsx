@@ -114,7 +114,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
           data-testid="img-splash-logo"
         />
         <div className="absolute -top-1.5 -left-1 w-9 h-9 rounded-full bg-gradient-to-br from-[#FF8A00] to-[#FF5500] text-white flex items-center justify-center shadow-lg border-2 border-white">
-          <MapPin className="h-4.5 w-4.5 fill-white/25" />
+          <MapPin className="h-[18px] w-[18px] fill-white/25" />
         </div>
       </div>
 
@@ -289,7 +289,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
             </div>
 
             <div className="space-y-2 pt-1">
-              <div className="w-full h-4.5 rounded-full bg-[#E6EFFD] overflow-hidden p-0.5 shadow-inner border border-blue-100">
+              <div className="w-full h-[18px] rounded-full bg-[#E6EFFD] overflow-hidden p-0.5 shadow-inner border border-blue-100">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-[#0B5ED7] to-[#1D74F5] saidi-progress-stripes transition-all duration-200"
                   style={{ width: `${progress}%` }}
@@ -327,10 +327,10 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
               variant="outline"
               onClick={() => completeFlow('login')}
               data-testid="button-splash-login"
-              className="w-full h-13 rounded-full bg-white border-2 border-[#0B5ED7] text-[#0B5ED7] hover:bg-blue-50 font-black text-base shadow-sm flex items-center justify-between px-5 transition-all active:scale-[0.98]"
+              className="w-full h-[52px] rounded-full bg-white border-2 border-[#0B5ED7] text-[#0B5ED7] hover:bg-blue-50 font-black text-base shadow-sm flex items-center justify-between px-5 transition-all active:scale-[0.98]"
             >
               <span className="w-8 h-8 rounded-full bg-blue-50 text-[#0B5ED7] flex items-center justify-center">
-                <User className="h-4.5 w-4.5" />
+                <User className="h-[18px] w-[18px]" />
               </span>
               <span>تسجيل الدخول</span>
               <span className="w-8" />

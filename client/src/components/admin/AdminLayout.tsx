@@ -830,7 +830,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         <div className="fixed bottom-6 left-6 z-[1000]">
           <button
             onClick={() => handleNavigation('/admin/chat')}
-            className="w-13 h-13 md:w-14 md:h-14 rounded-full bg-gradient-to-tr from-[#ff4500] via-[#ff5722] to-[#ff6a00] text-white shadow-xl shadow-orange-600/40 flex items-center justify-center hover:scale-110 transition-transform active:scale-95 border-2 border-white relative"
+            className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-tr from-[#ff4500] via-[#ff5722] to-[#ff6a00] text-white shadow-xl shadow-orange-600/40 flex items-center justify-center hover:scale-110 transition-transform active:scale-95 border-2 border-white relative"
             title="محادثات العملاء والسائقين"
           >
             <MessageSquare className="h-7 w-7" />

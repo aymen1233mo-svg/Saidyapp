@@ -657,7 +657,7 @@ export default function HomePage() {
             <MapPin className="h-3.5 w-3.5 shrink-0" />
             <span>متابعة الطلبات</span>
             {activeOrdersList.length > 0 && (
-              <span className="bg-[#FF6B00] text-white text-[10px] rounded-full h-4.5 min-w-[18px] px-1 flex items-center justify-center font-black tabular-nums">
+              <span className="bg-[#FF6B00] text-white text-[10px] rounded-full h-[18px] min-w-[18px] px-1 flex items-center justify-center font-black tabular-nums">
                 {activeOrdersList.length}
               </span>
             )}
@@ -811,7 +811,7 @@ export default function HomePage() {
                     className="w-full h-12 px-4 rounded-2xl bg-[#F4F8FF] hover:bg-blue-50 border border-blue-100 flex items-center justify-between gap-2 text-right transition-colors"
                   >
                     <div className="flex items-center gap-2.5 min-w-0">
-                      <MapPin className="h-4.5 w-4.5 text-[#FF6B00] shrink-0" />
+                      <MapPin className="h-[18px] w-[18px] text-[#FF6B00] shrink-0" />
                       <span className="text-xs sm:text-sm font-bold text-slate-700 truncate">
                         {deliveryAddress || 'اختر موقع التوصيل على الخريطة'}
                       </span>
@@ -885,7 +885,7 @@ export default function HomePage() {
                 <Button
                   type="submit"
                   disabled={quickOrderMutation.isPending}
-                  className="w-full h-13 rounded-full bg-gradient-to-r from-[#FF9800] via-[#FF7300] to-[#FF5500] hover:brightness-105 text-white font-black text-base shadow-[0_10px_24px_rgba(255,107,0,0.3)] flex items-center justify-center gap-2.5 transition-all active:scale-[0.99]"
+                  className="w-full h-[52px] rounded-full bg-gradient-to-r from-[#FF9800] via-[#FF7300] to-[#FF5500] hover:brightness-105 text-white font-black text-base shadow-[0_10px_24px_rgba(255,107,0,0.3)] flex items-center justify-center gap-2.5 transition-all active:scale-[0.99]"
                 >
                   {quickOrderMutation.isPending ? (
                     <>
@@ -1177,7 +1177,7 @@ export default function HomePage() {
                               }`}
                               onClick={(e) => toggleFavorite(e, restaurant.id)}
                             >
-                              <Heart className={`h-4.5 w-4.5 ${isFav ? 'fill-[#FF6B00]' : ''}`} />
+                              <Heart className={`h-[18px] w-[18px] ${isFav ? 'fill-[#FF6B00]' : ''}`} />
                             </button>
                             <Badge
                               className={`text-[10px] font-black px-2.5 py-0.5 rounded-full border-0 ${
@@ -1344,7 +1344,7 @@ export default function HomePage() {
                                   : 'bg-[#F4F8FF] border-blue-100 text-slate-400'
                             }`}
                           >
-                            <StepIcon className="h-4.5 w-4.5" />
+                            <StepIcon className="h-[18px] w-[18px]" />
                           </div>
                           <span
                             className={`text-[11px] mt-1.5 font-black leading-tight ${
@@ -1432,7 +1432,7 @@ export default function HomePage() {
                             className="w-10 h-10 rounded-full bg-[#0B5ED7] text-white flex items-center justify-center shadow-sm hover:bg-[#0950BA]"
                             aria-label="اتصال بالمندوب"
                           >
-                            <Phone className="h-4.5 w-4.5" />
+                            <Phone className="h-[18px] w-[18px]" />
                           </button>
                         )}
                         <button
@@ -1441,7 +1441,7 @@ export default function HomePage() {
                           className="w-10 h-10 rounded-full bg-white border border-blue-200 text-[#0B5ED7] flex items-center justify-center shadow-2xs hover:bg-blue-50"
                           aria-label="مراسلة المندوب"
                         >
-                          <MessageCircle className="h-4.5 w-4.5" />
+                          <MessageCircle className="h-[18px] w-[18px]" />
                         </button>
                       </div>
                     </div>

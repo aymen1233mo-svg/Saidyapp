@@ -387,7 +387,7 @@ export default function CustomerAuthPage() {
                 setActiveTab('login');
                 setShowOnboarding(false);
               }}
-              className="w-full h-13 rounded-full bg-white border-2 border-[#0B5ED7] text-[#0B5ED7] hover:bg-blue-50 font-black text-base shadow-sm flex items-center justify-between px-5 transition-all active:scale-[0.98]"
+              className="w-full h-[52px] rounded-full bg-white border-2 border-[#0B5ED7] text-[#0B5ED7] hover:bg-blue-50 font-black text-base shadow-sm flex items-center justify-between px-5 transition-all active:scale-[0.98]"
             >
               <span className="w-8" />
               <span>تسجيل الدخول</span>
@@ -450,7 +450,7 @@ export default function CustomerAuthPage() {
             </CardHeader>
             <CardContent className="bg-white px-6 sm:px-8 pt-6 pb-8">
               <Tabs value={activeTab} onValueChange={(val) => { setActiveTab(val); setShowOtpStep(false); setError(''); }} className="w-full">
-                <TabsList className="grid w-full grid-cols-2 mb-7 bg-[#EEF5FF] p-1.5 rounded-2xl h-13 border border-blue-100">
+                <TabsList className="grid w-full grid-cols-2 mb-7 bg-[#EEF5FF] p-1.5 rounded-2xl h-[52px] border border-blue-100">
                   <TabsTrigger
                     value="login"
                     className="rounded-xl data-[state=active]:bg-[#0B5ED7] data-[state=active]:text-white data-[state=active]:shadow-md font-black text-sm transition-all text-[#003B99]"
@@ -485,7 +485,7 @@ export default function CustomerAuthPage() {
                           onChange={(e) => setLoginIdentifier(e.target.value)}
                           placeholder="أدخل اسمك أو رقم هاتفك"
                           required
-                          className="pr-11 h-13 rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7] focus-visible:border-[#0B5ED7] transition-all text-base"
+                          className="pr-11 h-[52px] rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7] focus-visible:border-[#0B5ED7] transition-all text-base"
                         />
                       </div>
                     </div>
@@ -509,13 +509,13 @@ export default function CustomerAuthPage() {
                           onChange={(e) => setLoginPassword(e.target.value)}
                           placeholder="أدخل كلمة المرور"
                           required
-                          className="pr-11 h-13 rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7] focus-visible:border-[#0B5ED7] transition-all text-base"
+                          className="pr-11 h-[52px] rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7] focus-visible:border-[#0B5ED7] transition-all text-base"
                         />
                       </div>
                     </div>
                     <Button
                       type="submit"
-                      className="w-full h-13 rounded-full font-black text-lg mt-4 saidi-blue-gradient hover:brightness-110 text-white shadow-lg shadow-blue-600/20 transition-all active:scale-95"
+                      className="w-full h-[52px] rounded-full font-black text-lg mt-4 saidi-blue-gradient hover:brightness-110 text-white shadow-lg shadow-blue-600/20 transition-all active:scale-95"
                       disabled={loading}
                     >
                       {loading ? (
@@ -558,7 +558,7 @@ export default function CustomerAuthPage() {
                             onChange={(e) => setRegName(e.target.value)}
                             placeholder="مثال: محمد علي"
                             required
-                            className="pr-11 h-13 rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7]"
+                            className="pr-11 h-[52px] rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7]"
                           />
                         </div>
                       </div>
@@ -573,7 +573,7 @@ export default function CustomerAuthPage() {
                             onChange={(e) => setRegPhone(e.target.value)}
                             placeholder="77XXXXXXX"
                             required
-                            className="pr-11 h-13 rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7] text-left font-mono"
+                            className="pr-11 h-[52px] rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7] text-left font-mono"
                             dir="ltr"
                           />
                         </div>
@@ -589,13 +589,13 @@ export default function CustomerAuthPage() {
                             onChange={(e) => setRegPassword(e.target.value)}
                             placeholder="اختر كلمة مرور"
                             required
-                            className="pr-11 h-13 rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7]"
+                            className="pr-11 h-[52px] rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7]"
                           />
                         </div>
                       </div>
                       <Button
                         type="submit"
-                        className="w-full h-13 rounded-full font-black text-lg mt-4 saidi-orange-gradient hover:brightness-105 text-white shadow-lg shadow-orange-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        className="w-full h-[52px] rounded-full font-black text-lg mt-4 saidi-orange-gradient hover:brightness-105 text-white shadow-lg shadow-orange-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
                         disabled={loading}
                       >
                         {loading ? (
@@ -687,7 +687,7 @@ export default function CustomerAuthPage() {
 
                       <Button
                         type="submit"
-                        className="w-full h-13 rounded-full font-black text-lg saidi-orange-gradient hover:brightness-105 text-white shadow-lg shadow-orange-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        className="w-full h-[52px] rounded-full font-black text-lg saidi-orange-gradient hover:brightness-105 text-white shadow-lg shadow-orange-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
                         disabled={loading}
                       >
                         {loading ? (
@@ -782,7 +782,7 @@ export default function CustomerAuthPage() {
                   </div>
                   <Button
                     type="submit"
-                    className="w-full h-13 rounded-full font-black text-lg saidi-blue-gradient text-white"
+                    className="w-full h-[52px] rounded-full font-black text-lg saidi-blue-gradient text-white"
                     disabled={loading}
                   >
                     {loading ? <Loader2 className="animate-spin h-5 w-5" /> : 'إرسال رمز التحقق'}
@@ -839,7 +839,7 @@ export default function CustomerAuthPage() {
 
                   <Button
                     type="submit"
-                    className="w-full h-13 rounded-full font-black text-lg saidi-blue-gradient text-white"
+                    className="w-full h-[52px] rounded-full font-black text-lg saidi-blue-gradient text-white"
                     disabled={loading}
                   >
                     {loading ? <Loader2 className="animate-spin h-5 w-5" /> : 'تأكيد وتغيير كلمة المرور'}

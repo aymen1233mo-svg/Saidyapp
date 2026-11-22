@@ -229,9 +229,7 @@ export default function Layout({ children }: LayoutProps) {
             </button>
 
             <div className="relative flex flex-col items-center justify-center gap-2 mb-3">
-              <div className="bg-white/95 px-4 py-2 rounded-2xl shadow-lg">
-                <img src={sidebarLogoUrl} alt={appName} className="h-12 w-auto object-contain" />
-              </div>
+              <img src={sidebarLogoUrl} alt={appName} className="h-14 w-auto object-contain drop-shadow-[0_6px_14px_rgba(0,0,0,0.28)]" />
               <span className="text-[11px] font-bold text-white/90">{appSubtitle}</span>
             </div>
 
@@ -293,7 +291,7 @@ export default function Layout({ children }: LayoutProps) {
                         ? 'bg-gradient-to-br from-[#0B5ED7] to-[#0046B8] text-white shadow-md'
                         : 'bg-blue-50 text-[#0B5ED7]'
                     }`}>
-                      <Icon className="h-4.5 w-4.5" />
+                      <Icon className="h-[18px] w-[18px]" />
                     </div>
                     <span className={`text-sm flex-1 ${language === 'ar' ? 'text-right' : 'text-left'} ${isActive ? 'font-black text-[#0B5ED7]' : 'font-bold text-slate-700'}`}>
                       {item.label}
@@ -323,7 +321,7 @@ export default function Layout({ children }: LayoutProps) {
                 data-testid="button-change-city"
               >
                 <div className="w-9 h-9 flex items-center justify-center rounded-xl flex-shrink-0 bg-gradient-to-br from-[#0B5ED7] to-[#0046B8] text-white shadow-xs group-hover:scale-105 transition-transform">
-                  <MapPin className="h-4.5 w-4.5" />
+                  <MapPin className="h-[18px] w-[18px]" />
                 </div>
                 <div className={`flex-1 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                   <span className="text-xs font-black text-slate-800 flex items-center gap-1">
@@ -346,7 +344,7 @@ export default function Layout({ children }: LayoutProps) {
               data-testid="button-toggle-language"
             >
               <div className="w-9 h-9 flex items-center justify-center rounded-xl flex-shrink-0 bg-blue-50 text-[#0B5ED7]">
-                <Globe className="h-4.5 w-4.5" />
+                <Globe className="h-[18px] w-[18px]" />
               </div>
               <div className={`flex-1 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                 <span className="text-sm font-bold text-slate-700 block">
@@ -371,7 +369,7 @@ export default function Layout({ children }: LayoutProps) {
                   className="w-11 h-11 flex items-center justify-center rounded-2xl bg-blue-50 border border-blue-100 hover:bg-blue-100 shadow-xs transition-all"
                   data-testid="button-share"
                 >
-                  <Share2 className="h-4.5 w-4.5 text-[#0B5ED7]" />
+                  <Share2 className="h-[18px] w-[18px] text-[#0B5ED7]" />
                 </button>
               )}
               {showContactButton && (
@@ -406,7 +404,7 @@ export default function Layout({ children }: LayoutProps) {
             <div className="grid gap-3">
               <Button
                 variant="outline"
-                className="h-18 flex items-center justify-between px-5 rounded-2xl border-2 border-emerald-100 hover:bg-emerald-50 hover:border-emerald-300 group transition-all"
+                className="h-[72px] flex items-center justify-between px-5 rounded-2xl border-2 border-emerald-100 hover:bg-emerald-50 hover:border-emerald-300 group transition-all"
                 onClick={() => { window.open(whatsappLink, '_blank'); setSupportOpen(false); }}
               >
                 <div className="bg-emerald-100 p-2.5 rounded-xl group-hover:bg-emerald-200 transition-colors">
@@ -421,7 +419,7 @@ export default function Layout({ children }: LayoutProps) {
 
               <Button
                 variant="outline"
-                className="h-18 flex items-center justify-between px-5 rounded-2xl border-2 border-blue-100 hover:bg-blue-50 hover:border-blue-300 group transition-all"
+                className="h-[72px] flex items-center justify-between px-5 rounded-2xl border-2 border-blue-100 hover:bg-blue-50 hover:border-blue-300 group transition-all"
                 onClick={() => { window.location.href = phoneLink; setSupportOpen(false); }}
               >
                 <div className="bg-blue-100 p-2.5 rounded-xl group-hover:bg-blue-200 transition-colors">
@@ -585,11 +583,11 @@ export default function Layout({ children }: LayoutProps) {
             }
             setAdminChatOpen(true);
           }}
-          className="group relative flex items-center justify-center p-0 bg-transparent border-0 outline-none hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer"
+          className="group relative w-12 h-12 md:w-14 md:h-14 rounded-full shrink-0 flex items-center justify-center p-0 bg-transparent border-0 outline-none hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer"
           title={language === 'ar' ? 'مساعد الصايدي توصيل والمحادثات' : 'Al-Saidi Delivery Live Chat'}
         >
-          <div className="relative">
-            <AssistantMascotIcon className="w-13 h-13 md:w-15 md:h-15" />
+          <div className="relative w-12 h-12 md:w-14 md:h-14 shrink-0">
+            <AssistantMascotIcon className="w-12 h-12 md:w-14 md:h-14" />
             {unreadChatCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-[#FF5500] text-white text-[10px] font-black rounded-full min-w-[20px] h-[20px] px-1 flex items-center justify-center border-2 border-white shadow-md animate-pulse">
                 {unreadChatCount > 9 ? '9+' : unreadChatCount}
