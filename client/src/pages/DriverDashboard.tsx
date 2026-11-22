@@ -485,7 +485,7 @@ function SidebarContent({ activeTab, onTabChange, availableOrders, myOrders }: a
     <div className="h-full flex flex-col">
       <div className="p-6 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
         <h2 className="text-xl font-bold text-gray-900">📍 تطبيق السائق</h2>
-        <p className="text-sm text-gray-600 font-bold">نظام السريع ون للتوصيل</p>
+        <p className="text-sm text-gray-600 font-bold">نظام الصايدي توصيل</p>
       </div>
 
       <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
@@ -735,7 +735,7 @@ function OrderCard({ order, isLoading, onAccept, onStatusUpdate, actionType, isS
               </a>
               <a
                 href={`tel:${adminPhone}`}
-                className="flex flex-col items-center justify-center gap-2 bg-[#F05215] text-white p-4 rounded-2xl font-black hover:bg-[#C03A0A] transition-all shadow-lg active:scale-95"
+                className="flex flex-col items-center justify-center gap-2 bg-[#FF6B00] text-white p-4 rounded-2xl font-black hover:bg-[#E05A00] transition-all shadow-lg active:scale-95"
               >
                 <User size={24} />
                 <span className="text-xs">اتصال بالإدارة</span>

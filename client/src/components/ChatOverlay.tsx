@@ -121,7 +121,7 @@ export default function ChatOverlay({
           adminConversation: {
             id: 'admin',
             type: 'admin',
-            title: userType === 'driver' ? 'إدارة سريع ون (الدعم والعمليات)' : 'خدمة عملاء سريع ون (الإدارة)',
+            title: userType === 'driver' ? 'إدارة الصايدي توصيل (الدعم والعمليات)' : 'خدمة عملاء الصايدي توصيل (الإدارة)',
             subtitle: 'تواصل مباشر مع فريق الإدارة',
             unreadCount: 0,
             participantName: 'فريق الإدارة',
@@ -143,7 +143,7 @@ export default function ChatOverlay({
     return {
       id: 'admin',
       type: 'admin',
-      title: raw?.title || (userType === 'driver' ? 'إدارة سريع ون (الدعم والعمليات)' : 'خدمة عملاء سريع ون (الإدارة)'),
+      title: raw?.title || (userType === 'driver' ? 'إدارة الصايدي توصيل (الدعم والعمليات)' : 'خدمة عملاء الصايدي توصيل (الإدارة)'),
       subtitle: raw?.subtitle || 'تواصل مباشر مع فريق الإدارة',
       participantName: 'فريق الدعم والإدارة',
       unreadCount: raw?.unreadCount || 0,
@@ -164,7 +164,7 @@ export default function ChatOverlay({
       subtitle: c.subtitle,
       participantName: c.participantName || (userType === 'customer' ? 'كابتن التوصيل' : 'العميل'),
       participantPhone: c.participantPhone || '',
-      participantRole: c.participantRole || (userType === 'customer' ? 'كابتن سريع ون' : 'صاحب الطلب'),
+      participantRole: c.participantRole || (userType === 'customer' ? 'كابتن الصايدي توصيل' : 'صاحب الطلب'),
       isOnline: !!c.isOnline,
       participantStatus: c.participantStatus || (c.isOnline ? 'متصل' : 'مغلق'),
       unreadCount: c.unreadCount || 0,
@@ -440,19 +440,19 @@ export default function ChatOverlay({
       >
         {/* ── حالة العرض 1: قائمة المحادثات (اختيار مراسلة الإدارة أو السائق/العميل) ── */}
         {!selectedConv ? (
-          <div className="flex flex-col h-full bg-[#fdfaf7]">
+          <div className="flex flex-col h-full bg-[#F4F8FF]">
             
-            {/* Header - System Orange-Red */}
-            <div className="bg-gradient-to-r from-orange-600 via-orange-500 to-red-600 p-4 text-white flex items-center justify-between shadow-md shrink-0">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white shadow-inner">
+            {/* Header - Al-Saidi Royal Blue */}
+            <div className="bg-gradient-to-r from-[#0B5ED7] via-[#0852C1] to-[#003B99] p-4 text-white flex items-center justify-between shadow-md shrink-0 relative overflow-hidden">
+              <div className="flex items-center gap-3 relative z-10">
+                <div className="w-10 h-10 rounded-full bg-white/15 border border-white/25 flex items-center justify-center text-white shadow-inner">
                   <MessageCircle className="h-5 w-5" />
                 </div>
                 <div>
                   <div className="flex items-center gap-1.5">
                     <h2 className="font-bold text-sm leading-tight">الدردشات والمراسلات</h2>
-                    <span className="bg-white/20 text-white border border-white/30 text-[10px] font-bold px-1.5 py-0.2 rounded-full">
-                      سريع ون
+                    <span className="bg-[#FF6B00] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+                      الصايدي توصيل
                     </span>
                   </div>
                   <p className="text-[11px] text-white/90 mt-0.5">
@@ -463,9 +463,9 @@ export default function ChatOverlay({
                 </div>
               </div>
 
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1 relative z-10">
                 {totalUnread > 0 && (
-                  <span className="bg-white text-red-600 text-[11px] font-black px-2 py-0.5 rounded-full shadow-sm animate-pulse">
+                  <span className="bg-[#FF6B00] text-white text-[11px] font-black px-2 py-0.5 rounded-full shadow-sm animate-pulse">
                     {totalUnread} جديد
                   </span>
                 )}
@@ -480,12 +480,12 @@ export default function ChatOverlay({
             </div>
 
             {/* Content List */}
-            <div className="flex-1 overflow-y-auto divide-y divide-gray-100 bg-white">
+            <div className="flex-1 overflow-y-auto divide-y divide-blue-50 bg-white">
               
               {/* قسم الدعم والإدارة */}
-              <div className="p-2 bg-orange-50/50 border-b border-orange-100 flex items-center justify-between">
-                <span className="text-[11px] font-bold text-orange-800">الدعم المباشر والرسمي</span>
-                <span className="text-[10px] text-orange-700 bg-orange-100/70 border border-orange-200 px-1.5 py-0.5 rounded-full font-semibold">
+              <div className="p-2.5 bg-[#F4F8FF] border-b border-blue-100 flex items-center justify-between">
+                <span className="text-[11px] font-bold text-[#003B99]">الدعم المباشر والرسمي</span>
+                <span className="text-[10px] text-[#0B5ED7] bg-blue-100/70 border border-blue-200 px-2 py-0.5 rounded-full font-semibold">
                   متاح 24/7
                 </span>
               </div>
@@ -493,10 +493,10 @@ export default function ChatOverlay({
               {/* 1. خيار مراسلة الإدارة */}
               <button
                 onClick={() => handleSelectConversation(adminConversation)}
-                className="w-full p-3.5 flex items-center gap-3 hover:bg-orange-50/30 transition-colors text-right relative group"
+                className="w-full p-3.5 flex items-center gap-3 hover:bg-blue-50/40 transition-colors text-right relative group"
               >
                 <div className="relative shrink-0">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-orange-600 to-red-600 text-white flex items-center justify-center shadow-md">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-[#0B5ED7] to-[#003B99] text-white flex items-center justify-center shadow-md">
                     <Bot className="h-6 w-6" />
                   </div>
                   <span className="absolute bottom-0 left-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full shadow-sm" />
@@ -520,32 +520,32 @@ export default function ChatOverlay({
                     </p>
 
                     {adminConversation.unreadCount > 0 && (
-                      <span className="bg-gradient-to-r from-orange-600 to-red-600 text-white text-[11px] font-black min-w-[22px] h-5 px-1.5 rounded-full flex items-center justify-center shrink-0 shadow-sm animate-pulse">
+                      <span className="bg-[#FF6B00] text-white text-[11px] font-black min-w-[22px] h-5 px-1.5 rounded-full flex items-center justify-center shrink-0 shadow-sm animate-pulse">
                         {adminConversation.unreadCount}
                       </span>
                     )}
                   </div>
 
                   <div className="flex items-center gap-1 mt-1">
-                    <span className="text-[10px] text-orange-800 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded font-semibold flex items-center gap-1">
-                      <Shield className="h-3 w-3 text-orange-600" />
+                    <span className="text-[10px] text-[#003B99] bg-blue-50 border border-blue-200 px-2 py-0.5 rounded font-semibold flex items-center gap-1">
+                      <Shield className="h-3 w-3 text-[#0B5ED7]" />
                       إدارة التطبيق
                     </span>
                   </div>
                 </div>
 
-                <ChevronLeft className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors shrink-0" />
+                <ChevronLeft className="h-4 w-4 text-gray-400 group-hover:text-[#0B5ED7] transition-colors shrink-0" />
               </button>
 
               {/* قسم الطلبات النشطة (السائق أو العميل) */}
-              <div className="p-2 bg-gray-50 border-y border-gray-100 flex items-center justify-between mt-1">
-                <span className="text-[11px] font-bold text-gray-500">
+              <div className="p-2.5 bg-[#F8FAFF] border-y border-blue-50 flex items-center justify-between mt-1">
+                <span className="text-[11px] font-bold text-gray-600">
                   {userType === 'customer' 
                     ? 'طلباتك النشطة (مراسلة الكابتن)' 
                     : 'طلباتك المستلمة (مراسلة العميل)'}
                 </span>
                 {orderConversations.length > 0 && (
-                  <span className="text-[10px] text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded-full font-semibold">
+                  <span className="text-[10px] text-[#0B5ED7] bg-blue-50 px-2 py-0.5 rounded-full font-semibold border border-blue-100">
                     {orderConversations.length} نشط
                   </span>
                 )}
@@ -557,11 +557,11 @@ export default function ChatOverlay({
                   <button
                     key={conv.id}
                     onClick={() => handleSelectConversation(conv)}
-                    className="w-full p-3.5 flex items-center gap-3 hover:bg-gray-50 transition-colors text-right relative group"
+                    className="w-full p-3.5 flex items-center gap-3 hover:bg-blue-50/30 transition-colors text-right relative group"
                   >
                     <div className="relative shrink-0">
                       <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-md ${
-                        userType === 'customer' ? 'bg-[#ff7a00]' : 'bg-[#0070ba]'
+                        userType === 'customer' ? 'bg-gradient-to-tr from-[#FF6B00] to-[#FF8533]' : 'bg-gradient-to-tr from-[#0B5ED7] to-[#003B99]'
                       }`}>
                         {userType === 'customer' ? (
                           <Truck className="h-6 w-6" />
@@ -592,23 +592,23 @@ export default function ChatOverlay({
                         </p>
 
                         {conv.unreadCount > 0 && (
-                          <span className="bg-gradient-to-r from-orange-600 to-red-600 text-white text-[11px] font-black min-w-[22px] h-5 px-1.5 rounded-full flex items-center justify-center shrink-0 shadow-sm animate-pulse">
+                          <span className="bg-[#FF6B00] text-white text-[11px] font-black min-w-[22px] h-5 px-1.5 rounded-full flex items-center justify-center shrink-0 shadow-sm animate-pulse">
                             {conv.unreadCount}
                           </span>
                         )}
                       </div>
 
                       <div className="flex items-center gap-1.5 mt-1 text-[10px]">
-                        <span className="bg-orange-50 text-orange-700 font-bold px-1.5 py-0.2 rounded">
+                        <span className="bg-blue-50 text-[#0B5ED7] font-bold px-1.5 py-0.5 rounded">
                           طلب #{conv.orderNumber}
                         </span>
                         {conv.isOnline ? (
-                          <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded-full font-bold flex items-center gap-1">
+                          <span className="text-emerald-700 bg-emerald-50 border border-emerald-200 px-1.5 py-0.5 rounded-full font-bold flex items-center gap-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                             متصل الآن
                           </span>
                         ) : (
-                          <span className="text-gray-500 bg-gray-100 border border-gray-200 px-1.5 py-0.2 rounded-full font-medium flex items-center gap-1">
+                          <span className="text-gray-500 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded-full font-medium flex items-center gap-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
                             مغلق
                           </span>
@@ -621,7 +621,7 @@ export default function ChatOverlay({
                       </div>
                     </div>
 
-                    <ChevronLeft className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-colors shrink-0" />
+                    <ChevronLeft className="h-4 w-4 text-gray-400 group-hover:text-[#0B5ED7] transition-colors shrink-0" />
                   </button>
                 ))
               ) : (
@@ -644,16 +644,16 @@ export default function ChatOverlay({
             </div>
 
             {/* Bottom info banner */}
-            <div className="p-2.5 bg-gray-50 border-t border-gray-200 text-center text-[10px] text-gray-500">
-              رسائل آمنة ومشفرة على مدار الساعة عبر منصة سريع ون
+            <div className="p-2.5 bg-[#F4F8FF] border-t border-blue-100 text-center text-[10px] text-[#003B99] font-medium">
+              رسائل آمنة ومشفرة على مدار الساعة عبر منصة الصايدي توصيل
             </div>
           </div>
         ) : (
           /* ── حالة العرض 2: شاشة المحادثة المحددة (سواء الإدارة أو الكابتن أو العميل) ── */
           <div className="flex flex-col h-full">
             
-            {/* Header with Back Button - System Orange-Red */}
-            <div className="bg-gradient-to-r from-orange-600 via-orange-500 to-red-600 p-3 text-white flex items-center justify-between shadow-md shrink-0">
+            {/* Header with Back Button - Al-Saidi Royal Blue */}
+            <div className="bg-gradient-to-r from-[#0B5ED7] via-[#0852C1] to-[#003B99] p-3 text-white flex items-center justify-between shadow-md shrink-0">
               <div className="flex items-center gap-2.5 min-w-0">
                 {/* Back Button */}
                 <button
@@ -669,7 +669,7 @@ export default function ChatOverlay({
                   <div className={`w-9 h-9 rounded-full flex items-center justify-center text-white shadow-inner ${
                     selectedConv.type === 'admin' 
                       ? 'bg-white/20' 
-                      : (userType === 'customer' ? 'bg-[#ff7a00]' : 'bg-[#c2410c]')
+                      : (userType === 'customer' ? 'bg-[#FF6B00]' : 'bg-[#084298]')
                   }`}>
                     {selectedConv.type === 'admin' ? (
                       <Bot className="h-5 w-5" />
@@ -677,7 +677,7 @@ export default function ChatOverlay({
                       userType === 'customer' ? <Truck className="h-5 w-5" /> : <User className="h-5 w-5" />
                     )}
                   </div>
-                  <span className={`absolute bottom-0 left-0 w-2.5 h-2.5 border-2 border-orange-600 rounded-full ${
+                  <span className={`absolute bottom-0 left-0 w-2.5 h-2.5 border-2 border-[#0B5ED7] rounded-full ${
                     isCurrentTargetOnline ? 'bg-emerald-400' : 'bg-gray-400'
                   }`} />
                 </div>
@@ -688,8 +688,8 @@ export default function ChatOverlay({
                     <p className="font-bold text-xs truncate leading-tight">
                       {selectedConv.title}
                     </p>
-                    <span className="bg-white/20 text-white border border-white/30 text-[9px] font-bold px-1 rounded-full shrink-0">
-                      سريع ون
+                    <span className="bg-[#FF6B00] text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full shrink-0">
+                      الصايدي توصيل
                     </span>
                   </div>
                   <p className="text-[10px] text-white/90 flex items-center gap-1 mt-0.5 truncate">
@@ -745,23 +745,23 @@ export default function ChatOverlay({
               </div>
             </div>
 
-            {/* Messages container - SareeOne System Wallpaper */}
+            {/* Messages container - Al-Saidi Soft Sky Wallpaper */}
             <div 
               ref={scrollRef}
               className="flex-1 overflow-y-auto p-3.5 space-y-2.5"
               style={{
-                backgroundImage: 'radial-gradient(#fed7aa 1px, transparent 1px)',
+                backgroundImage: 'radial-gradient(#bfdbfe 1px, transparent 1px)',
                 backgroundSize: '16px 16px',
-                backgroundColor: '#fffaf8'
+                backgroundColor: '#F4F8FF'
               }}
             >
               {isMessagesLoading && activeMessages.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
-                  <Loader2 className="h-7 w-7 animate-spin text-orange-600" />
+                  <Loader2 className="h-7 w-7 animate-spin text-[#0B5ED7]" />
                 </div>
               ) : activeMessages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-center p-5 bg-white/90 backdrop-blur rounded-2xl border border-orange-100 shadow-sm max-w-[320px] mx-auto">
-                  <div className="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-2">
+                <div className="flex flex-col items-center justify-center h-full text-center p-5 bg-white/95 backdrop-blur rounded-2xl border border-blue-100 shadow-sm max-w-[320px] mx-auto">
+                  <div className="w-12 h-12 rounded-full bg-blue-50 text-[#0B5ED7] flex items-center justify-center mb-2">
                     <MessageCircle className="h-6 w-6" />
                   </div>
                   <p className="text-xs font-bold text-gray-800">
@@ -778,7 +778,7 @@ export default function ChatOverlay({
                           setMessage(chip);
                           sendMessageMutation.mutate(chip);
                         }}
-                        className="text-[10px] bg-white text-gray-700 border border-orange-200 hover:bg-orange-50 hover:text-orange-600 px-2 py-1 rounded-full transition-colors"
+                        className="text-[10px] bg-white text-gray-700 border border-blue-200 hover:bg-blue-50 hover:text-[#0B5ED7] px-2 py-1 rounded-full transition-colors"
                       >
                         {chip}
                       </button>
@@ -797,32 +797,32 @@ export default function ChatOverlay({
                     >
                       <div className={`max-w-[85%] p-2.5 rounded-2xl shadow-sm text-xs leading-relaxed relative ${
                         isMe 
-                          ? 'bg-gradient-to-r from-orange-600 to-red-500 text-white rounded-tr-none border border-orange-500 shadow-xs' 
-                          : 'bg-white text-gray-900 border border-gray-200 rounded-tl-none'
+                          ? 'bg-gradient-to-r from-[#0B5ED7] to-[#0852C1] text-white rounded-tr-none border border-[#0B5ED7] shadow-xs' 
+                          : 'bg-white text-gray-900 border border-blue-100 rounded-tl-none'
                       }`}>
                         {!isMe && (
-                          <p className="text-[10px] font-bold text-orange-700 mb-0.5">
+                          <p className="text-[10px] font-bold text-[#0B5ED7] mb-0.5">
                             {selectedConv.type === 'admin' 
-                              ? 'فريق دعم سريع ون (الإدارة)' 
+                              ? 'فريق دعم الصايدي توصيل (الإدارة)' 
                               : selectedConv.participantName}
                           </p>
                         )}
                         <p className="whitespace-pre-wrap break-words">{msg.content}</p>
-                        <div className={`flex items-center gap-1 mt-1 text-[9px] justify-end select-none ${isMe ? 'text-orange-100' : 'text-gray-400'}`}>
+                        <div className={`flex items-center gap-1 mt-1 text-[9px] justify-end select-none ${isMe ? 'text-blue-100' : 'text-gray-400'}`}>
                           <span>
                             {new Date(msg.createdAt).toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' })}
                           </span>
                           {isMe && (
                             msg.isRead ? (
-                              <span className="text-sky-200 font-black tracking-tighter text-[11px]" title="تمت القراءة (صحين أزرق)">
+                              <span className="text-[#FF8C00] font-black tracking-tighter text-[11px]" title="تمت القراءة">
                                 ✓✓
                               </span>
                             ) : msg.isDelivered ? (
-                              <span className="text-white font-black tracking-tighter text-[11px]" title="تم الاستلام في التطبيق (صحين غامقين)">
+                              <span className="text-white font-black tracking-tighter text-[11px]" title="تم الاستلام في التطبيق">
                                 ✓✓
                               </span>
                             ) : (
-                              <span className="text-orange-200 font-bold text-[11px]" title="تم الإرسال - الطرف الآخر مغلق (صح واحدة)">
+                              <span className="text-blue-200 font-bold text-[11px]" title="تم الإرسال">
                                 ✓
                               </span>
                             )
@@ -835,19 +835,19 @@ export default function ChatOverlay({
               )}
             </div>
 
-            {/* Input area - System Orange Bar */}
-            <form onSubmit={handleSend} className="p-2.5 border-t border-orange-100 bg-[#fff8f5] flex items-center gap-2 shrink-0">
+            {/* Input area - Al-Saidi Soft Sky Bar */}
+            <form onSubmit={handleSend} className="p-2.5 border-t border-blue-100 bg-[#F4F8FF] flex items-center gap-2 shrink-0">
               <Input 
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder={`اكتب رسالة لـ ${selectedConv.participantName}...`}
-                className="rounded-full border border-orange-200 bg-white focus-visible:ring-1 focus-visible:ring-orange-500 text-xs h-10 px-4 shadow-inner"
+                className="rounded-full border border-blue-200 bg-white focus-visible:ring-1 focus-visible:ring-[#0B5ED7] text-xs h-10 px-4 shadow-inner"
                 disabled={sendMessageMutation.isPending}
               />
               <Button 
                 type="submit" 
                 disabled={!message.trim() || sendMessageMutation.isPending}
-                className="rounded-full h-10 w-10 p-0 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shrink-0 shadow-md transition-all active:scale-95"
+                className="rounded-full h-10 w-10 p-0 bg-gradient-to-r from-[#FF6B00] to-[#FF5500] hover:from-[#e66000] hover:to-[#e04800] text-white shrink-0 shadow-md transition-all active:scale-95"
               >
                 {sendMessageMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </Button>

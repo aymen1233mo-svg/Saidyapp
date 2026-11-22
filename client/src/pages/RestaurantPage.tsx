@@ -246,7 +246,7 @@ function ReviewsListModal({
               onClose();
               onOpenRate();
             }}
-            className="text-xs font-black bg-[#FF5722] hover:bg-[#F4511E] text-white px-3.5 py-2 rounded-xl shadow-xs transition"
+            className="text-xs font-black bg-[#0B5ED7] hover:bg-[#094db5] text-white px-3.5 py-2 rounded-xl shadow-xs transition"
           >
             {language === 'ar' ? 'أضف تقييمك' : 'Write Review'}
           </button>
@@ -489,18 +489,18 @@ export default function RestaurantPage() {
   const currencySymbol = t('currency_symbol');
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-28" dir={dir}>
+    <div className="min-h-screen bg-[#F4F8FF] pb-28" dir={dir}>
 
       {/* ── Sticky Header - back button + name only ── */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-orange-100 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
-        <div className="flex items-center gap-3 px-3.5 py-2.5">
+      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-blue-100 shadow-[0_2px_12px_rgba(11,94,215,0.05)]">
+        <div className="flex items-center gap-3 px-3.5 py-2.5 max-w-5xl mx-auto">
           <button
             onClick={() => setLocation('/')}
-            className="w-9 h-9 flex items-center justify-center rounded-xl bg-orange-50 hover:bg-orange-100 active:scale-95 transition flex-shrink-0 text-[#FF5722]"
+            className="w-9 h-9 flex items-center justify-center rounded-xl bg-blue-50 hover:bg-blue-100 active:scale-95 transition flex-shrink-0 text-[#0B5ED7]"
           >
             {isRTL ? <ArrowRight className="h-4 w-4" /> : <ArrowLeft className="h-4 w-4" />}
           </button>
-          <h1 className="flex-1 text-slate-900 text-base font-black truncate">
+          <h1 className="flex-1 text-[#003B99] text-base font-black truncate">
             {restaurant.name}
           </h1>
         </div>
@@ -515,14 +515,14 @@ export default function RestaurantPage() {
             />
           </div>
         ) : (
-          <div className="w-full h-32 bg-gradient-to-br from-orange-100/60 to-orange-50 flex items-center justify-center">
-            <UtensilsCrossed className="h-12 w-12 text-[#FF5722]/40" />
+          <div className="w-full h-32 bg-gradient-to-br from-blue-100/60 to-blue-50 flex items-center justify-center">
+            <UtensilsCrossed className="h-12 w-12 text-[#0B5ED7]/40" />
           </div>
         )}
       </div>
 
       {/* ── Info Card ── */}
-      <div className="mx-3.5 -mt-3 bg-white rounded-3xl shadow-[0_8px_24px_rgba(0,0,0,0.06)] border border-orange-100/80 p-4 z-10 relative">
+      <div className="mx-3.5 md:mx-auto max-w-5xl -mt-3 bg-white rounded-3xl shadow-[0_8px_24px_rgba(11,94,215,0.08)] border border-blue-100/80 p-4 z-10 relative">
         {/* Rating row - clickable */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-1.5">
@@ -555,7 +555,7 @@ export default function RestaurantPage() {
             <span className="text-[11px] text-slate-400 font-medium hidden sm:inline">{t('prices_match_store')}</span>
             <button
               onClick={() => setRatingOpen(true)}
-              className="text-[11px] font-black text-[#FF5722] hover:text-[#E64A19] bg-orange-50 hover:bg-orange-100 px-2.5 py-1 rounded-lg transition"
+              className="text-[11px] font-black text-[#0B5ED7] hover:text-[#003B99] bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-lg transition"
             >
               {t('rate_restaurant_title')}
             </button>
@@ -564,9 +564,9 @@ export default function RestaurantPage() {
 
         {/* Status + timing + favorite */}
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 bg-orange-50/60 rounded-xl px-3 py-1.5 border border-orange-100">
-            <Clock className="h-3.5 w-3.5 text-[#FF5722]" />
-            <span className="text-xs font-bold text-slate-700">
+          <div className="flex items-center gap-1.5 bg-[#F4F8FF] rounded-xl px-3 py-1.5 border border-blue-100">
+            <Clock className="h-3.5 w-3.5 text-[#0B5ED7]" />
+            <span className="text-xs font-bold text-[#003B99]">
               {t('order_takes')} {restaurant.deliveryTime || '40 - 60'} {t('minutes_unit')}
             </span>
           </div>
@@ -581,10 +581,10 @@ export default function RestaurantPage() {
             <button
               onClick={toggleRestFav}
               className={`w-9 h-9 flex items-center justify-center rounded-xl border transition active:scale-95 ${
-                isRestFav ? 'bg-orange-50 border-orange-200 text-[#FF5722]' : 'bg-white border-slate-200 text-slate-400 hover:text-[#FF5722]'
+                isRestFav ? 'bg-orange-50 border-orange-200 text-[#FF6B00]' : 'bg-white border-blue-100 text-slate-400 hover:text-[#FF6B00]'
               }`}
             >
-              <Heart className={`h-4 w-4 ${isRestFav ? 'fill-[#FF5722]' : ''}`} />
+              <Heart className={`h-4 w-4 ${isRestFav ? 'fill-[#FF6B00]' : ''}`} />
             </button>
           </div>
         </div>
@@ -598,7 +598,7 @@ export default function RestaurantPage() {
 
       {/* ── Closed alert ── */}
       {!orderStatus.canOrder && (
-        <div className="mx-3.5 mt-3 flex items-start gap-2 bg-red-50 border border-red-200 rounded-2xl p-3">
+        <div className="mx-3.5 md:mx-auto max-w-5xl mt-3 flex items-start gap-2 bg-red-50 border border-red-200 rounded-2xl p-3">
           <AlertTriangle className="h-4 w-4 text-red-500 shrink-0 mt-0.5" />
           <p className="text-red-700 text-xs font-bold">{orderStatus.message}</p>
         </div>
@@ -606,20 +606,20 @@ export default function RestaurantPage() {
 
       {/* ── Section Tabs ── */}
       {displaySections.length > 0 && (
-        <div className="mt-3 bg-white/95 backdrop-blur-md border-b border-orange-100 sticky top-[52px] z-30 shadow-sm">
-          <div className="flex items-center gap-2 px-3.5 py-2.5 overflow-x-auto no-scrollbar">
+        <div className="mt-3 bg-white/95 backdrop-blur-md border-b border-blue-100 sticky top-[52px] z-30 shadow-sm">
+          <div className="flex items-center gap-2 px-3.5 py-2.5 overflow-x-auto no-scrollbar max-w-5xl mx-auto">
             <button
               onClick={() => setSelectedSection('all')}
-              className={`flex-shrink-0 px-4 py-1.5 rounded-xl text-xs font-black transition-all whitespace-nowrap border flex items-center gap-1.5 ${
+              className={`flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-black transition-all whitespace-nowrap border flex items-center gap-1.5 ${
                 selectedSection === 'all'
-                  ? 'bg-gradient-to-r from-[#FF6E40] to-[#FF5722] text-white border-transparent shadow-sm shadow-orange-500/20'
-                  : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                  ? 'bg-[#0B5ED7] text-white border-transparent shadow-sm shadow-blue-600/20'
+                  : 'bg-[#F4F8FF] text-slate-600 border-blue-100 hover:bg-blue-50'
               }`}
             >
               <span>{t('all_categories')}</span>
               {discountOffers.length > 0 && (
                 <span className={`px-1.5 py-0.2 text-[10px] rounded-full font-black ${
-                  selectedSection === 'all' ? 'bg-white text-[#FF5722]' : 'bg-[#FF5722] text-white'
+                  selectedSection === 'all' ? 'bg-[#FF6B00] text-white' : 'bg-[#FF6B00] text-white'
                 }`}>
                   {t('offers_tag')}
                 </span>
@@ -631,17 +631,15 @@ export default function RestaurantPage() {
                 <button
                   key={sec.id}
                   onClick={() => setSelectedSection(sec.id)}
-                  className={`flex-shrink-0 px-4 py-1.5 rounded-xl text-xs font-black transition-all whitespace-nowrap border flex items-center gap-1.5 ${
+                  className={`flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-black transition-all whitespace-nowrap border flex items-center gap-1.5 ${
                     selectedSection === sec.id
-                      ? 'bg-gradient-to-r from-[#FF6E40] to-[#FF5722] text-white border-transparent shadow-sm shadow-orange-500/20'
-                      : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                      ? 'bg-[#0B5ED7] text-white border-transparent shadow-sm shadow-blue-600/20'
+                      : 'bg-[#F4F8FF] text-slate-600 border-blue-100 hover:bg-blue-50'
                   }`}
                 >
                   <span>{sec.name}</span>
                   {secOffer && (
-                    <span className={`px-1.5 py-0.2 text-[10px] rounded-full font-black ${
-                      selectedSection === sec.id ? 'bg-white text-[#FF5722]' : 'bg-[#FF5722] text-white'
-                    }`}>
+                    <span className="px-1.5 py-0.2 text-[10px] rounded-full font-black bg-[#FF6B00] text-white">
                       {secOffer.discountPercent ? `${secOffer.discountPercent}%` : t('offers_tag')}
                     </span>
                   )}
@@ -792,10 +790,10 @@ export default function RestaurantPage() {
       )}
 
       {/* ── Menu Items ── */}
-      <div className="px-3.5 pt-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+      <div className="px-3.5 pt-3 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
         {filteredItems.length === 0 && bundleOffers.length === 0 ? (
-          <div className="text-center py-16">
-            <UtensilsCrossed className="h-14 w-14 text-slate-200 mx-auto mb-3" />
+          <div className="col-span-full text-center py-16">
+            <UtensilsCrossed className="h-14 w-14 text-blue-200 mx-auto mb-3" />
             <p className="text-slate-400 font-bold text-sm">{t('no_items_in_section')}</p>
             {displaySections.length === 0 && menuItems.length === 0 && (
               <p className="text-slate-300 text-xs mt-1">{t('no_items_added_yet')}</p>
@@ -809,24 +807,22 @@ export default function RestaurantPage() {
             return (
               <div
                 key={item.id}
-                className={`bg-white rounded-2xl border border-orange-100/60 shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_20px_rgba(255,87,34,0.08)] transition-all overflow-hidden flex ${
+                className={`bg-white rounded-3xl border border-blue-100/80 shadow-[0_4px_16px_rgba(11,94,215,0.05)] hover:shadow-[0_8px_20px_rgba(11,94,215,0.12)] transition-all overflow-hidden flex ${
                   item.isAvailable === false ? 'opacity-60' : ''
                 }`}
               >
-                {/* Image */}
                 <div className="relative flex-shrink-0 w-28 h-28">
                   {item.image ? (
                     <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full bg-orange-50/40 flex items-center justify-center">
-                      <UtensilsCrossed className="h-9 w-9 text-slate-300" />
+                    <div className="w-full h-full bg-[#F4F8FF] flex items-center justify-center">
+                      <UtensilsCrossed className="h-9 w-9 text-blue-200" />
                     </div>
                   )}
-                  {/* Favorite heart on image */}
                   <button
                     onClick={e => toggleMealFav(e, item.id, item.name, item)}
                     className={`absolute top-1.5 left-1.5 w-7 h-7 flex items-center justify-center rounded-full shadow-sm border transition active:scale-95 ${
-                      isMealFav ? 'bg-[#FF5722] border-[#FF5722] text-white' : 'bg-white/90 backdrop-blur-xs border-slate-200 text-slate-400'
+                      isMealFav ? 'bg-[#FF6B00] border-[#FF6B00] text-white' : 'bg-white/90 backdrop-blur-xs border-slate-200 text-slate-400'
                     }`}
                   >
                     <Heart className={`h-3.5 w-3.5 ${isMealFav ? 'fill-white text-white' : 'text-slate-400'}`} />
@@ -840,7 +836,6 @@ export default function RestaurantPage() {
                   )}
                 </div>
 
-                {/* Content */}
                 <div className="flex-1 p-3 flex flex-col justify-between min-w-0">
                   <div>
                     <h3 className="font-black text-slate-900 text-sm leading-snug line-clamp-2">
@@ -857,35 +852,35 @@ export default function RestaurantPage() {
                     <div className="flex items-center gap-1">
                       {(item as any).discountPrice ? (
                         <>
-                          <span className="text-[#FF5722] font-black text-sm">{(item as any).discountPrice} {currencySymbol}</span>
+                          <span className="text-[#0B5ED7] font-black text-sm">{(item as any).discountPrice} {currencySymbol}</span>
                           <span className="text-slate-400 text-[11px] line-through">{item.price} {currencySymbol}</span>
                         </>
                       ) : (
-                        <span className="text-[#FF5722] font-black text-sm">{item.price} {currencySymbol}</span>
+                        <span className="text-[#0B5ED7] font-black text-sm">{item.price} {currencySymbol}</span>
                       )}
                     </div>
 
                     {item.isAvailable !== false && (
                       qty > 0 ? (
-                        <div className="flex items-center gap-1.5 bg-orange-50 border border-orange-100 rounded-full px-2 py-1">
+                        <div className="flex items-center gap-1.5 bg-[#F4F8FF] border border-blue-100 rounded-full px-2 py-1">
                           <button
                             onClick={() => removeItem(item.id)}
-                            className="w-6 h-6 bg-[#FF5722] rounded-full flex items-center justify-center text-white active:scale-95 transition shadow-xs"
+                            className="w-6 h-6 bg-[#0B5ED7] rounded-full flex items-center justify-center text-white active:scale-95 transition shadow-xs"
                           >
                             <Minus className="h-3 w-3" />
                           </button>
-                          <span className="text-[#FF5722] font-black text-sm w-4 text-center">{qty}</span>
+                          <span className="text-[#003B99] font-black text-sm w-4 text-center">{qty}</span>
                           <button
-                            onClick={() => addItem(item, item.restaurantId || restaurant.id, restaurant.name)}
-                            className="w-6 h-6 bg-[#FF5722] rounded-full flex items-center justify-center text-white active:scale-95 transition shadow-xs"
+                            onClick={() => handleAddItem(item)}
+                            className="w-6 h-6 bg-[#0B5ED7] rounded-full flex items-center justify-center text-white active:scale-95 transition shadow-xs"
                           >
                             <Plus className="h-3 w-3" />
                           </button>
                         </div>
                       ) : (
                         <button
-                          onClick={() => addItem(item, item.restaurantId || restaurant.id, restaurant.name)}
-                          className="flex items-center gap-1 bg-gradient-to-r from-[#FF6E40] to-[#FF5722] text-white text-xs font-black px-3.5 py-1.5 rounded-xl shadow-sm shadow-orange-500/20 active:scale-95 transition"
+                          onClick={() => handleAddItem(item)}
+                          className="flex items-center gap-1 saidi-orange-gradient text-white text-xs font-black px-3.5 py-1.5 rounded-full shadow-sm shadow-orange-500/20 active:scale-95 transition"
                         >
                           <Plus className="h-3.5 w-3.5" />
                           {t('add_to_cart')}

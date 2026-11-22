@@ -767,7 +767,7 @@ export class MemStorage {
         customerName: "فاطمة النهمي",
         customerPhone: "771234561",
         rating: 5,
-        comment: "الكنافة والبقلاوة روعة، شكراً لتطبيق السريع ون.",
+        comment: "الكنافة والبقلاوة روعة، شكراً لتطبيق الصايدي توصيل.",
         isApproved: true,
         createdAt: new Date(Date.now() - 86400000)
       },

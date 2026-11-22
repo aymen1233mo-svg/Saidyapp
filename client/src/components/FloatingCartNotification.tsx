@@ -46,30 +46,30 @@ export default function FloatingCartNotification() {
           exit={{ y: 100, opacity: 0 }}
           className="fixed bottom-20 left-4 right-4 z-[60] md:max-w-md md:mx-auto"
         >
-          <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex items-center p-3 gap-3">
-            <div className="bg-primary/10 p-2 rounded-xl">
-              <ShoppingBag className="h-6 w-6 text-primary" />
+          <div className="bg-white rounded-3xl shadow-2xl border border-blue-100 overflow-hidden flex items-center p-3 gap-3">
+            <div className="bg-blue-50 p-2.5 rounded-2xl">
+              <ShoppingBag className="h-6 w-6 text-[#0B5ED7]" />
             </div>
-            
-            <div className="flex-1 min-w-0" onClick={openCart}>
-              <h4 className="text-sm font-black text-gray-900 truncate">تم إضافة {lastItemName}</h4>
-              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-wider">
+
+            <div className="flex-1 min-w-0 cursor-pointer" onClick={openCart}>
+              <h4 className="text-sm font-black text-slate-900 truncate">تم إضافة {lastItemName}</h4>
+              <p className="text-[11px] text-slate-500 font-bold">
                 لديك {itemCount} عناصر في السلة • المجموع: {formatCurrency(state.subtotal)}
               </p>
             </div>
-            
+
             <div className="flex items-center gap-2">
-              <Button 
-                size="sm" 
-                variant="ghost" 
+              <Button
+                size="sm"
+                variant="ghost"
                 className="h-8 w-8 rounded-full p-0"
                 onClick={() => setIsVisible(false)}
               >
-                <X className="h-4 w-4 text-gray-400" />
+                <X className="h-4 w-4 text-slate-400" />
               </Button>
-              <Button 
-                size="sm" 
-                className="bg-primary hover:bg-primary/90 text-white rounded-xl px-4 h-9 font-black text-xs flex items-center gap-1 shadow-lg shadow-primary/20"
+              <Button
+                size="sm"
+                className="bg-gradient-to-r from-[#FF8A00] to-[#FF5500] hover:from-[#FF961A] hover:to-[#FF6000] text-white rounded-xl px-4 h-9 font-black text-xs flex items-center gap-1 shadow-md shadow-orange-500/20"
                 onClick={openCart}
               >
                 عرض السلة

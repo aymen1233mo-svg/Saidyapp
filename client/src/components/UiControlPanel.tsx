@@ -125,7 +125,7 @@ export function UiControlPanel() {
               <Input 
                 value={localSettings['app_name'] || ''} 
                 onChange={(e) => handleInputChange('app_name', e.target.value)}
-                placeholder="مثال: متجر السريع ون"
+                placeholder="مثال: الصايدي توصيل"
               />
               <Button onClick={() => handleSaveSetting('app_name')}>حفظ</Button>
             </div>
@@ -136,7 +136,7 @@ export function UiControlPanel() {
               <Input 
                 value={localSettings['app_subtitle'] || ''} 
                 onChange={(e) => handleInputChange('app_subtitle', e.target.value)}
-                placeholder="مثال: السريع ون"
+                placeholder="مثال: الصايدي توصيل"
               />
               <Button onClick={() => handleSaveSetting('app_subtitle')}>حفظ</Button>
             </div>

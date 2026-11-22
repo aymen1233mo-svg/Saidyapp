@@ -60,9 +60,9 @@ const deliveryCenterPinIcon = new L.Icon({
           <feDropShadow dx="0" dy="2" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.45"/>
         </filter>
       </defs>
-      <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 8 12 8 12s8-6.75 8-12c0-4.42-3.58-8-8-8z" fill="#F05215" stroke="#ffffff" stroke-width="2" filter="url(#pinShadow)"/>
+      <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 8 12 8 12s8-6.75 8-12c0-4.42-3.58-8-8-8z" fill="#0B5ED7" stroke="#ffffff" stroke-width="2" filter="url(#pinShadow)"/>
       <circle cx="12" cy="10" r="4.2" fill="#ffffff"/>
-      <circle cx="12" cy="10" r="2.3" fill="#F05215"/>
+      <circle cx="12" cy="10" r="2.3" fill="#0B5ED7"/>
     </svg>
   `),
   iconSize: [44, 44],
@@ -138,8 +138,8 @@ export default function GeoZoneOverviewMap({
             center={[storeLocation.lat, storeLocation.lng]}
             radius={deliveryRadiusKm * 1000}
             pathOptions={{
-              color: '#F05215',
-              fillColor: '#F05215',
+              color: '#0B5ED7',
+              fillColor: '#0B5ED7',
               fillOpacity: 0.12,
               weight: 2.5,
               dashArray: '6, 6'
@@ -147,7 +147,7 @@ export default function GeoZoneOverviewMap({
           >
             <Popup>
               <div className="text-right p-1.5 font-sans" dir="rtl">
-                <strong className="block font-bold text-sm text-[#F05215]">
+                <strong className="block font-bold text-sm text-[#0B5ED7]">
                   دائرة أقصى مسافة توصيل ({deliveryRadiusKm} كم)
                 </strong>
                 <p className="text-xs text-muted-foreground mt-0.5">
@@ -179,7 +179,7 @@ export default function GeoZoneOverviewMap({
           >
             <Popup>
               <div className="text-right p-1.5 font-sans" dir="rtl">
-                <span className="font-bold text-[#F05215] block text-sm">📍 دبوس مركز التوصيل (المتجر)</span>
+                <span className="font-bold text-[#0B5ED7] block text-sm">📍 دبوس مركز التوصيل (المتجر)</span>
                 {draggableStorePin ? (
                   <span className="text-xs text-muted-foreground block mt-0.5">
                     يمكنك سحب هذا الدبوس أو النقر على الخريطة لتغيير المركز

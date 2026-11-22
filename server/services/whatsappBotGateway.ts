@@ -50,7 +50,7 @@ class WhatsAppBotGatewayService {
         this.session = {
           status: 'connected',
           phoneNumber: savedPhone.value,
-          pushName: savedName?.value || 'سريع ون - بوت الواتساب',
+          pushName: savedName?.value || 'الصايدي توصيل - بوت الواتساب',
           platform: 'WhatsApp Web / Cloud Gateway',
           connectedAt: savedConnectedAt?.value || new Date().toISOString(),
           totalMessagesSent: parseInt(savedCount?.value || '0', 10) || 0,
@@ -87,7 +87,7 @@ class WhatsAppBotGatewayService {
 
     // Standard Universal WhatsApp Intent URI that never crashes WhatsApp scanner
     const targetPhone = phoneHint ? formatPhoneForWhatsApp(phoneHint) : '967777146387';
-    const safePayload = `https://wa.me/${targetPhone}?text=${encodeURIComponent(`سريع ون - تفعيل بوت الواتساب التلقائي (رمز الربط: ${pairingCode})`)}`;
+    const safePayload = `https://wa.me/${targetPhone}?text=${encodeURIComponent(`الصايدي توصيل - تفعيل بوت الواتساب التلقائي (رمز الربط: ${pairingCode})`)}`;
 
     const qrCodeDataUrl = await QRCode.toDataURL(safePayload, {
       errorCorrectionLevel: 'M',
@@ -115,14 +115,14 @@ class WhatsAppBotGatewayService {
   /**
    * تأكيد وتفعيل ربط الجلسة برقم محدد فوراً (الطريقة المباشرة المعتمدة والآمنة)
    */
-  public async confirmConnection(phoneNumber: string, pushName: string = 'سريع ون - بوت النظام'): Promise<WhatsAppBotSession> {
+  public async confirmConnection(phoneNumber: string, pushName: string = 'الصايدي توصيل - بوت النظام'): Promise<WhatsAppBotSession> {
     const cleanPhone = formatPhoneForWhatsApp(phoneNumber);
     const now = new Date().toISOString();
 
     this.session = {
       status: 'connected',
       phoneNumber: `+${cleanPhone}`,
-      pushName: pushName || 'سريع ون - بوت النظام',
+      pushName: pushName || 'الصايدي توصيل - بوت النظام',
       platform: 'WhatsApp Web & Automated Cloud Gateway',
       connectedAt: now,
       totalMessagesSent: this.session.totalMessagesSent || 0,
@@ -229,7 +229,7 @@ class WhatsAppBotGatewayService {
       ? 'تسجيل الدخول' 
       : 'تأكيد إنشاء الحساب';
 
-    const message = `*سريع ون | Saree One 🛵*\n\nرمز التحقق الخاص بك لـ ${actionText} هو:\n\n👉 *${code}* 👈\n\n⏰ الرمز صالح لمدة 5 دقائق.\n🔒 لا تشارك هذا الرمز مع أي شخص لسلامة حسابك.\n\nنتمنى لك تجربة ممتعة معنا! ✨`;
+    const message = `*الصايدي توصيل | Al-Saidi Delivery 🛵*\n\nرمز التحقق الخاص بك لـ ${actionText} هو:\n\n👉 *${code}* 👈\n\n⏰ الرمز صالح لمدة 5 دقائق.\n🔒 لا تشارك هذا الرمز مع أي شخص لسلامة حسابك.\n\nنتمنى لك تجربة ممتعة معنا! ✨`;
 
     return this.sendMessage({
       to: phone,
@@ -242,7 +242,7 @@ class WhatsAppBotGatewayService {
    * إرسال إشعار حالة الطلب
    */
   public async sendOrderStatusUpdate(phone: string, orderNumber: string, statusText: string, extraNotes?: string) {
-    const message = `*سريع ون | تحديث حالة الطلب 📦*\n\nطلبك رقم: *#${orderNumber}*\nالحالة الآن: *${statusText}*\n${extraNotes ? `ملاحظات: ${extraNotes}\n` : ''}\nيمكنك تتبع موقع السائق مباشرة من التطبيق.\nشكراً لاختيارك سريع ون! 🚀`;
+    const message = `*الصايدي توصيل | تحديث حالة الطلب 📦*\n\nطلبك رقم: *#${orderNumber}*\nالحالة الآن: *${statusText}*\n${extraNotes ? `ملاحظات: ${extraNotes}\n` : ''}\nيمكنك تتبع موقع السائق مباشرة من التطبيق.\nشكراً لاختيارك الصايدي توصيل! 🚀`;
 
     return this.sendMessage({
       to: phone,

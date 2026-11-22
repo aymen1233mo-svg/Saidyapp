@@ -408,7 +408,7 @@ function PayrollTable({ employees, uiSettings }: { employees?: Employee[]; uiSet
 
   const getSetting = (key: string, fb = '') => uiSettings?.find((s: any) => s.key === key)?.value || fb;
   const companyLogo = getSetting('invoice_company_logo') || getSetting('header_logo_url') || getSetting('sidebar_logo_url');
-  const companyName = getSetting('invoice_company_name', 'السريع ون');
+  const companyName = getSetting('invoice_company_name', 'الصايدي توصيل');
   const primaryColor = getSetting('invoice_primary_color', '#3b82f6');
   const headerText = getSetting('invoice_header_text', 'كشف حساب ومستند صرف رواتب');
   const companyAddress = getSetting('invoice_company_address', '');

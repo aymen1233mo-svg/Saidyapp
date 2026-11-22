@@ -34,8 +34,6 @@ export default function Profile() {
   const [shareModalOpen, setShareModalOpen] = useState(false);
   
   useEffect(() => {
-    // إذا كان المستخدم غير مسجل، نوجهه لصفحة تسجيل الدخول فوراً
-    // لا نسمح للمستخدم الضيف برؤية الملف الشخصي فارغاً
     if (!authLoading && !isAuthenticated) {
       setLocation('/auth');
     }
@@ -74,7 +72,7 @@ export default function Profile() {
         try {
           const response = await fetch(
             `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&accept-language=${language}`,
-            { headers: { 'User-Agent': 'AlSarieOne/1.0' } }
+            { headers: { 'User-Agent': 'AlSaidiDelivery/1.0' } }
           );
           const data = await response.json();
           if (data && data.display_name) {
@@ -179,10 +177,10 @@ export default function Profile() {
 
   if (authLoading || isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-[#F4F8FF]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">{t('loading')}</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0B5ED7] mx-auto mb-4"></div>
+          <p className="text-slate-600 font-bold">{t('loading')}</p>
         </div>
       </div>
     );
@@ -195,21 +193,21 @@ export default function Profile() {
   const supportWhatsapp = getSetting('support_whatsapp', '');
   const supportPhone = getSetting('support_phone', '');
   const shareUrl = getSetting('share_url', '');
-  const shareText = getSetting('share_text', 'السريع ون');
+  const shareText = getSetting('share_text', 'الصايدي توصيل');
 
   const profileStats = [
     { 
       icon: Receipt, 
       label: language === 'ar' ? 'إجمالي الطلبات' : 'Total Orders', 
       value: userOrders?.length?.toString() || '0', 
-      color: 'text-primary' 
+      color: 'text-[#0B5ED7]' 
     },
-    { icon: Star, label: language === 'ar' ? 'التقييم' : 'Rating', value: '4.8', color: 'text-yellow-500' },
+    { icon: Star, label: language === 'ar' ? 'التقييم' : 'Rating', value: '4.9', color: 'text-[#FF6B00]' },
     { 
       icon: Clock, 
       label: language === 'ar' ? 'عضو منذ' : 'Member Since', 
       value: (user as any)?.createdAt ? new Date((user as any).createdAt).toLocaleDateString(language === 'ar' ? 'ar-YE' : 'en-US', { month: 'short', year: 'numeric' }) : (language === 'ar' ? 'جديد' : 'New'), 
-      color: 'text-green-500' 
+      color: 'text-emerald-600' 
     },
   ];
 
@@ -243,8 +241,8 @@ export default function Profile() {
         if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
           try {
             await navigator.share({
-              title: getSetting('app_name', 'السريع ون'),
-              text: shareText || (language === 'ar' ? 'تسوق من السريع ون الآن!' : 'Shop from Saree One now!'),
+              title: getSetting('app_name', 'الصايدي توصيل'),
+              text: shareText || (language === 'ar' ? 'اطلب من الصايدي توصيل الآن!' : 'Order from Al-Saidi Delivery now!'),
               url: shareUrl || window.location.origin
             });
             return;
@@ -260,36 +258,36 @@ export default function Profile() {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex flex-col items-center mb-6 bg-white p-6 rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)]">
-          <div className="flex items-center gap-2">
-            <span className="text-3xl font-black text-[#FF5722]">السريع ون</span>
-            <span className="text-[10px] font-black text-[#FF5722] bg-orange-50 border border-orange-200 rounded-lg px-2 py-0.5">SAREE ONE</span>
-          </div>
-          <p className="text-xs font-bold text-slate-400 mt-1">
+    <div className="min-h-screen bg-[#F4F8FF] pb-24">
+      {/* Al-Saidi Profile Hero Banner */}
+      <div className="relative bg-gradient-to-br from-[#0B5ED7] via-[#0950BA] to-[#003B99] text-white pt-5 pb-10 px-4 rounded-b-[2.5rem] shadow-lg overflow-hidden">
+        <div className="absolute -bottom-1 left-0 right-0 h-2.5 bg-gradient-to-r from-[#FF6B00] via-[#FF8533] to-[#FF6B00]" />
+        <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
+          <img src="/assets/saidi-logo.png" alt="الصايدي توصيل" className="h-12 object-contain mb-2 drop-shadow-md" />
+          <p className="text-xs font-bold text-blue-100">
             {language === 'ar' ? 'الملف الشخصي وإعدادات الحساب' : 'Profile & Account Settings'}
           </p>
         </div>
-        
+      </div>
+
+      <div className="container mx-auto px-4 -mt-5 max-w-4xl relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
-            <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden bg-white">
-              <CardHeader className="text-center bg-orange-50/40 pb-6 border-b border-orange-100/50">
-                <div className="w-20 h-20 bg-gradient-to-tr from-[#FF5722] to-[#FF6E40] rounded-3xl flex items-center justify-center mx-auto mb-3 shadow-md shadow-orange-500/20 text-white">
+          <div className="lg:col-span-2 space-y-5">
+            <Card className="rounded-3xl border border-blue-100/80 shadow-[0_8px_28px_rgba(11,94,215,0.08)] overflow-hidden bg-white">
+              <CardHeader className="text-center bg-[#F4F8FF]/70 pb-6 border-b border-blue-100/60">
+                <div className="w-20 h-20 bg-gradient-to-br from-[#0B5ED7] to-[#003B99] rounded-3xl flex items-center justify-center mx-auto mb-3 shadow-md shadow-blue-600/20 text-white border-2 border-white">
                   <User className="h-10 w-10 text-white" />
                 </div>
                 <CardTitle className="text-lg font-black text-slate-900">
                   {profile.name || (!isAuthenticated ? (language === 'ar' ? 'مستخدم ضيف' : 'Guest') : (language === 'ar' ? 'المستخدم' : 'User'))}
                 </CardTitle>
-                <Badge variant={!isAuthenticated ? "outline" : "secondary"} className="mx-auto mt-1 font-black text-xs bg-orange-100 text-[#FF5722] border-orange-200">
+                <Badge variant={!isAuthenticated ? "outline" : "secondary"} className="mx-auto mt-1 font-black text-xs bg-[#EEF5FF] text-[#0B5ED7] border-blue-200 rounded-full px-3">
                   {!isAuthenticated ? (language === 'ar' ? 'مستخدم ضيف' : 'Guest') : (language === 'ar' ? 'عضو مميز' : 'Premium Member')}
                 </Badge>
               </CardHeader>
-              <CardContent className="space-y-4 pt-4">
+              <CardContent className="space-y-4 pt-5">
                 {isEditing ? (
                   <div className="space-y-4">
-                    {/* الحقل الأول: اسم العميل */}
                     <div>
                       <Label htmlFor="name" className="text-slate-800 font-black text-xs">
                         {language === 'ar' ? '1. اسم العميل' : '1. Full Name'}
@@ -299,10 +297,9 @@ export default function Profile() {
                         value={profile.name}
                         onChange={(e) => setProfile(prev => ({ ...prev, name: e.target.value }))}
                         placeholder={language === 'ar' ? "أدخل اسمك الكامل" : "Enter your full name"}
-                        className="mt-1 rounded-xl border-slate-200 focus:border-[#FF5722]"
+                        className="mt-1 rounded-2xl border-blue-100 bg-[#F4F8FF] focus:bg-white focus:border-[#0B5ED7]"
                       />
                     </div>
-                    {/* الحقل الثاني: رقم الهاتف */}
                     <div>
                       <Label htmlFor="phone" className="text-slate-800 font-black text-xs">
                         {language === 'ar' ? '2. رقم الهاتف' : '2. Phone Number'}
@@ -313,10 +310,9 @@ export default function Profile() {
                         onChange={(e) => setProfile(prev => ({ ...prev, phone: e.target.value }))}
                         placeholder={language === 'ar' ? "أدخل رقم الهاتف" : "Enter phone number"}
                         dir="ltr"
-                        className="mt-1 rounded-xl border-slate-200 focus:border-[#FF5722]"
+                        className="mt-1 rounded-2xl border-blue-100 bg-[#F4F8FF] focus:bg-white focus:border-[#0B5ED7]"
                       />
                     </div>
-                    {/* الحقل الثالث: اسم المستخدم */}
                     <div>
                       <Label htmlFor="username" className="text-slate-800 font-black text-xs">
                         {language === 'ar' ? '3. اسم المستخدم' : '3. Username'}
@@ -326,10 +322,9 @@ export default function Profile() {
                         value={profile.username}
                         onChange={(e) => setProfile(prev => ({ ...prev, username: e.target.value }))}
                         placeholder={language === 'ar' ? "أدخل اسم المستخدم" : "Enter username"}
-                        className="mt-1 rounded-xl border-slate-200 focus:border-[#FF5722]"
+                        className="mt-1 rounded-2xl border-blue-100 bg-[#F4F8FF] focus:bg-white focus:border-[#0B5ED7]"
                       />
                     </div>
-                    {/* الحقل الرابع: البريد الإلكتروني (إن وجد) */}
                     <div>
                       <Label htmlFor="email" className="text-slate-800 font-black text-xs">
                         {language === 'ar' ? '4. البريد الإلكتروني (إن وجد)' : '4. Email (optional)'}
@@ -340,10 +335,9 @@ export default function Profile() {
                         value={profile.email}
                         onChange={(e) => setProfile(prev => ({ ...prev, email: e.target.value }))}
                         placeholder="example@mail.com"
-                        className="mt-1 rounded-xl border-slate-200 focus:border-[#FF5722]"
+                        className="mt-1 rounded-2xl border-blue-100 bg-[#F4F8FF] focus:bg-white focus:border-[#0B5ED7]"
                       />
                     </div>
-                    {/* الحقل الأخير: عنوان موقع العميل النصي */}
                     <div>
                       <div className="flex items-center justify-between mb-1">
                         <Label htmlFor="address" className="text-slate-800 font-black text-xs">
@@ -355,7 +349,7 @@ export default function Profile() {
                           size="sm"
                           onClick={fetchCurrentLocationAddress}
                           disabled={gettingLocation}
-                          className="text-xs text-[#FF5722] hover:bg-orange-50 h-7 px-2 font-black rounded-lg"
+                          className="text-xs text-[#0B5ED7] hover:bg-[#EEF5FF] h-7 px-2 font-black rounded-full"
                         >
                           {gettingLocation ? (
                             <><Loader2 className="h-3 w-3 animate-spin mx-1" /> {language === 'ar' ? 'جاري التحديد...' : 'Locating...'}</>
@@ -369,22 +363,21 @@ export default function Profile() {
                         value={profile.address}
                         onChange={(e) => setProfile(prev => ({ ...prev, address: e.target.value }))}
                         placeholder={language === 'ar' ? "أدخل عنوان موقعك أو انقر على استخدام موقعي الحالي" : "Enter address or fetch current location"}
-                        className="rounded-xl border-slate-200 focus:border-[#FF5722]"
+                        className="rounded-2xl border-blue-100 bg-[#F4F8FF] focus:bg-white focus:border-[#0B5ED7]"
                       />
                     </div>
                     <div className="flex gap-2 pt-2">
-                      <Button onClick={handleSave} className="flex-1 font-black rounded-xl bg-gradient-to-r from-[#FF6E40] to-[#FF5722] text-white shadow-sm shadow-orange-500/20" disabled={updateProfileMutation.isPending}>
+                      <Button onClick={handleSave} className="flex-1 font-black rounded-full bg-[#FF6B00] hover:bg-[#E55E00] text-white shadow-sm" disabled={updateProfileMutation.isPending}>
                         {updateProfileMutation.isPending ? t('loading') : t('save')}
                       </Button>
-                      <Button variant="outline" className="rounded-xl font-black" onClick={() => setIsEditing(false)}>{t('cancel')}</Button>
+                      <Button variant="outline" className="rounded-full font-black border-blue-200 text-[#0B5ED7]" onClick={() => setIsEditing(false)}>{t('cancel')}</Button>
                     </div>
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {/* الحقل الأول: اسم العميل */}
-                    <div className="flex items-center justify-between p-3.5 bg-orange-50/40 rounded-2xl border border-orange-100/60">
+                    <div className="flex items-center justify-between p-3.5 bg-[#F4F8FF] rounded-2xl border border-blue-100/70">
                       <div className="flex items-center gap-3">
-                        <User className="h-5 w-5 text-[#FF5722] shrink-0" />
+                        <User className="h-5 w-5 text-[#0B5ED7] shrink-0" />
                         <div>
                           <p className="text-[11px] text-slate-400 font-bold">
                             {language === 'ar' ? '1. اسم العميل' : '1. Customer Name'}
@@ -394,10 +387,9 @@ export default function Profile() {
                       </div>
                     </div>
 
-                    {/* الحقل الثاني: رقم الهاتف */}
-                    <div className="flex items-center justify-between p-3.5 bg-orange-50/40 rounded-2xl border border-orange-100/60">
+                    <div className="flex items-center justify-between p-3.5 bg-[#F4F8FF] rounded-2xl border border-blue-100/70">
                       <div className="flex items-center gap-3">
-                        <Phone className="h-5 w-5 text-[#FF5722] shrink-0" />
+                        <Phone className="h-5 w-5 text-[#0B5ED7] shrink-0" />
                         <div>
                           <p className="text-[11px] text-slate-400 font-bold">
                             {language === 'ar' ? '2. رقم الهاتف' : '2. Phone Number'}
@@ -407,8 +399,7 @@ export default function Profile() {
                       </div>
                     </div>
 
-                    {/* الحقل الثالث: اسم المستخدم */}
-                    <div className="flex items-center justify-between p-3.5 bg-orange-50/40 rounded-2xl border border-orange-100/60">
+                    <div className="flex items-center justify-between p-3.5 bg-[#F4F8FF] rounded-2xl border border-blue-100/70">
                       <div className="flex items-center gap-3">
                         <AtSign className="h-5 w-5 text-slate-400 shrink-0" />
                         <div>
@@ -420,8 +411,7 @@ export default function Profile() {
                       </div>
                     </div>
 
-                    {/* الحقل الرابع: البريد الإلكتروني (إن وجد) */}
-                    <div className="flex items-center justify-between p-3.5 bg-orange-50/40 rounded-2xl border border-orange-100/60">
+                    <div className="flex items-center justify-between p-3.5 bg-[#F4F8FF] rounded-2xl border border-blue-100/70">
                       <div className="flex items-center gap-3">
                         <Mail className="h-5 w-5 text-slate-400 shrink-0" />
                         <div>
@@ -435,16 +425,15 @@ export default function Profile() {
                       </div>
                     </div>
 
-                    {/* الحقل الأخير: عنوان موقع العميل النصي */}
-                    <div className="p-3.5 bg-orange-50/40 rounded-2xl border border-orange-100/60 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <MapPin className="h-5 w-5 text-[#FF5722] shrink-0" />
-                          <div>
+                    <div className="p-3.5 bg-[#F4F8FF] rounded-2xl border border-blue-100/70 space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <MapPin className="h-5 w-5 text-[#0B5ED7] shrink-0" />
+                          <div className="min-w-0">
                             <p className="text-[11px] text-slate-400 font-bold">
                               {language === 'ar' ? '5. عنوان موقع العميل (نصي)' : '5. Location Address (Text)'}
                             </p>
-                            <p className="font-black text-slate-900 text-sm">{profile.address || (language === 'ar' ? 'لم يتم تحديث الموقع بعد' : 'No address set')}</p>
+                            <p className="font-black text-slate-900 text-sm truncate">{profile.address || (language === 'ar' ? 'لم يتم تحديث الموقع بعد' : 'No address set')}</p>
                           </div>
                         </div>
                         <Button
@@ -453,7 +442,7 @@ export default function Profile() {
                           size="sm"
                           onClick={fetchCurrentLocationAddress}
                           disabled={gettingLocation}
-                          className="text-xs gap-1 border-orange-200 text-[#FF5722] hover:bg-orange-50 rounded-xl shrink-0 font-black"
+                          className="text-xs gap-1 border-blue-200 text-[#0B5ED7] hover:bg-[#EEF5FF] rounded-full shrink-0 font-black"
                         >
                           {gettingLocation ? (
                             <><Loader2 className="h-3.5 w-3.5 animate-spin" /> {language === 'ar' ? 'جاري الجلب...' : 'Locating...'}</>
@@ -464,7 +453,7 @@ export default function Profile() {
                       </div>
                     </div>
 
-                    <Button onClick={() => setIsEditing(true)} className="w-full font-black mt-2 rounded-2xl bg-gradient-to-r from-[#FF6E40] to-[#FF5722] hover:from-[#FF5722] hover:to-[#E64A19] text-white shadow-md shadow-orange-500/20 py-3">
+                    <Button onClick={() => setIsEditing(true)} className="w-full font-black mt-2 rounded-full bg-[#0B5ED7] hover:bg-[#0950BA] text-white shadow-md shadow-blue-600/20 h-12">
                       {t('edit_profile')}
                     </Button>
                   </div>
@@ -476,9 +465,9 @@ export default function Profile() {
               {profileStats.map((stat, index) => {
                 const Icon = stat.icon;
                 return (
-                  <Card key={index} className="text-center rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.02)] bg-white overflow-hidden">
+                  <Card key={index} className="text-center rounded-3xl border border-blue-100/80 shadow-xs bg-white overflow-hidden">
                     <CardContent className="p-4">
-                      <div className="w-10 h-10 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center mx-auto mb-2 text-[#FF5722]">
+                      <div className="w-10 h-10 rounded-2xl bg-[#EEF5FF] border border-blue-100 flex items-center justify-center mx-auto mb-2">
                         <Icon className={`h-5 w-5 ${stat.color}`} />
                       </div>
                       <div className="text-base font-black text-slate-900">{stat.value}</div>
@@ -496,57 +485,57 @@ export default function Profile() {
                   <Button
                     key={item.path + item.label}
                     variant="ghost"
-                    className="w-full h-auto p-4 justify-between bg-white hover:bg-orange-50/60 rounded-3xl border border-orange-100/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)] transition-all"
+                    className="w-full h-auto p-4 justify-between bg-white hover:bg-[#EEF5FF] rounded-3xl border border-blue-100/80 shadow-xs transition-all"
                     onClick={() => item.onClick ? item.onClick() : setLocation(item.path)}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-2xl bg-orange-50 flex items-center justify-center text-[#FF5722]">
-                        <Icon className="h-5 w-5 text-[#FF5722]" />
+                      <div className="w-10 h-10 rounded-2xl bg-[#EEF5FF] flex items-center justify-center text-[#0B5ED7]">
+                        <Icon className="h-5 w-5 text-[#0B5ED7]" />
                       </div>
                       <div className={language === 'ar' ? 'text-right' : 'text-left'}>
                         <div className="font-black text-slate-900 text-sm">{item.label}</div>
                         <div className="text-xs text-slate-400 font-bold">{item.description}</div>
                       </div>
                     </div>
-                    <ArrowRight className={`h-4 w-4 text-slate-400 ${language === 'ar' ? 'rotate-180' : ''}`} />
+                    <ArrowRight className={`h-4 w-4 text-[#0B5ED7] ${language === 'ar' ? 'rotate-180' : ''}`} />
                   </Button>
                 );
               })}
 
-              {/* زر تسجيل الخروج مع التنبيه */}
               <Button
                 variant="outline"
-                className="w-full h-auto p-4 justify-between border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 font-bold transition-all mt-4"
+                className="w-full h-auto p-4 justify-between rounded-3xl border-rose-200 bg-white text-rose-600 hover:bg-rose-50 hover:text-rose-700 font-bold transition-all mt-4"
                 onClick={() => setShowLogoutConfirm(true)}
               >
                 <div className="flex items-center gap-3">
-                  <LogOut className="h-6 w-6 text-red-600" />
+                  <div className="w-10 h-10 rounded-2xl bg-rose-50 flex items-center justify-center">
+                    <LogOut className="h-5 w-5 text-rose-600" />
+                  </div>
                   <div className={language === 'ar' ? 'text-right' : 'text-left'}>
-                    <div className="font-bold text-red-600">{t('logout')}</div>
-                    <div className="text-xs text-red-400">{language === 'ar' ? 'الخروج ومسح الجلسة الحالية' : 'Exit and clear session'}</div>
+                    <div className="font-black text-rose-600">{t('logout')}</div>
+                    <div className="text-xs text-rose-400">{language === 'ar' ? 'الخروج ومسح الجلسة الحالية' : 'Exit and clear session'}</div>
                   </div>
                 </div>
-                <ArrowRight className={`h-5 w-5 text-red-400 ${language === 'ar' ? 'rotate-180' : ''}`} />
+                <ArrowRight className={`h-5 w-5 text-rose-400 ${language === 'ar' ? 'rotate-180' : ''}`} />
               </Button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* نافذة تأكيد الخروج المنبثقة */}
       <AlertDialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
-        <AlertDialogContent className="rounded-2xl max-w-md">
+        <AlertDialogContent className="rounded-3xl max-w-md border border-blue-100">
           <AlertDialogHeader>
-            <AlertDialogTitle className={`${language === 'ar' ? 'text-right' : 'text-left'} text-lg font-black text-red-600 flex items-center gap-2`}>
+            <AlertDialogTitle className={`${language === 'ar' ? 'text-right' : 'text-left'} text-lg font-black text-rose-600 flex items-center gap-2`}>
               <LogOut className="w-5 h-5" />
               {t('logout_confirm_title')}
             </AlertDialogTitle>
-            <AlertDialogDescription className={`${language === 'ar' ? 'text-right' : 'text-left'} text-sm font-semibold text-gray-700 py-3 leading-relaxed`}>
+            <AlertDialogDescription className={`${language === 'ar' ? 'text-right' : 'text-left'} text-sm font-semibold text-slate-700 py-3 leading-relaxed`}>
               {t('logout_confirm_desc')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex items-center gap-2 justify-end">
-            <AlertDialogCancel className="font-bold rounded-xl">{t('cancel')}</AlertDialogCancel>
+            <AlertDialogCancel className="font-bold rounded-full border-blue-200 text-[#0B5ED7]">{t('cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 setShowLogoutConfirm(false);
@@ -557,7 +546,7 @@ export default function Profile() {
                 });
                 setLocation('/auth');
               }}
-              className="bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl"
+              className="bg-rose-600 hover:bg-rose-700 text-white font-black rounded-full"
             >
               {t('logout')}
             </AlertDialogAction>
@@ -565,12 +554,11 @@ export default function Profile() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* نافذة مشاركة التطبيق */}
       <ShareAppModal
         isOpen={shareModalOpen}
         onClose={() => setShareModalOpen(false)}
-        appName={getSetting('app_name', 'السريع ون')}
-        shareText={shareText || (language === 'ar' ? 'تسوق من السريع ون الآن!' : 'Shop from Saree One now!')}
+        appName={getSetting('app_name', 'الصايدي توصيل')}
+        shareText={shareText || (language === 'ar' ? 'اطلب من الصايدي توصيل الآن!' : 'Order from Al-Saidi Delivery now!')}
         shareUrl={shareUrl || window.location.origin}
         logoUrl={getSetting('header_logo_url') || getSetting('logo_url')}
       />

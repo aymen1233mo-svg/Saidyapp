@@ -19,16 +19,16 @@ export const Navbar: React.FC = () => {
   }
 
   return (
-    <nav className="bg-white/80 backdrop-blur-md border-b overflow-x-auto whitespace-nowrap no-scrollbar sticky top-[64px] md:top-[88px] z-30 transition-all">
+    <nav className="bg-white/90 backdrop-blur-md border-b border-blue-100 overflow-x-auto whitespace-nowrap no-scrollbar sticky top-[96px] md:top-[68px] z-30 transition-all">
       <div className="container mx-auto px-4">
-        <ul className="flex items-center justify-center gap-4 md:gap-8 py-2 md:py-3">
+        <ul className="flex items-center justify-start md:justify-center gap-2.5 md:gap-4 py-2.5">
           <li>
             <button
               onClick={() => setLocation('/')}
-              className={`text-[11px] md:text-[13px] font-black uppercase tracking-tighter transition-all px-4 py-1.5 rounded-full ${
-                location === '/' 
-                  ? 'bg-primary text-white shadow-lg shadow-primary/20' 
-                  : 'text-gray-600 hover:bg-gray-100'
+              className={`text-xs md:text-sm font-black transition-all px-4 py-1.5 rounded-full ${
+                location === '/'
+                  ? 'bg-[#0B5ED7] text-white shadow-md shadow-blue-500/20'
+                  : 'text-slate-600 bg-blue-50/70 hover:bg-blue-100/80'
               }`}
             >
               {t('home')}
@@ -36,11 +36,23 @@ export const Navbar: React.FC = () => {
           </li>
           <li>
             <button
+              onClick={() => setLocation('/wasalni')}
+              className={`text-xs md:text-sm font-black transition-all px-4 py-1.5 rounded-full ${
+                location === '/wasalni'
+                  ? 'bg-[#FF6B00] text-white shadow-md shadow-orange-500/20'
+                  : 'text-slate-600 bg-orange-50/70 hover:bg-orange-100/80'
+              }`}
+            >
+              {t('quick_order')}
+            </button>
+          </li>
+          <li>
+            <button
               onClick={() => setLocation('/orders')}
-              className={`text-[11px] md:text-[13px] font-black uppercase tracking-tighter transition-all px-4 py-1.5 rounded-full ${
-                location === '/orders' 
-                  ? 'bg-primary text-white shadow-lg shadow-primary/20' 
-                  : 'text-gray-600 hover:bg-gray-100'
+              className={`text-xs md:text-sm font-black transition-all px-4 py-1.5 rounded-full ${
+                location === '/orders'
+                  ? 'bg-[#0B5ED7] text-white shadow-md shadow-blue-500/20'
+                  : 'text-slate-600 bg-blue-50/70 hover:bg-blue-100/80'
               }`}
             >
               {t('orders')}
@@ -50,10 +62,10 @@ export const Navbar: React.FC = () => {
             <li key={cat.id}>
               <button
                 onClick={() => setLocation(`/category/${cat.name}`)}
-                className={`text-[11px] md:text-[13px] font-black uppercase tracking-tighter transition-all px-4 py-1.5 rounded-full ${
-                  location === `/category/${cat.name}` 
-                    ? 'bg-primary text-white shadow-lg shadow-primary/20' 
-                    : 'text-gray-600 hover:bg-gray-100'
+                className={`text-xs md:text-sm font-black transition-all px-4 py-1.5 rounded-full ${
+                  location === `/category/${cat.name}`
+                    ? 'bg-[#0B5ED7] text-white shadow-md shadow-blue-500/20'
+                    : 'text-slate-600 bg-blue-50/70 hover:bg-blue-100/80'
                 }`}
               >
                 {cat.name}

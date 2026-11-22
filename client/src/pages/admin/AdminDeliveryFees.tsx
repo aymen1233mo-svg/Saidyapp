@@ -778,7 +778,7 @@ export default function AdminDeliveryFees() {
             )}
           </TabsTrigger>
           <TabsTrigger value="zone-restrictions" className="flex items-center gap-1.5 py-2.5 text-xs md:text-sm font-medium">
-            <ShieldAlert className="h-4 w-4 text-[#F05215]" />
+            <ShieldAlert className="h-4 w-4 text-[#0B5ED7]" />
             نطاق ومناطق التوصيل المسموح بها
             {enableZoneRestriction && (
               <Badge className="mr-1 text-[10px] px-1.5 py-0 h-4 bg-emerald-600 text-white hover:bg-emerald-600">
@@ -1680,7 +1680,7 @@ export default function AdminDeliveryFees() {
             <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4">
               <div>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <ShieldAlert className="h-5 w-5 text-[#F05215]" />
+                  <ShieldAlert className="h-5 w-5 text-[#0B5ED7]" />
                   إدارة نطاق ومناطق التوصيل المسموح بها
                 </CardTitle>
                 <CardDescription className="text-xs sm:text-sm mt-1">
@@ -1693,7 +1693,7 @@ export default function AdminDeliveryFees() {
                   variant="outline"
                   size="sm"
                   onClick={() => setIsPreviewModalOpen(true)}
-                  className="border-[#F05215]/40 text-[#C73208] hover:bg-[#F05215]/10 text-xs font-semibold"
+                  className="border-[#0B5ED7]/40 text-[#003B99] hover:bg-[#0B5ED7]/10 text-xs font-semibold"
                 >
                   <Eye className="h-3.5 w-3.5 ml-1.5" />
                   معاينة تنبيه العميل
@@ -1706,7 +1706,7 @@ export default function AdminDeliveryFees() {
                     restrictionMode
                   })}
                   disabled={saveZoneRestrictionMutation.isPending}
-                  className="bg-[#F05215] hover:bg-[#C03A0A] text-white text-xs font-semibold"
+                  className="bg-[#0B5ED7] hover:bg-[#003B99] text-white text-xs font-semibold"
                 >
                   <Save className="h-3.5 w-3.5 ml-1.5" />
                   {saveZoneRestrictionMutation.isPending ? 'جاري الحفظ...' : 'حفظ وتطبيق التغييرات'}
@@ -1733,7 +1733,7 @@ export default function AdminDeliveryFees() {
                 <Switch
                   checked={enableZoneRestriction}
                   onCheckedChange={setEnableZoneRestriction}
-                  className="data-[state=checked]:bg-[#F05215]"
+                  className="data-[state=checked]:bg-[#0B5ED7]"
                 />
               </div>
 
@@ -1804,11 +1804,11 @@ export default function AdminDeliveryFees() {
           </Card>
 
           {/* Card 2: Interactive Map with Pin, Distance Scaling & Radius Controls */}
-          <Card className="border-2 border-[#F05215]/30 shadow-sm">
+          <Card className="border-2 border-[#0B5ED7]/30 shadow-sm">
             <CardHeader className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-3">
               <div>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <MapPin className="h-5 w-5 text-[#F05215]" />
+                  <MapPin className="h-5 w-5 text-[#0B5ED7]" />
                   <span>دبوس مركز التوصيل وتكبير/تصغير نطاق المسافة على الخريطة</span>
                 </CardTitle>
                 <CardDescription className="text-xs sm:text-sm mt-1">
@@ -1838,7 +1838,7 @@ export default function AdminDeliveryFees() {
                     centerLng: pinLocation.lng
                   })}
                   disabled={saveZoneRestrictionMutation.isPending}
-                  className="bg-[#F05215] hover:bg-[#C03A0A] text-white text-xs font-semibold"
+                  className="bg-[#0B5ED7] hover:bg-[#003B99] text-white text-xs font-semibold"
                 >
                   <Save className="h-3.5 w-3.5 ml-1.5" />
                   {saveZoneRestrictionMutation.isPending ? 'جاري الحفظ...' : 'حفظ وتطبيق الدبوس والمسافة'}
@@ -1850,7 +1850,7 @@ export default function AdminDeliveryFees() {
               {/* Quick City Presets */}
               <div className="flex flex-wrap items-center gap-1.5 p-2.5 bg-muted/40 rounded-xl border">
                 <span className="text-xs font-bold text-muted-foreground ml-2 flex items-center gap-1 shrink-0">
-                  <Compass className="h-3.5 w-3.5 text-[#F05215]" />
+                  <Compass className="h-3.5 w-3.5 text-[#0B5ED7]" />
                   مراكز ومواقع سريعة:
                 </span>
                 <div className="flex flex-wrap items-center gap-1.5">
@@ -1860,7 +1860,7 @@ export default function AdminDeliveryFees() {
                       variant="outline"
                       size="sm"
                       onClick={() => handleApplyPinPreset(preset)}
-                      className="h-7 px-2.5 text-[11px] rounded-full hover:border-[#F05215] hover:text-[#F05215] transition-colors"
+                      className="h-7 px-2.5 text-[11px] rounded-full hover:border-[#0B5ED7] hover:text-[#0B5ED7] transition-colors"
                     >
                       {preset.name}
                     </Button>
@@ -1874,10 +1874,10 @@ export default function AdminDeliveryFees() {
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <h4 className="font-bold text-sm text-foreground flex items-center gap-1.5">
-                        <ZoomIn className="h-4 w-4 text-[#F05215]" />
+                        <ZoomIn className="h-4 w-4 text-[#0B5ED7]" />
                         <span>تكبير وتصغير مسافة التوصيل المسموح بها</span>
                       </h4>
-                      <Badge className="bg-[#F05215] text-white text-xs px-2 py-0.5 font-bold">
+                      <Badge className="bg-[#0B5ED7] text-white text-xs px-2 py-0.5 font-bold">
                         {maxDistanceKm} كم
                       </Badge>
                     </div>
@@ -1911,7 +1911,7 @@ export default function AdminDeliveryFees() {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleAdjustDistance(1)}
-                      className="h-8 px-2.5 text-xs font-bold text-[#F05215] hover:bg-background"
+                      className="h-8 px-2.5 text-xs font-bold text-[#0B5ED7] hover:bg-background"
                       title="تكبير المسافة بـ 1 كم"
                     >
                       +1 كم
@@ -1920,7 +1920,7 @@ export default function AdminDeliveryFees() {
                       variant="ghost"
                       size="sm"
                       onClick={() => handleAdjustDistance(5)}
-                      className="h-8 px-2 text-xs font-bold text-[#F05215] hover:bg-background"
+                      className="h-8 px-2 text-xs font-bold text-[#0B5ED7] hover:bg-background"
                       title="تكبير المسافة بـ 5 كم"
                     >
                       +5 كم
@@ -1941,7 +1941,7 @@ export default function AdminDeliveryFees() {
                   <div className="flex justify-between text-[11px] text-muted-foreground px-1">
                     <span>1 كم (نطاق ضيق)</span>
                     <span>15 كم</span>
-                    <span className="font-bold text-[#F05215]">25 كم (الافتراضي)</span>
+                    <span className="font-bold text-[#0B5ED7]">25 كم (الافتراضي)</span>
                     <span>35 كم</span>
                     <span>50 كم (أقصى نطاق)</span>
                   </div>
@@ -1958,7 +1958,7 @@ export default function AdminDeliveryFees() {
                       size="sm"
                       onClick={() => setMaxDistanceKm(String(dist))}
                       className={`h-6 px-2 text-[11px] rounded-md ${
-                        parseFloat(maxDistanceKm) === dist ? 'bg-[#F05215] text-white' : ''
+                        parseFloat(maxDistanceKm) === dist ? 'bg-[#0B5ED7] text-white' : ''
                       }`}
                     >
                       {dist} كم
@@ -1976,7 +1976,7 @@ export default function AdminDeliveryFees() {
                   </div>
                   <div className="p-3 bg-muted/40 rounded-lg border text-right">
                     <span className="text-[11px] text-muted-foreground block">مساحة التغطية المسموحة</span>
-                    <span className="font-mono text-xs font-bold text-[#F05215] block mt-0.5">
+                    <span className="font-mono text-xs font-bold text-[#0B5ED7] block mt-0.5">
                       ~{Math.round(Math.PI * Math.pow(parseFloat(maxDistanceKm) || 25, 2)).toLocaleString()} كم²
                     </span>
                   </div>
@@ -1993,7 +1993,7 @@ export default function AdminDeliveryFees() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
                   <span className="flex items-center gap-1 font-semibold text-foreground">
-                    <Crosshair className="h-3.5 w-3.5 text-[#F05215]" />
+                    <Crosshair className="h-3.5 w-3.5 text-[#0B5ED7]" />
                     الخريطة التفاعلية المباشرة:
                   </span>
                   <span>
@@ -2016,9 +2016,9 @@ export default function AdminDeliveryFees() {
 
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-muted/20 border rounded-xl">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span className="inline-block w-3 h-3 rounded-full bg-[#F05215]" />
-                    <span>الدبوس البرتقالي: مركز المتجر</span>
-                    <span className="inline-block w-3 h-3 rounded-full border-2 border-[#F05215] border-dashed ml-2" />
+                    <span className="inline-block w-3 h-3 rounded-full bg-[#0B5ED7]" />
+                    <span>الدبوس الأزرق: مركز المتجر</span>
+                    <span className="inline-block w-3 h-3 rounded-full border-2 border-[#0B5ED7] border-dashed ml-2" />
                     <span>الدائرة المتقطعة: أقصى مسافة ({maxDistanceKm} كم)</span>
                   </div>
 
@@ -2032,7 +2032,7 @@ export default function AdminDeliveryFees() {
                       centerLng: pinLocation.lng
                     })}
                     disabled={saveZoneRestrictionMutation.isPending}
-                    className="w-full sm:w-auto bg-[#F05215] hover:bg-[#C03A0A] text-white text-xs font-semibold px-5"
+                    className="w-full sm:w-auto bg-[#0B5ED7] hover:bg-[#003B99] text-white text-xs font-semibold px-5"
                   >
                     <Save className="h-3.5 w-3.5 ml-1.5" />
                     {saveZoneRestrictionMutation.isPending ? 'جاري الحفظ والتطبيق...' : 'حفظ وتطبيق دبوس ونطاق التوصيل في تطبيق العميل'}
@@ -2072,7 +2072,7 @@ export default function AdminDeliveryFees() {
                 <Button 
                   size="sm" 
                   onClick={() => setIsAddGeoZoneOpen(true)}
-                  className="text-xs bg-[#F05215] hover:bg-[#C03A0A] text-white"
+                  className="text-xs bg-[#0B5ED7] hover:bg-[#003B99] text-white"
                 >
                   <Plus className="h-4 w-4 ml-1.5" />
                   رسم منطقة جديدة على الخريطة

@@ -293,7 +293,7 @@ router.post('/send-otp', async (req, res) => {
 
     // تجهيز رابط الواتساب المباشر بالرسالة الجاهزة كنسخة احتياطية ذكية ومباشرة
     const yemenPhoneWithCountryCode = phone.startsWith('967') ? phone : `967${phone}`;
-    const waMessage = encodeURIComponent(`مرحباً بك في السريع ون 🛵\nرمز التحقق الخاص بك هو: ${code}\nيرجى إدخاله لإنشاء حسابك بنجاح.`);
+    const waMessage = encodeURIComponent(`مرحباً بك في الصايدي توصيل 🛵\nرمز التحقق الخاص بك هو: ${code}\nيرجى إدخاله لإنشاء حسابك بنجاح.`);
     const whatsappUrl = waResult?.whatsappUrl || `https://wa.me/${yemenPhoneWithCountryCode}?text=${waMessage}`;
 
     const smsUrlSetting = await storage.getUiSetting('otp_sms_provider_url');

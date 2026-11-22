@@ -3716,7 +3716,7 @@ router.post("/whatsapp-bot/send-test", async (req, res) => {
     if (!phone) {
       return res.status(400).json({ error: "رقم المستلم مطلوب" });
     }
-    const msgText = message || "مرحباً! هذه رسالة تجريبية من بوت الواتساب الخاص بتطبيق سريع ون 🚀";
+    const msgText = message || "مرحباً! هذه رسالة تجريبية من بوت الواتساب الخاص بتطبيق الصايدي توصيل 🚀";
     const result = await whatsAppBotGateway.sendMessage({
       to: phone,
       message: msgText,

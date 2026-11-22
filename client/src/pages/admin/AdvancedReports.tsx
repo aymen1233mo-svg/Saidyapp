@@ -203,9 +203,9 @@ export default function AdvancedReports() {
                       <Line 
                         type="monotone" 
                         dataKey="amount" 
-                        stroke="#ec3714" 
+                        stroke="#0B5ED7" 
                         strokeWidth={3} 
-                        dot={{ r: 4, fill: '#ec3714' }}
+                        dot={{ r: 4, fill: '#0B5ED7' }}
                         activeDot={{ r: 6, strokeWidth: 0 }} 
                       />
                     </ReChartsLineChart>

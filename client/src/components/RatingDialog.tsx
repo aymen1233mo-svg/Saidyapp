@@ -104,7 +104,7 @@ export default function RatingDialog({ isOpen, onClose, orderId, restaurantName,
           {/* Restaurant Rating */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 font-semibold">
-              <Utensils className="h-5 w-5 text-orange-500" />
+              <Utensils className="h-5 w-5 text-[#FF6B00]" />
               <span>تقييم المطعم ({restaurantName})</span>
             </div>
             <div className="flex justify-center">
@@ -114,15 +114,15 @@ export default function RatingDialog({ isOpen, onClose, orderId, restaurantName,
               placeholder="اكتب تعليقك على جودة الطعام والخدمة..."
               value={restaurantComment}
               onChange={(e) => setRestaurantComment(e.target.value)}
-              className="resize-none"
+              className="resize-none rounded-2xl border-blue-100"
             />
           </div>
 
           {/* Driver Rating - Only if driver exists */}
           {driverName && (
-            <div className="space-y-3 border-t pt-4">
+            <div className="space-y-3 border-t border-blue-50 pt-4">
               <div className="flex items-center gap-2 font-semibold">
-                <Truck className="h-5 w-5 text-blue-500" />
+                <Truck className="h-5 w-5 text-[#0B5ED7]" />
                 <span>تقييم السائق ({driverName})</span>
               </div>
               <div className="flex justify-center">
@@ -132,7 +132,7 @@ export default function RatingDialog({ isOpen, onClose, orderId, restaurantName,
                 placeholder="اكتب تعليقك على سرعة التوصيل وأسلوب السائق..."
                 value={driverComment}
                 onChange={(e) => setDriverComment(e.target.value)}
-                className="resize-none"
+                className="resize-none rounded-2xl border-blue-100"
               />
             </div>
           )}
@@ -141,7 +141,7 @@ export default function RatingDialog({ isOpen, onClose, orderId, restaurantName,
         <DialogFooter className="sm:justify-center">
           <Button
             type="button"
-            className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold"
+            className="w-full h-11 rounded-full bg-gradient-to-r from-[#0B5ED7] to-[#0046B8] hover:from-[#0A53BE] hover:to-[#003B99] text-white font-black shadow-md shadow-blue-500/20"
             onClick={handleSubmit}
             disabled={mutation.isPending}
           >

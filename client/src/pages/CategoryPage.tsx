@@ -122,24 +122,24 @@ export default function CategoryPage() {
   };
 
   return (
-    <div className="bg-white min-h-screen pb-20">
+    <div className="bg-[#F4F8FF] min-h-screen pb-20">
       <div className="container mx-auto px-4 py-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
-        <button onClick={() => setLocation('/')} className="hover:text-[#F05215] transition-colors">HOME</button>
+        <button onClick={() => setLocation('/')} className="hover:text-[#0B5ED7] transition-colors">الرئيسية</button>
         <span>/</span>
-        <span className="text-black">{decodeURIComponent(slug || '')}</span>
+        <span className="text-[#003B99]">{decodeURIComponent(slug || '')}</span>
       </div>
 
       <div className="container mx-auto px-4">
         <div>
-          <h1 className="text-5xl font-black mb-12 uppercase tracking-tighter italic border-r-8 border-primary pr-6">{getCategoryTitle()}</h1>
+          <h1 className="text-3xl sm:text-4xl font-black mb-8 text-[#003B99] border-r-8 border-[#0B5ED7] pr-5">{getCategoryTitle()}</h1>
 
-          <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-6 border-b pb-6">
-            <div className="flex items-center gap-8 w-full md:w-auto overflow-x-auto whitespace-nowrap scrollbar-hide">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white p-3.5 rounded-2xl border border-blue-100 shadow-xs">
+            <div className="flex items-center gap-4 w-full md:w-auto overflow-x-auto whitespace-nowrap no-scrollbar">
               {['recommend', 'newest', 'price-asc', 'price-desc'].map((sort) => (
                 <button 
                   key={sort}
                   onClick={() => setSortBy(sort)}
-                  className={`text-sm font-black pb-2 border-b-2 transition-all uppercase tracking-tighter ${sortBy === sort ? 'border-[#F05215] text-[#F05215]' : 'border-transparent text-gray-400'}`}
+                  className={`text-xs sm:text-sm font-black px-3.5 py-2 rounded-full transition-all ${sortBy === sort ? 'bg-[#0B5ED7] text-white shadow-sm' : 'text-gray-500 hover:text-[#0B5ED7] hover:bg-blue-50'}`}
                 >
                   {sort === 'recommend' ? 'التوصية' : 
                    sort === 'newest' ? 'الأحدث' : 
@@ -148,11 +148,11 @@ export default function CategoryPage() {
               ))}
             </div>
             
-            <div className="flex items-center gap-6 shrink-0">
-              <span className="text-sm font-bold text-gray-400 uppercase">{sortedItems.length} منتج</span>
-              <div className="flex border-2 border-gray-100 rounded-none overflow-hidden">
-                <button className="p-2.5 bg-gray-50"><LayoutGrid className="h-4 w-4" /></button>
-                <button className="p-2.5 hover:bg-gray-50"><ListMenu className="h-4 w-4" /></button>
+            <div className="flex items-center gap-4 shrink-0">
+              <span className="text-xs font-bold text-[#0B5ED7] bg-blue-50 px-3 py-1 rounded-full">{sortedItems.length} منتج</span>
+              <div className="flex border border-blue-100 rounded-xl overflow-hidden">
+                <button className="p-2 bg-blue-50 text-[#0B5ED7]"><LayoutGrid className="h-4 w-4" /></button>
+                <button className="p-2 hover:bg-blue-50 text-gray-500"><ListMenu className="h-4 w-4" /></button>
               </div>
             </div>
           </div>

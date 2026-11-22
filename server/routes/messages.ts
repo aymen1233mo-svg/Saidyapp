@@ -195,7 +195,7 @@ router.get("/user-conversations", async (req, res) => {
     const userType = String(req.query.userType || 'customer').trim();
     const cleanId = rawUserId.replace(/\D/g, '');
 
-    const defaultAdminTitle = userType === 'driver' ? 'إدارة سريع ون (الدعم والعمليات)' : 'خدمة عملاء سريع ون (الإدارة)';
+    const defaultAdminTitle = userType === 'driver' ? 'إدارة الصايدي توصيل (الدعم والعمليات)' : 'خدمة عملاء الصايدي توصيل (الإدارة)';
 
     if (!rawUserId) {
       return res.json({
@@ -546,7 +546,7 @@ router.get("/admin/order-monitoring", async (req, res) => {
             ? customerName 
             : m.senderType === 'driver' 
               ? driverName 
-              : 'إدارة سريع ون (الرقابة)'
+              : 'إدارة الصايدي توصيل (الرقابة)'
         })),
         messageCount: orderChats.length,
         hasAlert,
@@ -594,8 +594,8 @@ router.post("/admin/order-monitoring/intervene", async (req, res) => {
     }
 
     const prefix = interventionType === 'warning' 
-      ? '⚠️ [توجيه رقابي عاجل من إدارة سريع ون]: '
-      : '🛡️ [إشعار رقابي من إدارة العمليات - سريع ون]: ';
+      ? '⚠️ [توجيه رقابي عاجل من إدارة الصايدي توصيل]: '
+      : '🛡️ [إشعار رقابي من إدارة العمليات - الصايدي توصيل]: ';
 
     const interventionContent = `${prefix}${message.trim()}`;
 
@@ -645,7 +645,7 @@ export const DEFAULT_AUTO_REPLY_CONFIG: AutoReplyConfig = {
   enabled: true,
   enableForCustomer: true,
   enableForDriver: true,
-  welcomeMessage: "أهلاً بك في منصة سريع ون! يسعدنا تواصلك معنا، كيف يمكننا مساعدتك اليوم؟ 🛵✨",
+  welcomeMessage: "أهلاً بك في منصة الصايدي توصيل! يسعدنا تواصلك معنا، كيف يمكننا مساعدتك اليوم؟ 🛵✨",
   replies: [
     "شكراً لتواصلك معنا! إذا كان استفسارك بخصوص طلب معين، يرجى تزويدنا برقم الطلب لنتمكن من مساعدتك فوراً.",
     "تم استلام رسالتك وتوثيقها في النظام. هل ترغب في معرفة حالة التوصيل أو الاستفسار عن كابتن التوصيل؟",

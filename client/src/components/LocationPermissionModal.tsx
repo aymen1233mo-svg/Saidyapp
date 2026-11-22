@@ -194,14 +194,14 @@ export function LocationPermissionModal({
         dir="rtl"
       >
         {/* Compact Header */}
-        <div className="relative bg-gradient-to-br from-[#FF5722] via-[#F4511E] to-[#E64A19] px-4 pt-5 pb-4 text-white text-center">
-          
+        <div className="relative bg-gradient-to-br from-[#0B5ED7] via-[#064BB5] to-[#003B99] px-4 pt-5 pb-4 text-white text-center">
+
           {/* Animated Pin Beacon */}
           <div className="relative mx-auto mb-2.5 w-12 h-12 flex items-center justify-center">
             <div className="absolute inset-0 rounded-full bg-white/20 animate-ping opacity-50 pointer-events-none" />
-            <div className="relative w-11 h-11 rounded-2xl bg-white text-[#F05215] flex items-center justify-center shadow-md">
-              <MapPin className="h-6 w-6 text-[#F05215]" />
-              <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-white rounded-full" />
+            <div className="relative w-11 h-11 rounded-2xl bg-white text-[#0B5ED7] flex items-center justify-center shadow-md">
+              <MapPin className="h-6 w-6 text-[#0B5ED7]" />
+              <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-[#FF6B00] border-2 border-white rounded-full" />
             </div>
           </div>
 
@@ -215,15 +215,15 @@ export function LocationPermissionModal({
 
         {/* Compact Body */}
         <div className="p-4 space-y-3.5">
-          
+
           {/* Key Quick Badges */}
           <div className="grid grid-cols-3 gap-1.5 text-center text-[10px] font-bold text-slate-700">
-            <div className="p-2 rounded-xl bg-orange-50/80 border border-orange-100 flex flex-col items-center gap-0.5">
-              <Store className="h-3.5 w-3.5 text-[#F05215]" />
+            <div className="p-2 rounded-xl bg-blue-50/80 border border-blue-100 flex flex-col items-center gap-0.5">
+              <Store className="h-3.5 w-3.5 text-[#0B5ED7]" />
               <span className="truncate">أقرب المتاجر</span>
             </div>
-            <div className="p-2 rounded-xl bg-blue-50/80 border border-blue-100 flex flex-col items-center gap-0.5 text-blue-900">
-              <Navigation className="h-3.5 w-3.5 text-blue-600" />
+            <div className="p-2 rounded-xl bg-orange-50/80 border border-orange-100 flex flex-col items-center gap-0.5 text-orange-900">
+              <Navigation className="h-3.5 w-3.5 text-[#FF6B00]" />
               <span className="truncate">توصيل دقيق</span>
             </div>
             <div className="p-2 rounded-xl bg-emerald-50/80 border border-emerald-100 flex flex-col items-center gap-0.5 text-emerald-900">
@@ -234,10 +234,10 @@ export function LocationPermissionModal({
 
           {/* Action Buttons */}
           <div className="space-y-2 pt-0.5">
-            <Button 
+            <Button
               onClick={handleAllow}
               disabled={isLocating}
-              className="w-full h-10 rounded-xl bg-gradient-to-r from-[#F05215] to-[#FF7840] hover:from-[#E64A19] hover:to-[#F4511E] text-white font-black text-xs gap-2 shadow-sm active:scale-95 transition-all"
+              className="w-full h-11 rounded-full bg-gradient-to-r from-[#FF8A00] to-[#FF5500] hover:from-[#FF961A] hover:to-[#FF6000] text-white font-black text-xs gap-2 shadow-md shadow-orange-500/25 active:scale-95 transition-all"
             >
               {isLocating ? (
                 <>

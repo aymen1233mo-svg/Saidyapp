@@ -72,11 +72,11 @@ export default function AdminWhatsAppBot() {
 
   // Direct bot state
   const [manualPhone, setManualPhone] = useState('967777146387');
-  const [botName, setBotName] = useState('سريع ون - بوت النظام');
+  const [botName, setBotName] = useState('الصايدي توصيل - بوت النظام');
 
   // Test message state
   const [testPhone, setTestPhone] = useState('');
-  const [testMessage, setTestMessage] = useState('مرحباً بك في سريع ون! رمز التحقق الخاص بك هو: 4892');
+  const [testMessage, setTestMessage] = useState('مرحباً بك في الصايدي توصيل! رمز التحقق الخاص بك هو: 4892');
 
   // Meta Cloud API state
   const [metaAccessToken, setMetaAccessToken] = useState('');
@@ -426,7 +426,7 @@ export default function AdminWhatsAppBot() {
                 <div>
                   <label className="text-xs font-black text-slate-700 block mb-1.5">اسم البوت / التطبيق التعريفي:</label>
                   <Input
-                    placeholder="سريع ون - بوت النظام"
+                    placeholder="الصايدي توصيل - بوت النظام"
                     value={botName}
                     onChange={(e) => setBotName(e.target.value)}
                     className="rounded-2xl text-sm h-11 font-medium"
@@ -626,7 +626,7 @@ export default function AdminWhatsAppBot() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setTestMessage('مرحباً بك في سريع ون 🛵\nرمز التحقق الخاص بك هو: *5921*\nصالح لمدة 5 دقائق.')}
+                      onClick={() => setTestMessage('مرحباً بك في الصايدي توصيل 🛵\nرمز التحقق الخاص بك هو: *5921*\nصالح لمدة 5 دقائق.')}
                       className="rounded-xl text-[11px] font-bold h-9 flex-1"
                     >
                       كود OTP

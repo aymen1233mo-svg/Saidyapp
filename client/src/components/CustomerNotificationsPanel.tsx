@@ -30,7 +30,7 @@ interface CustomerNotification {
   replies?: NotificationReply[];
 }
 
-export function CustomerNotificationsPanel() {
+export function CustomerNotificationsPanel({ lightVariant = false }: { lightVariant?: boolean } = {}) {
   const [isOpen, setIsOpen] = useState(false);
   const [expandedReplyId, setExpandedReplyId] = useState<string | null>(null);
   const [replyTextMap, setReplyTextMap] = useState<Record<string, string>>({});
@@ -210,12 +210,16 @@ export function CustomerNotificationsPanel() {
           setIsOpen(!isOpen);
           if (!isOpen) refetch();
         }}
-        className="h-10 w-10 flex items-center justify-center text-white hover:bg-white/20 rounded-full transition-colors relative"
+        className={`h-10 w-10 flex items-center justify-center rounded-full transition-colors relative ${
+          lightVariant
+            ? 'text-[#0B5ED7] bg-white hover:bg-blue-50 border border-blue-100 shadow-xs'
+            : 'text-white hover:bg-white/20'
+        }`}
         aria-label="الإشعارات"
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
-          <span className="absolute top-0.5 right-0.5 bg-yellow-400 text-gray-900 text-[9px] rounded-full h-4 w-4 flex items-center justify-center font-black border border-white/20 animate-pulse">
+          <span className="absolute -top-0.5 -right-0.5 bg-[#FF4D2D] text-white text-[10px] rounded-full h-4.5 min-w-[18px] px-1 flex items-center justify-center font-black border-2 border-white shadow-sm">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -225,12 +229,12 @@ export function CustomerNotificationsPanel() {
         <>
           {/* خلفية شفافة لإغلاق اللوحة عند الضغط خارجها */}
           <div className="fixed inset-0 z-[190]" onClick={() => setIsOpen(false)} />
-          
+
           {/* لوحة الإشعارات - متجاوبة ومرتبة */}
           <div
-            className="fixed z-[200] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
+            className="fixed z-[200] bg-white rounded-3xl shadow-2xl border border-blue-100 overflow-hidden"
             style={{
-              top: '64px',
+              top: '72px',
               right: '8px',
               left: '8px',
               maxWidth: '400px',
@@ -240,12 +244,12 @@ export function CustomerNotificationsPanel() {
             dir="rtl"
           >
             {/* رأس اللوحة */}
-            <div className="flex items-center justify-between px-4 py-3.5 bg-primary text-white sticky top-0 shadow-sm">
+            <div className="flex items-center justify-between px-4 py-3.5 bg-gradient-to-r from-[#0B5ED7] to-[#0046B8] text-white sticky top-0 shadow-sm">
               <div className="flex items-center gap-2">
                 <Bell className="h-4 w-4" />
                 <span className="font-black text-sm">صندوق الإشعارات</span>
                 {unreadCount > 0 && (
-                  <span className="bg-white/20 text-white text-[10px] px-2 py-0.5 rounded-full font-black">
+                  <span className="bg-[#FF6B00] text-white text-[10px] px-2 py-0.5 rounded-full font-black">
                     {unreadCount} جديد
                   </span>
                 )}

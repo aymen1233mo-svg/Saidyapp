@@ -166,8 +166,8 @@ export const CitySelectionModal: React.FC<CitySelectionModalProps> = ({
         className="w-[92vw] max-w-md p-0 overflow-hidden rounded-3xl border-none shadow-2xl bg-white"
         dir="rtl"
       >
-        {/* Header with vibrant gradient */}
-        <div className="relative bg-gradient-to-br from-[#FF5722] via-[#F4511E] to-[#E64A19] px-6 pt-7 pb-6 text-white overflow-hidden">
+        {/* Header with Royal Blue gradient */}
+        <div className="relative bg-gradient-to-br from-[#0B5ED7] via-[#064BB5] to-[#003B99] px-6 pt-7 pb-6 text-white overflow-hidden">
           {/* Decorative blurs */}
           <div className="absolute -top-12 -right-8 w-36 h-36 rounded-full bg-white/10 blur-xl pointer-events-none" />
           <div className="absolute -bottom-10 -left-10 w-32 h-32 rounded-full bg-black/10 blur-lg pointer-events-none" />
@@ -204,7 +204,7 @@ export const CitySelectionModal: React.FC<CitySelectionModalProps> = ({
         {/* Redirecting State Overlay */}
         {isRedirecting ? (
           <div className="p-8 text-center space-y-4">
-            <div className="w-16 h-16 mx-auto rounded-full bg-orange-100 flex items-center justify-center text-orange-600 animate-pulse">
+            <div className="w-16 h-16 mx-auto rounded-full bg-blue-100 flex items-center justify-center text-[#0B5ED7] animate-pulse">
               <Server className="h-8 w-8 animate-spin" />
             </div>
             <div className="space-y-1">
@@ -216,7 +216,7 @@ export const CitySelectionModal: React.FC<CitySelectionModalProps> = ({
               </p>
             </div>
             <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-              <div className="bg-orange-500 h-full w-2/3 animate-pulse rounded-full" />
+              <div className="bg-[#0B5ED7] h-full w-2/3 animate-pulse rounded-full" />
             </div>
           </div>
         ) : (
@@ -232,14 +232,14 @@ export const CitySelectionModal: React.FC<CitySelectionModalProps> = ({
                   onClick={() => handleSelectCity(city)}
                   className={`w-full text-right p-4 rounded-2xl border-2 transition-all duration-200 flex items-center gap-3.5 group relative ${
                     isSelected
-                      ? 'border-orange-500 bg-orange-50/50 shadow-md ring-2 ring-orange-400/20'
-                      : 'border-slate-100 hover:border-orange-200 hover:bg-slate-50/80 bg-white shadow-xs'
+                      ? 'border-[#0B5ED7] bg-blue-50/70 shadow-md ring-2 ring-blue-400/20'
+                      : 'border-slate-100 hover:border-blue-200 hover:bg-slate-50/80 bg-white shadow-xs'
                   }`}
                 >
                   {/* City Icon / Badge */}
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0 transition-transform group-hover:scale-105 ${
-                    isSelected 
-                      ? 'bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-md' 
+                    isSelected
+                      ? 'bg-gradient-to-br from-[#0B5ED7] to-[#0046B8] text-white shadow-md'
                       : 'bg-slate-100 text-slate-700'
                   }`}>
                     {city.icon ? (
@@ -285,11 +285,11 @@ export const CitySelectionModal: React.FC<CitySelectionModalProps> = ({
                   {/* Selection Indicator */}
                   <div className="flex-shrink-0">
                     {isSelected ? (
-                      <div className="w-6 h-6 rounded-full bg-orange-500 text-white flex items-center justify-center shadow-xs">
+                      <div className="w-6 h-6 rounded-full bg-[#0B5ED7] text-white flex items-center justify-center shadow-xs">
                         <Check className="h-4 w-4 stroke-[3]" />
                       </div>
                     ) : (
-                      <div className="w-6 h-6 rounded-full border-2 border-slate-200 group-hover:border-orange-300" />
+                      <div className="w-6 h-6 rounded-full border-2 border-slate-200 group-hover:border-blue-300" />
                     )}
                   </div>
                 </button>

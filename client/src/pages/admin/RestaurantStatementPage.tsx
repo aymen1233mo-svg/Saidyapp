@@ -160,7 +160,7 @@ export default function RestaurantStatementPage() {
   const withdrawals = statement?.withdrawals || [];
 
   const logoSrc = iSet('invoice_company_logo') || iSet('header_logo_url') || iSet('sidebar_logo_url');
-  const companyName = iSet('invoice_company_name', 'السريع ون');
+  const companyName = iSet('invoice_company_name', 'الصايدي توصيل');
   const companyPhone = iSet('invoice_company_phone');
   const companyAddress = iSet('invoice_company_address');
 
@@ -227,7 +227,7 @@ export default function RestaurantStatementPage() {
       ═══════════════════════════════════════════ */}
       <div ref={printRef} style={{ background: '#fff' }}>
 
-        {/* ترويسة المستند — بتصميم Saree One */}
+        {/* ترويسة المستند — بتصميم الصايدي توصيل */}
         <div style={{
           border: `4px solid ${ORANGE}`,
           borderRadius: 16,
@@ -265,8 +265,8 @@ export default function RestaurantStatementPage() {
                   textAlign: 'center',
                   boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
                 }}>
-                  <div style={{ fontSize: 30, fontWeight: 900, color: '#fff', letterSpacing: 1 }}>سريع</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: ORANGE, letterSpacing: 4, marginTop: 2 }}>SAREE</div>
+                  <div style={{ fontSize: 28, fontWeight: 900, color: '#fff', letterSpacing: 0.5 }}>الصايدي</div>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: ORANGE, letterSpacing: 3, marginTop: 2 }}>AL-SAIDI</div>
                 </div>
               )}
             </div>
@@ -510,7 +510,7 @@ export default function RestaurantStatementPage() {
           color: '#555',
           direction: 'rtl',
         }}>
-          كشف الحساب وتصفيات المتاجر تم إنشاؤها آلياً من نظام <strong style={{ color: ORANGE }}>السريع ون</strong> — {new Date().toLocaleString('ar-YE')}
+          كشف الحساب وتصفيات المتاجر تم إنشاؤها آلياً من نظام <strong style={{ color: ORANGE }}>الصايدي توصيل</strong> — {new Date().toLocaleString('ar-YE')}
         </div>
       </div>
 

@@ -314,28 +314,28 @@ export function OrderChatModal({
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
       <DialogContent className="max-w-md w-[95vw] h-[580px] rounded-3xl p-0 flex flex-col overflow-hidden bg-white shadow-2xl border-none" dir="rtl">
         
-        {/* Header - System Orange-Red Gradient */}
-        <div className="bg-gradient-to-r from-orange-600 via-orange-500 to-red-600 p-3.5 text-white flex items-center justify-between shrink-0 shadow-md select-none">
+        {/* Header - Al-Saidi Royal Blue Gradient */}
+        <div className="bg-gradient-to-r from-[#0B5ED7] via-[#0852C1] to-[#003B99] p-3.5 text-white flex items-center justify-between shrink-0 shadow-md select-none">
           <div className="flex items-center gap-2.5">
             <div className="relative shrink-0">
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center font-bold text-white shadow-inner">
+              <div className="w-10 h-10 rounded-full bg-white/15 border border-white/25 flex items-center justify-center font-bold text-white shadow-inner">
                 {activeTarget === 'party' ? (
                   currentUserType === 'customer' ? <Truck className="h-5 w-5" /> : <User className="h-5 w-5" />
                 ) : (
                   <Bot className="h-5 w-5" />
                 )}
               </div>
-              <span className={`absolute bottom-0 left-0 w-3 h-3 border-2 border-orange-600 rounded-full shadow-xs ${
+              <span className={`absolute bottom-0 left-0 w-3 h-3 border-2 border-[#0B5ED7] rounded-full shadow-xs ${
                 isPartyOnline ? 'bg-emerald-400' : 'bg-gray-400'
               }`} />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
                 <p className="font-bold text-sm leading-tight">
-                  {activeTarget === 'party' ? partyTitle : 'خدمة عملاء سريع ون (الإدارة)'}
+                  {activeTarget === 'party' ? partyTitle : 'خدمة عملاء الصايدي توصيل (الإدارة)'}
                 </p>
-                <span className="bg-white/20 text-white border border-white/30 text-[9px] font-bold px-1.5 py-0.2 rounded-full">
-                  سريع ون
+                <span className="bg-[#FF6B00] text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full">
+                  الصايدي توصيل
                 </span>
               </div>
               <p className="text-[11px] text-white/90 mt-0.5 flex items-center gap-1">
@@ -364,21 +364,21 @@ export function OrderChatModal({
         </div>
 
         {/* ── تبديل وجهة المحادثة (السائق/العميل vs الإدارة) مع عداد الرسائل غير المقروءة ── */}
-        <div className="bg-[#fdfaf7] p-2 border-b border-orange-100 flex items-center gap-2 shrink-0">
+        <div className="bg-[#F4F8FF] p-2 border-b border-blue-100 flex items-center gap-2 shrink-0">
           {/* زر مراسلة الطرف الآخر في الطلب */}
           <button
             onClick={() => setActiveTarget('party')}
             className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 relative ${
               activeTarget === 'party'
-                ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-sm'
-                : 'bg-white text-gray-700 hover:bg-orange-50 border border-gray-200'
+                ? 'bg-gradient-to-r from-[#0B5ED7] to-[#003B99] text-white shadow-sm'
+                : 'bg-white text-gray-700 hover:bg-blue-50 border border-blue-100'
             }`}
           >
             {currentUserType === 'customer' ? <Truck className="h-4 w-4" /> : <User className="h-4 w-4" />}
             <span>{currentUserType === 'customer' ? 'مراسلة السائق' : 'مراسلة العميل'}</span>
             {partyUnreadCount > 0 && (
               <span className={`text-[10px] font-black px-1.5 py-0.2 rounded-full shadow-xs ${
-                activeTarget === 'party' ? 'bg-white text-orange-600' : 'bg-red-500 text-white animate-pulse'
+                activeTarget === 'party' ? 'bg-[#FF6B00] text-white' : 'bg-[#FF6B00] text-white animate-pulse'
               }`}>
                 {partyUnreadCount}
               </span>
@@ -390,16 +390,14 @@ export function OrderChatModal({
             onClick={() => setActiveTarget('admin')}
             className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 relative ${
               activeTarget === 'admin'
-                ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-sm'
-                : 'bg-white text-gray-700 hover:bg-orange-50 border border-gray-200'
+                ? 'bg-gradient-to-r from-[#0B5ED7] to-[#003B99] text-white shadow-sm'
+                : 'bg-white text-gray-700 hover:bg-blue-50 border border-blue-100'
             }`}
           >
             <Shield className="h-4 w-4" />
             <span>مراسلة الإدارة</span>
             {adminUnreadCount > 0 && (
-              <span className={`text-[10px] font-black px-1.5 py-0.2 rounded-full shadow-xs ${
-                activeTarget === 'admin' ? 'bg-white text-orange-600' : 'bg-red-500 text-white animate-pulse'
-              }`}>
+              <span className="bg-[#FF6B00] text-white text-[10px] font-black px-1.5 py-0.2 rounded-full shadow-xs animate-pulse">
                 {adminUnreadCount}
               </span>
             )}
@@ -407,35 +405,35 @@ export function OrderChatModal({
         </div>
 
         {/* Quick Messages Bar */}
-        <div className="bg-[#fffdfb] px-3 py-2 border-b border-orange-100 flex gap-1.5 overflow-x-auto shrink-0 no-scrollbar">
+        <div className="bg-[#F9FBFF] px-3 py-2 border-b border-blue-100 flex gap-1.5 overflow-x-auto shrink-0 no-scrollbar">
           {quickMessages.map((qm, idx) => (
             <button
               key={idx}
               onClick={() => sendMessageMutation.mutate(qm)}
-              className="bg-white border border-orange-200 text-gray-700 text-[11px] px-2.5 py-1 rounded-full whitespace-nowrap hover:bg-orange-50 hover:text-orange-600 hover:border-orange-300 transition-colors shadow-xs"
+              className="bg-white border border-blue-200 text-gray-700 text-[11px] px-2.5 py-1 rounded-full whitespace-nowrap hover:bg-blue-50 hover:text-[#0B5ED7] hover:border-[#0B5ED7]/40 transition-colors shadow-xs"
             >
               {qm}
             </button>
           ))}
         </div>
 
-        {/* Messages List - System Wallpaper */}
+        {/* Messages List - Al-Saidi Wallpaper */}
         <div 
           ref={scrollRef} 
           className="flex-1 overflow-y-auto p-3.5 space-y-2.5"
           style={{
-            backgroundImage: 'radial-gradient(#fed7aa 1px, transparent 1px)',
+            backgroundImage: 'radial-gradient(#bfdbfe 1px, transparent 1px)',
             backgroundSize: '16px 16px',
-            backgroundColor: '#fffaf8'
+            backgroundColor: '#F4F8FF'
           }}
         >
           {isLoading && currentMessages.length === 0 ? (
             <div className="flex items-center justify-center h-full">
-              <Loader2 className="h-7 w-7 animate-spin text-orange-600" />
+              <Loader2 className="h-7 w-7 animate-spin text-[#0B5ED7]" />
             </div>
           ) : currentMessages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center p-6 bg-white/90 backdrop-blur rounded-2xl border border-orange-100 shadow-sm max-w-[300px] mx-auto">
-              <div className="w-12 h-12 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mb-2">
+            <div className="flex flex-col items-center justify-center h-full text-center p-6 bg-white/95 backdrop-blur rounded-2xl border border-blue-100 shadow-sm max-w-[300px] mx-auto">
+              <div className="w-12 h-12 rounded-full bg-blue-50 text-[#0B5ED7] flex items-center justify-center mb-2">
                 <MessageCircle className="h-6 w-6" />
               </div>
               <p className="text-xs font-bold text-gray-800">
@@ -457,30 +455,30 @@ export function OrderChatModal({
                 <div key={msg.id || Math.random()} className={`flex ${isMe ? 'justify-start' : 'justify-end'}`}>
                   <div className={`max-w-[85%] p-2.5 rounded-2xl shadow-xs text-xs leading-relaxed relative ${
                     isMe
-                      ? 'bg-gradient-to-r from-orange-600 to-red-500 text-white rounded-tr-none border border-orange-500'
-                      : 'bg-white text-gray-900 border border-gray-200 rounded-tl-none'
+                      ? 'bg-gradient-to-r from-[#0B5ED7] to-[#0852C1] text-white rounded-tr-none border border-[#0B5ED7]'
+                      : 'bg-white text-gray-900 border border-blue-100 rounded-tl-none'
                   }`}>
                     {!isMe && (
-                      <p className="text-[10px] font-bold text-orange-700 mb-0.5">
-                        {activeTarget === 'party' ? (recipientName || 'الطرف الآخر') : 'فريق دعم سريع ون (الإدارة)'}
+                      <p className="text-[10px] font-bold text-[#0B5ED7] mb-0.5">
+                        {activeTarget === 'party' ? (recipientName || 'الطرف الآخر') : 'فريق دعم الصايدي توصيل (الإدارة)'}
                       </p>
                     )}
                     <p className="whitespace-pre-wrap break-words">{msg.content}</p>
-                    <div className={`flex items-center gap-1 mt-1 text-[9px] justify-end select-none ${isMe ? 'text-orange-100' : 'text-gray-400'}`}>
+                    <div className={`flex items-center gap-1 mt-1 text-[9px] justify-end select-none ${isMe ? 'text-blue-100' : 'text-gray-400'}`}>
                       <span>
                         {msg.createdAt ? new Date(msg.createdAt).toLocaleTimeString('ar-YE', { hour: '2-digit', minute: '2-digit' }) : ''}
                       </span>
                       {isMe && (
                         msg.isRead ? (
-                          <span className="text-sky-200 font-black tracking-tighter text-[11px]" title="تمت القراءة (صحين أزرق)">
+                          <span className="text-[#FF8C00] font-black tracking-tighter text-[11px]" title="تمت القراءة">
                             ✓✓
                           </span>
                         ) : msg.isDelivered ? (
-                          <span className="text-white font-black tracking-tighter text-[11px]" title="تم الاستلام في التطبيق (صحين غامقين)">
+                          <span className="text-white font-black tracking-tighter text-[11px]" title="تم الاستلام في التطبيق">
                             ✓✓
                           </span>
                         ) : (
-                          <span className="text-orange-200 font-bold text-[11px]" title="تم الإرسال - الطرف الآخر مغلق (صح واحدة)">
+                          <span className="text-blue-200 font-bold text-[11px]" title="تم الإرسال">
                             ✓
                           </span>
                         )
@@ -493,19 +491,19 @@ export function OrderChatModal({
           )}
         </div>
 
-        {/* Input Form - System Orange Bar */}
-        <form onSubmit={handleSend} className="p-2.5 bg-[#fff8f5] border-t border-orange-100 flex items-center gap-2 shrink-0">
+        {/* Input Form - Al-Saidi Soft Sky Bar */}
+        <form onSubmit={handleSend} className="p-2.5 bg-[#F4F8FF] border-t border-blue-100 flex items-center gap-2 shrink-0">
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder={`اكتب رسالة إلى ${activeTarget === 'party' ? (currentUserType === 'customer' ? 'السائق' : 'العميل') : 'الإدارة'}...`}
-            className="rounded-full border border-orange-200 bg-white focus-visible:ring-1 focus-visible:ring-orange-500 text-xs h-10 px-4 shadow-inner"
+            className="rounded-full border border-blue-200 bg-white focus-visible:ring-1 focus-visible:ring-[#0B5ED7] text-xs h-10 px-4 shadow-inner"
             disabled={sendMessageMutation.isPending}
           />
           <Button
             type="submit"
             disabled={!message.trim() || sendMessageMutation.isPending}
-            className="rounded-full h-10 w-10 p-0 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shrink-0 shadow-md transition-all active:scale-95"
+            className="rounded-full h-10 w-10 p-0 bg-gradient-to-r from-[#FF6B00] to-[#FF5500] hover:from-[#e66000] hover:to-[#e04800] text-white shrink-0 shadow-md transition-all active:scale-95"
           >
             {sendMessageMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
           </Button>

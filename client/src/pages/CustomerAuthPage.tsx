@@ -16,6 +16,7 @@ export default function CustomerAuthPage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showOnboarding, setShowOnboarding] = useState(true);
   const [activeTab, setActiveTab] = useState('login');
 
   const [loginIdentifier, setLoginIdentifier] = useState('');
@@ -143,7 +144,7 @@ export default function CustomerAuthPage() {
     try {
       const result = await login(loginIdentifier.trim(), loginPassword);
       if (result.success) {
-        toast({ title: 'تم تسجيل الدخول', description: 'مرحباً بك مجدداً في السريع ون' });
+        toast({ title: 'تم تسجيل الدخول', description: 'مرحباً بك مجدداً في الصايدي توصيل' });
         setLocation('/');
       } else {
         setError(result.message || 'بيانات الدخول غير صحيحة');
@@ -211,7 +212,7 @@ export default function CustomerAuthPage() {
           if (regRes.success) {
             toast({
               title: 'تم إنشاء الحساب بنجاح 🎉',
-              description: 'أهلاً بك في منصة السريع ون',
+              description: 'أهلاً بك في منصة الصايدي توصيل',
             });
             setLocation('/');
             return;
@@ -305,7 +306,7 @@ export default function CustomerAuthPage() {
         otpCode: otpCode.trim(),
       });
       if (result.success) {
-        toast({ title: 'تم إنشاء الحساب بنجاح', description: 'مرحباً بك في السريع ون! تم التحقق من رقمك وإنشاء حسابك 🎉' });
+        toast({ title: 'تم إنشاء الحساب بنجاح', description: 'مرحباً بك في الصايدي توصيل! تم التحقق من رقمك وإنشاء حسابك 🎉' });
         setLocation('/');
       } else {
         setError(result.message || 'فشل في إنشاء الحساب');
@@ -318,321 +319,427 @@ export default function CustomerAuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 py-12" dir="rtl">
-      <div className="mb-8 text-center">
-        <div className="text-5xl md:text-6xl mb-4 flex justify-center font-black">
-          <span className="text-[#ec3714]">السريع ون</span>
-        </div>
-        <p className="text-muted-foreground font-bold">لخدمات التوصيل</p>
+    <div className="min-h-screen saidi-sky-backdrop relative overflow-hidden flex flex-col items-center justify-center p-4 py-8" dir="rtl">
+      {/* Al-Saidi Top Left Corner Swoosh Wave */}
+      <div className="pointer-events-none fixed top-0 left-0 w-44 h-36 z-0 overflow-hidden">
+        <svg viewBox="0 0 220 170" className="w-full h-full" preserveAspectRatio="none">
+          <path d="M0,0 L205,0 C140,35 70,85 0,150 Z" fill="#0B5ED7" />
+          <path d="M0,122 C65,72 130,30 198,0 L215,0 C142,40 72,88 0,145 Z" fill="#FF6B00" />
+        </svg>
       </div>
 
-      <Card className="w-full max-w-md border-none shadow-2xl rounded-[2rem] overflow-hidden">
-        <CardHeader className="space-y-1 bg-white pb-8">
-          <div className="flex items-center gap-2 mb-4">
-            <Button variant="ghost" size="icon" onClick={() => setLocation('/')} className="h-10 w-10 rounded-full hover:bg-gray-100 transition-colors">
-              <ArrowRight className="h-6 w-6" />
-            </Button>
-            <CardTitle className="text-3xl font-black">حسابي</CardTitle>
+      {/* Al-Saidi Bottom Swoosh Wave */}
+      <div className="pointer-events-none fixed bottom-0 left-0 right-0 h-12 z-0 overflow-hidden">
+        <svg viewBox="0 0 400 40" className="w-full h-full" preserveAspectRatio="none">
+          <path d="M0,26 Q180,38 400,6 L400,40 L0,40 Z" fill="#0B5ED7" />
+          <path d="M0,23 Q190,34 400,2 L400,8 Q190,38 0,28 Z" fill="#FF6B00" />
+        </svg>
+      </div>
+
+      {showOnboarding ? (
+        /* ── Al-Saidi Onboarding Hero Card (Matches reference welcome mockup) ── */
+        <div className="relative z-10 w-full max-w-md flex flex-col items-center text-center animate-in fade-in zoom-in-95 duration-300">
+          <div className="relative mb-3">
+            <img
+              src="/assets/saidi-logo.png"
+              alt="الصايدي توصيل"
+              className="w-60 sm:w-64 h-auto object-contain drop-shadow-[0_10px_22px_rgba(11,94,215,0.18)]"
+            />
           </div>
-          <CardDescription className="text-base font-medium">
-            سجل دخولك أو أنشئ حساباً جديداً لتجربة تسوق رائعة
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="bg-white px-8 pb-10">
-          <Tabs value={activeTab} onValueChange={(val) => { setActiveTab(val); setShowOtpStep(false); setError(''); }} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-10 bg-gray-100 p-1.5 rounded-2xl h-14">
-              <TabsTrigger
-                value="login"
-                className="rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md font-black text-base transition-all"
-              >
-                <User className="w-5 h-5 ml-2" />
-                دخول
-              </TabsTrigger>
-              <TabsTrigger
-                value="register"
-                className="rounded-xl data-[state=active]:bg-white data-[state=active]:shadow-md font-black text-base transition-all"
-              >
-                <UserPlus className="w-5 h-5 ml-2" />
-                تسجيل
-              </TabsTrigger>
-            </TabsList>
 
-            {error && (
-              <Alert variant="destructive" className="mb-6 rounded-xl border-2">
-                <AlertDescription className="font-bold">{error}</AlertDescription>
-              </Alert>
-            )}
+          <div className="saidi-blue-gradient text-white font-bold text-sm px-6 py-2 rounded-full shadow-lg border border-white/25 mb-5">
+            سرعة في التوصيل.. <span className="text-[#FF8C00] font-black">ثقة</span> في التعامل.
+          </div>
 
-            <TabsContent value="login">
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="login-id" className="font-bold">الاسم أو رقم الهاتف</Label>
-                  <div className="relative">
-                    <User className="absolute right-3 top-4 h-5 w-5 text-gray-400" />
-                    <Input
-                      id="login-id"
-                      value={loginIdentifier}
-                      onChange={(e) => setLoginIdentifier(e.target.value)}
-                      placeholder="أدخل اسمك أو رقم هاتفك"
-                      required
-                      className="pr-10 h-14 rounded-xl border-gray-200 focus-visible:ring-primary focus-visible:border-primary transition-all text-lg"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="login-pass" className="font-bold">كلمة المرور</Label>
-                    <button
-                      type="button"
-                      onClick={() => { setShowForgotModal(true); setError(''); }}
-                      className="text-xs font-bold text-primary hover:underline"
-                    >
-                      نسي كلمة المرور؟
-                    </button>
-                  </div>
-                  <div className="relative">
-                    <Lock className="absolute right-3 top-4 h-5 w-5 text-gray-400" />
-                    <Input
-                      id="login-pass"
-                      type="password"
-                      value={loginPassword}
-                      onChange={(e) => setLoginPassword(e.target.value)}
-                      placeholder="أدخل كلمة المرور"
-                      required
-                      className="pr-10 h-14 rounded-xl border-gray-200 focus-visible:ring-primary focus-visible:border-primary transition-all text-lg"
-                    />
-                  </div>
-                </div>
+          <div className="w-full rounded-[2rem] overflow-hidden shadow-xl border-2 border-white bg-white mb-6 relative">
+            <img
+              src="/assets/saidi-courier-hero.jpg"
+              alt="كابتن الصايدي توصيل"
+              className="w-full h-56 sm:h-64 object-cover"
+            />
+            <div className="absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-[#003B99]/75 to-transparent flex items-end justify-center pb-3">
+              <span className="text-white text-xs font-bold tracking-wide">
+                خدمة توصيل ذكية وموثوقة على مدار الساعة
+              </span>
+            </div>
+          </div>
+
+          <div className="w-full space-y-3 px-2">
+            <Button
+              type="button"
+              onClick={() => {
+                setActiveTab('register');
+                setShowOnboarding(false);
+              }}
+              className="w-full h-14 rounded-full saidi-orange-gradient hover:brightness-105 text-white font-black text-lg shadow-lg shadow-orange-500/25 flex items-center justify-between px-5 transition-all active:scale-[0.98]"
+            >
+              <span className="w-8 h-8 rounded-full bg-white text-[#FF6B00] flex items-center justify-center shadow-sm">
+                <ArrowRight className="h-4 w-4 rotate-180" />
+              </span>
+              <span>ابدأ الآن</span>
+              <span className="w-8" />
+            </Button>
+
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setActiveTab('login');
+                setShowOnboarding(false);
+              }}
+              className="w-full h-13 rounded-full bg-white border-2 border-[#0B5ED7] text-[#0B5ED7] hover:bg-blue-50 font-black text-base shadow-sm flex items-center justify-between px-5 transition-all active:scale-[0.98]"
+            >
+              <span className="w-8" />
+              <span>تسجيل الدخول</span>
+              <span className="w-8 h-8 rounded-full bg-blue-50 text-[#0B5ED7] flex items-center justify-center">
+                <User className="h-4 w-4" />
+              </span>
+            </Button>
+
+            <button
+              type="button"
+              onClick={() => {
+                localStorage.setItem('is_guest', 'true');
+                window.dispatchEvent(new Event('storage'));
+                setLocation('/');
+              }}
+              className="w-full py-2.5 text-sm font-bold text-[#003B99]/80 hover:text-[#0B5ED7] transition-colors"
+            >
+              تصفح التطبيق كزائر ←
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="relative z-10 w-full max-w-md animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="mb-5 text-center flex flex-col items-center">
+            <img
+              src="/assets/saidi-logo.png"
+              alt="الصايدي توصيل"
+              className="w-44 h-auto object-contain mb-2 drop-shadow-md cursor-pointer"
+              onClick={() => setShowOnboarding(true)}
+            />
+            <span className="inline-flex items-center gap-1.5 bg-white/90 border border-blue-100 text-[#003B99] text-xs font-bold px-4 py-1 rounded-full shadow-xs">
+              سرعة في التوصيل.. <span className="text-[#FF6B00] font-black">ثقة</span> في التعامل
+            </span>
+          </div>
+
+          <Card className="w-full border border-blue-100 shadow-2xl shadow-blue-900/10 rounded-[2rem] overflow-hidden bg-white">
+            <CardHeader className="space-y-1 bg-gradient-to-b from-[#EEF5FF] to-white pb-6 border-b border-blue-50">
+              <div className="flex items-center justify-between mb-2">
                 <Button
-                  type="submit"
-                  className="w-full h-14 rounded-xl font-black text-xl mt-6 bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 transition-all active:scale-95"
-                  disabled={loading}
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowOnboarding(true)}
+                  className="h-10 w-10 rounded-full bg-white shadow-xs border border-blue-100 text-[#0B5ED7] hover:bg-blue-50 transition-colors"
+                  title="رجوع"
                 >
-                  {loading ? (
-                    <>
-                      <Loader2 className="ml-2 h-5 w-5 animate-spin" />
-                      جاري تسجيل الدخول...
-                    </>
-                  ) : (
-                    'تسجيل الدخول'
-                  )}
+                  <ArrowRight className="h-5 w-5" />
                 </Button>
-
-                <div className="pt-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => {
-                      localStorage.setItem('is_guest', 'true');
-                      window.dispatchEvent(new Event('storage'));
-                      setLocation('/');
-                    }}
-                    className="w-full h-14 rounded-xl font-black text-xl border-2 hover:bg-gray-50 transition-all active:scale-95"
+                <CardTitle className="text-2xl font-black text-[#003B99]">حسابي</CardTitle>
+                <button
+                  type="button"
+                  onClick={() => setLocation('/')}
+                  className="text-xs font-bold text-[#0B5ED7] hover:underline"
+                >
+                  الرئيسية
+                </button>
+              </div>
+              <CardDescription className="text-sm font-medium text-center text-gray-500">
+                سجل دخولك أو أنشئ حساباً جديداً لتجربة توصيل سريعة وموثوقة
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="bg-white px-6 sm:px-8 pt-6 pb-8">
+              <Tabs value={activeTab} onValueChange={(val) => { setActiveTab(val); setShowOtpStep(false); setError(''); }} className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-7 bg-[#EEF5FF] p-1.5 rounded-2xl h-13 border border-blue-100">
+                  <TabsTrigger
+                    value="login"
+                    className="rounded-xl data-[state=active]:bg-[#0B5ED7] data-[state=active]:text-white data-[state=active]:shadow-md font-black text-sm transition-all text-[#003B99]"
                   >
-                    الدخول كزائر
-                  </Button>
-                </div>
-              </form>
-            </TabsContent>
-
-            <TabsContent value="register">
-              {!showOtpStep ? (
-                /* الخطوة 1: إدخال البيانات والتلفون */
-                <form onSubmit={handleStartRegister} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="reg-name" className="font-bold">الاسم بالكامل</Label>
-                    <div className="relative">
-                      <User className="absolute right-3 top-3.5 h-5 w-5 text-gray-400" />
-                      <Input
-                        id="reg-name"
-                        value={regName}
-                        onChange={(e) => setRegName(e.target.value)}
-                        placeholder="مثال: محمد علي"
-                        required
-                        className="pr-10 h-14 rounded-xl border-gray-200 focus-visible:ring-primary"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="reg-phone" className="font-bold">رقم الهاتف (الجمهورية اليمنية)</Label>
-                    <div className="relative">
-                      <Phone className="absolute right-3 top-3.5 h-5 w-5 text-gray-400" />
-                      <Input
-                        id="reg-phone"
-                        type="tel"
-                        value={regPhone}
-                        onChange={(e) => setRegPhone(e.target.value)}
-                        placeholder="77XXXXXXX"
-                        required
-                        className="pr-10 h-14 rounded-xl border-gray-200 focus-visible:ring-primary text-left font-mono"
-                        dir="ltr"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="reg-pass" className="font-bold">كلمة المرور</Label>
-                    <div className="relative">
-                      <Lock className="absolute right-3 top-3.5 h-5 w-5 text-gray-400" />
-                      <Input
-                        id="reg-pass"
-                        type="password"
-                        value={regPassword}
-                        onChange={(e) => setRegPassword(e.target.value)}
-                        placeholder="اختر كلمة مرور"
-                        required
-                        className="pr-10 h-14 rounded-xl border-gray-200 focus-visible:ring-primary"
-                      />
-                    </div>
-                  </div>
-                  <Button
-                    type="submit"
-                    className="w-full h-14 rounded-xl font-black text-xl mt-6 bg-secondary hover:bg-secondary/90 text-white shadow-lg shadow-secondary/20 transition-all active:scale-95 flex items-center justify-center gap-2"
-                    disabled={loading}
+                    <User className="w-4 h-4 ml-1.5" />
+                    دخول
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="register"
+                    className="rounded-xl data-[state=active]:bg-[#0B5ED7] data-[state=active]:text-white data-[state=active]:shadow-md font-black text-sm transition-all text-[#003B99]"
                   >
-                    {loading ? (
-                      <>
-                        <Loader2 className="h-5 w-5 animate-spin" />
-                        جاري إرسال رمز التحقق...
-                      </>
-                    ) : (
-                      <>
-                        <ShieldCheck className="h-6 w-6" />
-                        إرسال رمز التحقق (OTP)
-                      </>
-                    )}
-                  </Button>
-                </form>
-              ) : (
-                /* الخطوة 2: إدخال رمز OTP والتحقق */
-                <form onSubmit={handleFinalRegister} className="space-y-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-center space-y-2">
-                    <div className="flex items-center justify-center gap-2 font-black text-emerald-800 text-lg">
-                      <ShieldCheck className="w-6 h-6 text-emerald-600" />
-                      التحقق من رقم الهاتف
-                    </div>
-                    <p className="text-sm font-semibold text-emerald-700 dir-ltr font-mono">
-                      +967 {regPhone}
-                    </p>
+                    <UserPlus className="w-4 h-4 ml-1.5" />
+                    حساب جديد
+                  </TabsTrigger>
+                </TabsList>
 
-                    {/* زر فتح الواتساب إذا كانت القناة المفعلة هي الواتساب */}
-                    {otpWhatsappUrl && (otpChannel === 'whatsapp' || otpChannel === 'both') && (
-                      <div className="pt-2">
+                {error && (
+                  <Alert variant="destructive" className="mb-5 rounded-2xl border-2">
+                    <AlertDescription className="font-bold">{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                <TabsContent value="login">
+                  <form onSubmit={handleLogin} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="login-id" className="font-bold text-[#003B99]">الاسم أو رقم الهاتف</Label>
+                      <div className="relative">
+                        <User className="absolute right-3.5 top-4 h-5 w-5 text-[#0B5ED7]/60" />
+                        <Input
+                          id="login-id"
+                          value={loginIdentifier}
+                          onChange={(e) => setLoginIdentifier(e.target.value)}
+                          placeholder="أدخل اسمك أو رقم هاتفك"
+                          required
+                          className="pr-11 h-13 rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7] focus-visible:border-[#0B5ED7] transition-all text-base"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="login-pass" className="font-bold text-[#003B99]">كلمة المرور</Label>
+                        <button
+                          type="button"
+                          onClick={() => { setShowForgotModal(true); setError(''); }}
+                          className="text-xs font-bold text-[#FF6B00] hover:underline"
+                        >
+                          نسيت كلمة المرور؟
+                        </button>
+                      </div>
+                      <div className="relative">
+                        <Lock className="absolute right-3.5 top-4 h-5 w-5 text-[#0B5ED7]/60" />
+                        <Input
+                          id="login-pass"
+                          type="password"
+                          value={loginPassword}
+                          onChange={(e) => setLoginPassword(e.target.value)}
+                          placeholder="أدخل كلمة المرور"
+                          required
+                          className="pr-11 h-13 rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7] focus-visible:border-[#0B5ED7] transition-all text-base"
+                        />
+                      </div>
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full h-13 rounded-full font-black text-lg mt-4 saidi-blue-gradient hover:brightness-110 text-white shadow-lg shadow-blue-600/20 transition-all active:scale-95"
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="ml-2 h-5 w-5 animate-spin" />
+                          جاري تسجيل الدخول...
+                        </>
+                      ) : (
+                        'تسجيل الدخول'
+                      )}
+                    </Button>
+
+                    <div className="pt-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          localStorage.setItem('is_guest', 'true');
+                          window.dispatchEvent(new Event('storage'));
+                          setLocation('/');
+                        }}
+                        className="w-full h-12 rounded-full font-bold text-base border-2 border-blue-200 text-[#0B5ED7] hover:bg-blue-50 transition-all active:scale-95"
+                      >
+                        الدخول كزائر
+                      </Button>
+                    </div>
+                  </form>
+                </TabsContent>
+
+                <TabsContent value="register">
+                  {!showOtpStep ? (
+                    <form onSubmit={handleStartRegister} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="reg-name" className="font-bold text-[#003B99]">الاسم بالكامل</Label>
+                        <div className="relative">
+                          <User className="absolute right-3.5 top-3.5 h-5 w-5 text-[#0B5ED7]/60" />
+                          <Input
+                            id="reg-name"
+                            value={regName}
+                            onChange={(e) => setRegName(e.target.value)}
+                            placeholder="مثال: محمد علي"
+                            required
+                            className="pr-11 h-13 rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7]"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="reg-phone" className="font-bold text-[#003B99]">رقم الهاتف (الجمهورية اليمنية)</Label>
+                        <div className="relative">
+                          <Phone className="absolute right-3.5 top-3.5 h-5 w-5 text-[#0B5ED7]/60" />
+                          <Input
+                            id="reg-phone"
+                            type="tel"
+                            value={regPhone}
+                            onChange={(e) => setRegPhone(e.target.value)}
+                            placeholder="77XXXXXXX"
+                            required
+                            className="pr-11 h-13 rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7] text-left font-mono"
+                            dir="ltr"
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="reg-pass" className="font-bold text-[#003B99]">كلمة المرور</Label>
+                        <div className="relative">
+                          <Lock className="absolute right-3.5 top-3.5 h-5 w-5 text-[#0B5ED7]/60" />
+                          <Input
+                            id="reg-pass"
+                            type="password"
+                            value={regPassword}
+                            onChange={(e) => setRegPassword(e.target.value)}
+                            placeholder="اختر كلمة مرور"
+                            required
+                            className="pr-11 h-13 rounded-2xl border-blue-100 bg-[#F9FBFF] focus-visible:ring-[#0B5ED7]"
+                          />
+                        </div>
+                      </div>
+                      <Button
+                        type="submit"
+                        className="w-full h-13 rounded-full font-black text-lg mt-4 saidi-orange-gradient hover:brightness-105 text-white shadow-lg shadow-orange-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <>
+                            <Loader2 className="h-5 w-5 animate-spin" />
+                            جاري إرسال رمز التحقق...
+                          </>
+                        ) : (
+                          <>
+                            <ShieldCheck className="h-5 w-5" />
+                            إرسال رمز التحقق (OTP)
+                          </>
+                        )}
+                      </Button>
+                    </form>
+                  ) : (
+                    <form onSubmit={handleFinalRegister} className="space-y-5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                      <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-center space-y-2">
+                        <div className="flex items-center justify-center gap-2 font-black text-[#003B99] text-lg">
+                          <ShieldCheck className="w-6 h-6 text-[#0B5ED7]" />
+                          التحقق من رقم الهاتف
+                        </div>
+                        <p className="text-sm font-semibold text-[#0B5ED7] dir-ltr font-mono">
+                          +967 {regPhone}
+                        </p>
+
+                        {otpWhatsappUrl && (otpChannel === 'whatsapp' || otpChannel === 'both') && (
+                          <div className="pt-2">
+                            <Button
+                              type="button"
+                              onClick={() => window.open(otpWhatsappUrl, '_blank')}
+                              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-full gap-2 h-11"
+                            >
+                              <MessageCircle className="w-5 h-5 fill-white" />
+                              فتح الواتساب لاستلام الكود فوراً
+                            </Button>
+                          </div>
+                        )}
+
+                        {demoOtpCode && (
+                          <div className="mt-2 bg-white border border-blue-200 rounded-xl p-2 inline-flex items-center gap-2 text-xs font-bold text-[#003B99]">
+                            <KeyRound className="w-4 h-4 text-[#FF6B00]" />
+                            رمز التحقق: <span className="font-mono text-base font-black text-[#0B5ED7] tracking-widest">{demoOtpCode}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label htmlFor="otp-input" className="font-bold text-base block text-center text-[#003B99]">
+                          أدخل رمز التحقق المكون من 4 أرقام:
+                        </Label>
+
+                        <div className="flex items-center justify-center gap-3 dir-ltr">
+                          {[0, 1, 2, 3].map((index) => {
+                            const digit = otpCode[index] || '';
+                            return (
+                              <input
+                                key={index}
+                                id={`otp-box-${index}`}
+                                type="text"
+                                inputMode="numeric"
+                                maxLength={1}
+                                value={digit}
+                                onChange={(e) => {
+                                  const val = e.target.value.replace(/[^0-9]/g, '');
+                                  const currentOtp = otpCode.split('');
+                                  currentOtp[index] = val;
+                                  const newOtp = currentOtp.join('').slice(0, 4);
+                                  setOtpCode(newOtp);
+
+                                  if (val && index < 3) {
+                                    const nextInput = document.getElementById(`otp-box-${index + 1}`);
+                                    nextInput?.focus();
+                                  }
+                                }}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Backspace' && !otpCode[index] && index > 0) {
+                                    const prevInput = document.getElementById(`otp-box-${index - 1}`);
+                                    prevInput?.focus();
+                                  }
+                                }}
+                                className="w-14 h-16 rounded-2xl border-2 border-[#0B5ED7] bg-[#F4F8FF] text-center text-3xl font-black font-mono text-[#003B99] focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:bg-white shadow-sm transition-all"
+                                autoFocus={index === 0}
+                              />
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      <Button
+                        type="submit"
+                        className="w-full h-13 rounded-full font-black text-lg saidi-orange-gradient hover:brightness-105 text-white shadow-lg shadow-orange-500/20 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <>
+                            <Loader2 className="h-5 w-5 animate-spin" />
+                            جاري التحقق وإنشاء الحساب...
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle2 className="h-5 w-5" />
+                            تأكيد وإنشاء الحساب
+                          </>
+                        )}
+                      </Button>
+
+                      <div className="flex items-center justify-between pt-2">
                         <Button
                           type="button"
-                          onClick={() => window.open(otpWhatsappUrl, '_blank')}
-                          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl gap-2 h-11"
+                          variant="ghost"
+                          onClick={() => setShowOtpStep(false)}
+                          className="text-sm font-bold text-gray-500 hover:text-gray-800"
                         >
-                          <MessageCircle className="w-5 h-5 fill-white" />
-                          فتح الواتساب لاستلام الكود فوراً
+                          تعديل رقم الهاتف
+                        </Button>
+
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled={!canResend || loading}
+                          onClick={handleResendOtp}
+                          className="text-sm font-bold rounded-full border-blue-200 text-[#0B5ED7] gap-1.5"
+                        >
+                          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                          {canResend ? 'إعادة إرسال الرمز' : `إعادة الإرسال (${countdown}ث)`}
                         </Button>
                       </div>
-                    )}
+                    </form>
+                  )}
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
 
-                    {demoOtpCode && (
-                      <div className="mt-2 bg-white/90 border border-emerald-300 rounded-xl p-2 inline-flex items-center gap-2 text-xs font-bold text-emerald-900">
-                        <KeyRound className="w-4 h-4 text-emerald-600" />
-                        رمز التحقق: <span className="font-mono text-base font-black text-primary tracking-widest">{demoOtpCode}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* خانات إدخال رمز التحقق الـ 4 المتميزة */}
-                  <div className="space-y-3">
-                    <Label htmlFor="otp-input" className="font-bold text-base block text-center">
-                      أدخل رمز التحقق المكون من 4 أرقام:
-                    </Label>
-
-                    <div className="flex items-center justify-center gap-3 dir-ltr">
-                      {[0, 1, 2, 3].map((index) => {
-                        const digit = otpCode[index] || '';
-                        return (
-                          <input
-                            key={index}
-                            id={`otp-box-${index}`}
-                            type="text"
-                            inputMode="numeric"
-                            maxLength={1}
-                            value={digit}
-                            onChange={(e) => {
-                              const val = e.target.value.replace(/[^0-9]/g, '');
-                              const currentOtp = otpCode.split('');
-                              currentOtp[index] = val;
-                              const newOtp = currentOtp.join('').slice(0, 4);
-                              setOtpCode(newOtp);
-
-                              // نقل التركيز للتركيبة التالية
-                              if (val && index < 3) {
-                                const nextInput = document.getElementById(`otp-box-${index + 1}`);
-                                nextInput?.focus();
-                              }
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Backspace' && !otpCode[index] && index > 0) {
-                                const prevInput = document.getElementById(`otp-box-${index - 1}`);
-                                prevInput?.focus();
-                              }
-                            }}
-                            className="w-14 h-16 rounded-2xl border-2 border-emerald-500 bg-emerald-50/30 text-center text-3xl font-black font-mono text-emerald-900 focus:outline-none focus:ring-4 focus:ring-emerald-500/30 focus:bg-white shadow-sm transition-all"
-                            autoFocus={index === 0}
-                          />
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full h-14 rounded-xl font-black text-xl bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/20 transition-all active:scale-95 flex items-center justify-center gap-2"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="h-5 w-5 animate-spin" />
-                        جاري التحقق وإنشاء الحساب...
-                      </>
-                    ) : (
-                      <>
-                        <CheckCircle2 className="h-6 w-6" />
-                        تأكيد وانشاء الحساب
-                      </>
-                    )}
-                  </Button>
-
-                  <div className="flex items-center justify-between pt-2">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() => setShowOtpStep(false)}
-                      className="text-sm font-bold text-gray-500 hover:text-gray-800"
-                    >
-                      تعديل رقم الهاتف
-                    </Button>
-
-                    <Button
-                      type="button"
-                      variant="outline"
-                      disabled={!canResend || loading}
-                      onClick={handleResendOtp}
-                      className="text-sm font-bold rounded-xl gap-1.5"
-                    >
-                      <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                      {canResend ? 'إعادة إرسال الرمز' : `إعادة الإرسال (${countdown}ث)`}
-                    </Button>
-                  </div>
-                </form>
-              )}
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-
-      <p className="mt-8 text-sm text-muted-foreground max-w-xs text-center">
-        بتسجيلك في السريع ون، أنت توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا.
-      </p>
+          <p className="mt-6 text-xs text-gray-500 max-w-xs mx-auto text-center leading-relaxed">
+            بتسجيلك في الصايدي توصيل، أنت توافق على شروط الخدمة وسياسة الخصوصية الخاصة بنا.
+          </p>
+        </div>
+      )}
 
       {showForgotModal && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <Card className="w-full max-w-md shadow-2xl rounded-3xl border-none">
+          <Card className="w-full max-w-md shadow-2xl rounded-3xl border border-blue-100">
             <CardHeader className="text-center relative pb-2">
               <Button
                 variant="ghost"
@@ -642,10 +749,10 @@ export default function CustomerAuthPage() {
               >
                 ✕
               </Button>
-              <div className="mx-auto w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center mb-3 text-primary">
+              <div className="mx-auto w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-3 text-[#0B5ED7]">
                 <KeyRound className="w-6 h-6" />
               </div>
-              <CardTitle className="text-2xl font-black">استعادة كلمة المرور</CardTitle>
+              <CardTitle className="text-2xl font-black text-[#003B99]">استعادة كلمة المرور</CardTitle>
               <CardDescription>
                 {forgotStep === 1 ? 'أدخل رقم هاتفك المسجل لإرسال رمز التحقق' : 'أدخل رمز التحقق وكلمة المرور الجديدة'}
               </CardDescription>
@@ -669,13 +776,13 @@ export default function CustomerAuthPage() {
                         onChange={(e) => setForgotPhone(e.target.value)}
                         placeholder="770000000"
                         required
-                        className="pr-10 h-14 rounded-xl border-gray-200 text-lg"
+                        className="pr-10 h-14 rounded-2xl border-blue-100 text-lg"
                       />
                     </div>
                   </div>
                   <Button
                     type="submit"
-                    className="w-full h-14 rounded-xl font-black text-lg bg-primary text-white"
+                    className="w-full h-13 rounded-full font-black text-lg saidi-blue-gradient text-white"
                     disabled={loading}
                   >
                     {loading ? <Loader2 className="animate-spin h-5 w-5" /> : 'إرسال رمز التحقق'}
@@ -711,7 +818,7 @@ export default function CustomerAuthPage() {
                       onChange={(e) => setForgotOtp(e.target.value)}
                       placeholder="1234"
                       required
-                      className="h-14 rounded-xl text-center text-xl tracking-widest"
+                      className="h-14 rounded-2xl text-center text-xl tracking-widest border-blue-100"
                     />
                   </div>
 
@@ -725,14 +832,14 @@ export default function CustomerAuthPage() {
                         onChange={(e) => setNewPassword(e.target.value)}
                         placeholder="أدخل كلمة المرور الجديدة"
                         required
-                        className="pr-10 h-14 rounded-xl border-gray-200 text-lg"
+                        className="pr-10 h-14 rounded-2xl border-blue-100 text-lg"
                       />
                     </div>
                   </div>
 
                   <Button
                     type="submit"
-                    className="w-full h-14 rounded-xl font-black text-lg bg-primary text-white"
+                    className="w-full h-13 rounded-full font-black text-lg saidi-blue-gradient text-white"
                     disabled={loading}
                   >
                     {loading ? <Loader2 className="animate-spin h-5 w-5" /> : 'تأكيد وتغيير كلمة المرور'}

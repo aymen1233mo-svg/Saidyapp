@@ -39,7 +39,7 @@ const INVOICE_KEYS = [
 ];
 
 const DEFAULT_DESIGN: Record<string, string> = {
-  invoice_company_name: 'السريع ون',
+  invoice_company_name: 'الصايدي توصيل',
   invoice_company_logo: '',
   invoice_company_address: 'الجمهورية اليمنية',
   invoice_company_phone: '',
@@ -47,7 +47,7 @@ const DEFAULT_DESIGN: Record<string, string> = {
   invoice_company_website: '',
   invoice_header_text: 'كشف حساب / سند طلب',
   invoice_footer_text: 'شكراً لتعاملكم معنا - جميع الحقوق محفوظة',
-  invoice_primary_color: '#ef4444',
+  invoice_primary_color: '#0B5ED7',
   invoice_secondary_color: '#1f2937',
   invoice_bank_name: '',
   invoice_bank_account: '',
@@ -60,7 +60,7 @@ const DEFAULT_DESIGN: Record<string, string> = {
 };
 
 function PreviewInvoice({ design }: { design: Record<string, string> }) {
-  const primaryColor = design.invoice_primary_color || '#ef4444';
+  const primaryColor = design.invoice_primary_color || '#0B5ED7';
   const showLogo = design.invoice_show_logo !== 'false';
   const logoUrl = design.invoice_company_logo;
 
@@ -341,7 +341,7 @@ export default function AdminInvoiceDesign() {
                       <Input
                         value={design.invoice_company_name}
                         onChange={e => set('invoice_company_name', e.target.value)}
-                        placeholder="السريع ون"
+                        placeholder="الصايدي توصيل"
                         className="mt-1"
                       />
                     </div>
@@ -455,7 +455,7 @@ export default function AdminInvoiceDesign() {
                         </div>
                       </div>
                       <div className="flex gap-2 mt-2 flex-wrap">
-                        {['#ef4444','#f97316','#16a34a','#2563eb','#7c3aed','#0f172a','#374151'].map(c => (
+                        {['#0B5ED7','#FF6B00','#003B99','#16a34a','#7c3aed','#0f172a','#374151'].map(c => (
                           <button
                             key={c}
                             onClick={() => set('invoice_primary_color', c)}

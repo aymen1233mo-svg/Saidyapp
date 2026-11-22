@@ -614,10 +614,10 @@ export default function AdminUiSettings() {
 
             {/* الهوية البصرية */}
             <SectionCard {...secProps('branding')} title="الهوية البصرية والشعار" icon={ImageIcon} color="text-purple-600">
-              <SettingRow label="اسم التطبيق" {...rowProps('app_name')} placeholder="السريع ون" description="الاسم الذي يظهر في الشريط العلوي" />
-              <SettingRow label="النص الفرعي أسفل اسم التطبيق" {...rowProps('app_subtitle')} placeholder="السريع ون" description="النص الصغير الذي يظهر أسفل اسم التطبيق في الهيدر والقائمة الجانبية" />
+              <SettingRow label="اسم التطبيق" {...rowProps('app_name')} placeholder="الصايدي توصيل" description="الاسم الذي يظهر في الشريط العلوي" />
+              <SettingRow label="النص الفرعي أسفل اسم التطبيق" {...rowProps('app_subtitle')} placeholder="الصايدي توصيل" description="النص الصغير الذي يظهر أسفل اسم التطبيق في الهيدر والقائمة الجانبية" />
               <SettingRow label="إصدار التطبيق" {...rowProps('app_version')} placeholder="1.0.0" description="رقم إصدار التطبيق الظاهر في القائمة الجانبية" />
-              <SettingRow label="اللون الأساسي (hex)" {...rowProps('app_theme')} placeholder="#16a34a" description="لون الموضوع الرئيسي" />
+              <SettingRow label="اللون الأساسي (hex)" {...rowProps('app_theme')} placeholder="#0B5ED7" description="لون الموضوع الرئيسي" />
               <SettingRow label="شعار الشريط العلوي" {...rowProps('header_logo_url')} type="image" description="الشعار الصغير في أعلى التطبيق" />
               <SettingRow label="شعار القائمة الجانبية" {...rowProps('sidebar_logo_url')} type="image" description="شعار خاص بالقائمة الجانبية" />
               <SettingRow label="الشعار النصي للقائمة الجانبية" {...rowProps('sidebar_tagline')} placeholder="كل ما تحتاجونه في مكان واحد" description="النص الظاهر أسفل الشعار في القائمة الجانبية" />
@@ -629,7 +629,7 @@ export default function AdminUiSettings() {
               <SettingRow label="إظهار شاشة الترحيب" {...rowProps('show_splash_screen')} type="boolean" description="عرض شاشة الترحيب عند فتح التطبيق لأول مرة" />
               <SettingRow label="صورة شاشة الترحيب" {...rowProps('splash_image_url')} type="image" description="الصورة الرئيسية في شاشة الترحيب" />
               <SettingRow label="صورة إضافية للترحيب" {...rowProps('splash_image_url_2')} type="image" description="صورة ثانية تظهر في الشاشة (اختياري)" />
-              <SettingRow label="عنوان شاشة الترحيب" {...rowProps('splash_title')} placeholder="السريع ون" description="النص الرئيسي في شاشة الترحيب" />
+              <SettingRow label="عنوان شاشة الترحيب" {...rowProps('splash_title')} placeholder="الصايدي توصيل" description="النص الرئيسي في شاشة الترحيب" />
               <SettingRow label="نص الترحيب (وصف)" {...rowProps('splash_subtitle')} type="textarea" placeholder="أفضل وجبات طازجة..." description="الوصف أسفل العنوان" />
               <SettingRow label="نص زر البداية" {...rowProps('splash_button_text')} placeholder="ابدأ الآن" description="النص على زر البدء في شاشة الترحيب" />
               <SettingRow label="مدة عرض شاشة الترحيب (بالثواني)" {...rowProps('splash_duration')} placeholder="3.8" description="المدة الكافية لاكتمال عرض كافة المحتويات والتأثيرات (مثال: 3.8 ثانية)" />
@@ -951,7 +951,7 @@ export default function AdminUiSettings() {
             <SectionCard {...secProps('sidebar')} title="القائمة الجانبية والمشاركة" icon={Share2} color="text-blue-600">
               <SettingRow label="إظهار زر المشاركة في القائمة" {...rowProps('show_share_button')} type="boolean" description="إظهار أو إخفاء زر مشاركة التطبيق" />
               <SettingRow label="إظهار زر التواصل في القائمة" {...rowProps('show_contact_button')} type="boolean" description="إظهار أو إخفاء زر التواصل في القائمة الجانبية" />
-              <SettingRow label="نص المشاركة" {...rowProps('share_text')} type="textarea" placeholder="جرب تطبيق السريع ون الآن!" description="النص الافتراضي عند مشاركة التطبيق" rows={2} />
+              <SettingRow label="نص المشاركة" {...rowProps('share_text')} type="textarea" placeholder="جرب تطبيق الصايدي توصيل الآن!" description="النص الافتراضي عند مشاركة التطبيق" rows={2} />
               <SettingRow label="رابط المشاركة" {...rowProps('share_url')} placeholder="https://tamtom.app" description="الرابط الذي يشاركه المستخدم" />
             </SectionCard>
 
@@ -963,14 +963,14 @@ export default function AdminUiSettings() {
 
             {/* محتوى صفحة حول التطبيق */}
             <SectionCard {...secProps('about_page')} title="محتوى صفحة حول التطبيق" icon={Globe} color="text-indigo-600">
-              <SettingRow label="اسم التطبيق" {...rowProps('about_app_name')} placeholder="السريع ون (Alsaree1)" description="اسم التطبيق الظاهر في رأس صفحة حول التطبيق" />
+              <SettingRow label="اسم التطبيق" {...rowProps('about_app_name')} placeholder="الصايدي توصيل (Al-Saidi Delivery)" description="اسم التطبيق الظاهر في رأس صفحة حول التطبيق" />
               <SettingRow label="نبذة ووصف التطبيق" {...rowProps('about_app_description')} type="textarea" placeholder="التطبيق الرائد والأسرع لتوصيل الخضار والفواكه والمواد الغذائية والمتاجر..." description="الوصف التفصيلي عن التطبيق وخدماته" rows={3} />
               <SettingRow label="رقم الإصدار" {...rowProps('about_app_version')} placeholder="1.5.0" description="رقم إصدار التطبيق (مثال: 1.5.0)" />
               <SettingRow label="رؤية التطبيق" {...rowProps('about_app_vision')} type="textarea" placeholder="أن نكون الخيار الأول والأنسب لكل منزل ومؤسسة..." description="النص الخاص برؤية المنصة المستقلية" rows={2} />
               <SettingRow label="رسالة التطبيق" {...rowProps('about_app_mission')} type="textarea" placeholder="تقديم تجربة تسوق سلسة وآمنة وتوفير طازج المنتجات..." description="النص الخاص برسالة التطبيق للعملاء" rows={2} />
               <SettingRow label="رقم هاتف التواصل" {...rowProps('about_app_phone')} placeholder="+967770000000" description="رقم الهاتف الظاهر في قسم الاتصال" />
               <SettingRow label="رقم واتساب التواصل" {...rowProps('about_app_whatsapp')} placeholder="+967770000000" description="رقم الواتساب المباشر للعملاء" />
-              <SettingRow label="البريد الإلكتروني للدعم" {...rowProps('about_app_email')} placeholder="support@alsaree1.com" description="بريد التواصل والدعم الفني" />
+              <SettingRow label="البريد الإلكتروني للدعم" {...rowProps('about_app_email')} placeholder="support@alsaidi-delivery.com" description="بريد التواصل والدعم الفني" />
             </SectionCard>
 
             {/* إعدادات السلة والدفع */}

@@ -250,7 +250,7 @@ export default function WhatsAppChatBox({ initialUserId, initialUserType, classN
 
   // Quick replies list
   const quickReplies = [
-    'أهلاً وسهلاً بك في منصة سريع ون! كيف يمكننا خدمتك ومساعدتك اليوم؟ 😊',
+    'أهلاً وسهلاً بك في منصة الصايدي توصيل! كيف يمكننا خدمتك ومساعدتك اليوم؟ 😊',
     'طلبك قيد المتابعة مع الكابتن الآن وسنوافيك بالتحديثات فوراً 🛵',
     'تم تسجيل ملاحظتك وجاري العمل على معالجتها بأسرع وقت ممكن ✅',
     'يرجى تزويدنا برقم الطلب لتسهيل متابعة العملية معك 📦',
@@ -260,10 +260,10 @@ export default function WhatsAppChatBox({ initialUserId, initialUserType, classN
   return (
     <div className={`flex h-[750px] w-full rounded-2xl border border-gray-300 bg-white shadow-xl overflow-hidden font-sans ${className}`} dir="rtl">
       
-      {/* ── الجانب الأيمن: قائمة المحادثات (سريع ون) ── */}
+      {/* ── الجانب الأيمن: قائمة المحادثات (الصايدي توصيل) ── */}
       <div className="w-full md:w-[360px] lg:w-[400px] border-l border-gray-200 flex flex-col bg-[#fdfaf7] shrink-0">
         
-        {/* شريط رأس المحادثات بنظام سريع ون البرتقالي المحمر */}
+        {/* شريط رأس المحادثات بنظام الصايدي توصيل */}
         <div className="bg-gradient-to-r from-orange-600 via-orange-500 to-red-600 text-white p-4 flex items-center justify-between shadow-md select-none">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center shadow-inner">
@@ -273,7 +273,7 @@ export default function WhatsAppChatBox({ initialUserId, initialUserType, classN
               <h2 className="font-bold text-base tracking-tight flex items-center gap-1.5">
                 محادثات الدعم الفوري
                 <span className="bg-white/20 text-white border border-white/30 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
-                  سريع ون
+                  الصايدي توصيل
                 </span>
               </h2>
               <p className="text-xs text-white/90 flex items-center gap-1">
@@ -309,7 +309,7 @@ export default function WhatsAppChatBox({ initialUserId, initialUserType, classN
             )}
           </div>
 
-          {/* فلاتر سريعة بنظام سريع ون */}
+          {/* فلاتر سريعة بنظام الصايدي توصيل */}
           <div className="flex items-center gap-1.5 text-xs overflow-x-auto pb-1 scrollbar-none">
             <button
               onClick={() => setActiveFilter('all')}
@@ -439,12 +439,12 @@ export default function WhatsAppChatBox({ initialUserId, initialUserType, classN
         </div>
       </div>
 
-      {/* ── الجانب الأيسر: صندوق شات سريع ون النشط ── */}
+      {/* ── الجانب الأيسر: صندوق شات الصايدي توصيل النشط ── */}
       <div className="flex-1 flex flex-col bg-[#fffaf8] relative min-w-0">
         
         {selectedUser ? (
           <>
-            {/* شريط رأس المحادثة العلوية - بنظام سريع ون */}
+            {/* شريط رأس المحادثة العلوية - بنظام الصايدي توصيل */}
             <div className="bg-gradient-to-r from-orange-50 via-white to-red-50 border-b border-orange-200 px-4 py-2.5 flex items-center justify-between shadow-xs shrink-0 z-10">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="relative">
@@ -462,7 +462,7 @@ export default function WhatsAppChatBox({ initialUserId, initialUserType, classN
                     <span className={`text-[10px] px-1.5 py-0.2 rounded font-semibold ${
                       selectedUser.userType === 'driver' ? 'bg-orange-100 text-orange-800' : 'bg-red-100 text-red-800'
                     }`}>
-                      {selectedUser.userType === 'driver' ? 'كابتن توصيل' : 'عميل سريع ون'}
+                      {selectedUser.userType === 'driver' ? 'كابتن توصيل' : 'عميل الصايدي توصيل'}
                     </span>
                   </h3>
                   <div className="flex items-center gap-2 text-xs text-gray-500">
@@ -523,7 +523,7 @@ export default function WhatsAppChatBox({ initialUserId, initialUserType, classN
               </div>
             </div>
 
-            {/* مساحة رسائل سريع ون مع خلفية دافئة */}
+            {/* مساحة رسائل الصايدي توصيل مع خلفية دافئة */}
             <div 
               className="flex-1 overflow-y-auto p-4 space-y-3"
               style={{
@@ -535,7 +535,7 @@ export default function WhatsAppChatBox({ initialUserId, initialUserType, classN
               {/* شارة تاريخ اليوم */}
               <div className="flex justify-center my-2">
                 <span className="bg-white/95 shadow-xs border border-orange-200 text-orange-800 text-[11px] font-bold px-3 py-1 rounded-full select-none">
-                  محادثة خدمة العملاء المباشرة (سريع ون)
+                  محادثة خدمة العملاء المباشرة (الصايدي توصيل)
                 </span>
               </div>
 
@@ -616,7 +616,7 @@ export default function WhatsAppChatBox({ initialUserId, initialUserType, classN
               </div>
             )}
 
-            {/* شريط الإدخال السفلي بنظام سريع ون */}
+            {/* شريط الإدخال السفلي بنظام الصايدي توصيل */}
             <form onSubmit={handleSendMessage} className="bg-[#fff8f5] p-2.5 border-t border-orange-200 flex items-center gap-2 shrink-0">
               <Button
                 type="button"
@@ -662,7 +662,7 @@ export default function WhatsAppChatBox({ initialUserId, initialUserType, classN
             <div className="w-20 h-20 rounded-full bg-white shadow-sm flex items-center justify-center mb-4 text-orange-600 border border-orange-100">
               <MessageSquare className="h-10 w-10" />
             </div>
-            <h3 className="text-xl font-bold text-gray-700">صندوق محادثات سريع ون المباشر</h3>
+            <h3 className="text-xl font-bold text-gray-700">صندوق محادثات الصايدي توصيل المباشر</h3>
             <p className="text-sm text-gray-500 mt-2 max-w-sm">
               حدد أي محادثة من القائمة الجانبية لبدء المحادثة الفورية، أو تواصل مع عملائك وسائقيك بنقرة زر واحدة.
             </p>

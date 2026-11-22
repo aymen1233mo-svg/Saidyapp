@@ -614,7 +614,7 @@ export default function AdminSecurity() {
                         variant="secondary"
                         className="absolute top-2.5 left-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-2.5 py-1 h-7 gap-1 z-10"
                         onClick={() => copyToClipboard(`// MainActivity.kt - معالجة الصلاحيات الكاملة لتطبيق ${selectedAppTarget === 'driver' ? 'السائق' : 'العميل'}
-package com.sareeone.${selectedAppTarget === 'driver' ? 'driver' : 'customer'}
+package com.alsaidi.${selectedAppTarget === 'driver' ? 'driver' : 'customer'}
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -767,12 +767,12 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class SareeWebViewScreen extends StatefulWidget {
+class AlSaidiWebViewScreen extends StatefulWidget {
   @override
-  _SareeWebViewScreenState createState() => _SareeWebViewScreenState();
+  _AlSaidiWebViewScreenState createState() => _AlSaidiWebViewScreenState();
 }
 
-class _SareeWebViewScreenState extends State<SareeWebViewScreen> {
+class _AlSaidiWebViewScreenState extends State<AlSaidiWebViewScreen> {
   late final WebViewController _controller;
   final String appUrl = '${typeof window !== 'undefined' ? window.location.origin : ''}${selectedAppTarget === 'driver' ? '/driver' : ''}?apiKey=${selectedAppTarget === 'driver' ? (securitySettings?.driverApiKey || 'sareeone_driver_app_key_default') : (securitySettings?.customerApiKey || 'sareeone_cust_app_key_default')}';
 
@@ -858,7 +858,7 @@ _controller = WebViewController()
                         className="absolute top-2.5 left-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-2.5 py-1 h-7 gap-1 z-10"
                         onClick={() => copyToClipboard(`<!-- أذونات الموقع الجغرافي والاتصال والإنترنت في AndroidManifest.xml -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sareeone.${selectedAppTarget === 'driver' ? 'driver' : 'customer'}">
+    package="com.alsaidi.${selectedAppTarget === 'driver' ? 'driver' : 'customer'}">
 
     <!-- 1. أذونات الموقع الجغرافي الدقيق لتطبيق السائق والعميل -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -895,7 +895,7 @@ _controller = WebViewController()
 
     <application
         android:usesCleartextTraffic="true"
-        android:label="سريع ون">
+        android:label="الصايدي توصيل">
         <!-- باقي إعدادات التطبيق -->
     </application>
 </manifest>`, 'manifest_code', 'ملف AndroidManifest.xml')}

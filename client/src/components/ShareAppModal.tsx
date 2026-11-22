@@ -115,7 +115,7 @@ export const ShareAppModal: React.FC<ShareAppModalProps> = ({
         </DialogDescription>
 
         {/* Gradient Header */}
-        <div className="relative bg-gradient-to-br from-[#FF5722] via-[#F4511E] to-[#E64A19] text-white p-6 pb-7 text-center">
+        <div className="relative bg-gradient-to-br from-[#0B5ED7] via-[#064BB5] to-[#003B99] text-white p-6 pb-7 text-center">
           <button
             onClick={onClose}
             className={`absolute top-4 ${language === 'ar' ? 'left-4' : 'right-4'} p-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors`}
@@ -206,9 +206,9 @@ export const ShareAppModal: React.FC<ShareAppModalProps> = ({
               onClick={handleCopyLink}
               size="sm"
               className={`h-9 px-4 rounded-xl font-black text-xs transition-all shadow-sm ${
-                copied 
-                  ? 'bg-green-600 hover:bg-green-700 text-white' 
-                  : 'bg-[#FF5722] hover:bg-[#F4511E] text-white'
+                copied
+                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                  : 'bg-[#0B5ED7] hover:bg-[#0046B8] text-white'
               }`}
             >
               {copied ? (
@@ -230,9 +230,9 @@ export const ShareAppModal: React.FC<ShareAppModalProps> = ({
             <Button
               onClick={handleNativeShare}
               variant="outline"
-              className="w-full h-11 rounded-2xl border-slate-200 hover:bg-slate-50 font-bold text-xs flex items-center justify-center gap-2 text-slate-700"
+              className="w-full h-11 rounded-2xl border-blue-200 hover:bg-blue-50 font-bold text-xs flex items-center justify-center gap-2 text-slate-700"
             >
-              <Smartphone className="h-4 w-4 text-[#FF5722]" />
+              <Smartphone className="h-4 w-4 text-[#0B5ED7]" />
               {language === 'ar' ? 'خيارات مشاركة إضافية عبر الهاتف' : 'More System Share Options'}
             </Button>
           )}

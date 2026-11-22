@@ -3,7 +3,7 @@ import { useLocation } from 'wouter';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { ArrowRight, Package, Clock, CheckCircle, XCircle, Eye, Loader, Star, Phone, X } from 'lucide-react';
+import { ArrowRight, Package, Clock, CheckCircle, XCircle, Eye, Loader, Star, Phone, X, Bike } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -61,7 +61,6 @@ export default function OrdersPage() {
   const [showRatingDialog, setShowRatingDialog] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  // نافذة إلغاء الطلب
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [cancellingOrder, setCancellingOrder] = useState<Order | null>(null);
   const [cancelReason, setCancelReason] = useState('');
@@ -127,7 +126,6 @@ export default function OrdersPage() {
         return { ...order, restaurantName, parsedItems };
       });
 
-      // دمج طلبات وصل لي
       let wasalniOrders: Order[] = [];
       if (wasalniRes.ok) {
         try {
@@ -173,7 +171,6 @@ export default function OrdersPage() {
     retry: 1
   });
 
-  // اشتراك WebSocket
   useEffect(() => {
     if (!customerPhone) return;
     let ws: WebSocket | null = null;
@@ -187,14 +184,14 @@ export default function OrdersPage() {
         ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
 
         ws.onopen = () => {
-          const customerId = user?.id;
-          if (customerId) {
+          const cid = user?.id;
+          if (cid) {
             ws?.send(JSON.stringify({
               type: 'auth',
-              payload: { userId: customerId, userType: 'customer' },
+              payload: { userId: cid, userType: 'customer' },
             }));
           }
-          if (customerPhone && customerPhone !== customerId) {
+          if (customerPhone && customerPhone !== cid) {
             ws?.send(JSON.stringify({
               type: 'auth',
               payload: { userId: customerPhone, userType: 'customer' },
@@ -239,7 +236,6 @@ export default function OrdersPage() {
     };
   }, [customerPhone, customerId, user?.id, queryClient]);
 
-  // طلب الإلغاء
   const cancelOrderMutation = useMutation({
     mutationFn: async ({ orderId, reason, isWasalni }: { orderId: string; reason: string; isWasalni?: boolean }) => {
       const url = isWasalni ? `/api/wasalni/${orderId}` : `/api/orders/${orderId}`;
@@ -278,9 +274,9 @@ export default function OrdersPage() {
     const statusMapAr: Record<string, string> = {
       pending: 'قيد المراجعة',
       confirmed: 'مؤكد',
-      preparing: 'قيد التحضير',
-      on_way: 'في الطريق',
-      delivered: 'تم التوصيل',
+      preparing: 'قيد التجهيز',
+      on_way: 'قيد التوصيل',
+      delivered: 'تم التسليم',
       cancelled: 'ملغي',
       scheduled: 'مجدول',
     };
@@ -296,17 +292,17 @@ export default function OrdersPage() {
     return (language === 'ar' ? statusMapAr[status] : statusMapEn[status]) || status;
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusBadgeClasses = (status: string) => {
     const colorMap: Record<string, string> = {
-      pending: 'bg-yellow-500',
-      confirmed: 'bg-blue-500',
-      preparing: 'bg-orange-500',
-      on_way: 'bg-purple-500',
-      delivered: 'bg-green-500',
-      cancelled: 'bg-red-500',
-      scheduled: 'bg-teal-500',
+      pending: 'bg-amber-100 text-amber-800 border-amber-200',
+      confirmed: 'bg-sky-100 text-[#0B5ED7] border-sky-200',
+      preparing: 'bg-orange-100 text-[#FF6B00] border-orange-200',
+      on_way: 'bg-[#EEF5FF] text-[#0B5ED7] border-blue-200',
+      delivered: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+      cancelled: 'bg-rose-100 text-rose-700 border-rose-200',
+      scheduled: 'bg-indigo-100 text-indigo-700 border-indigo-200',
     };
-    return colorMap[status] || 'bg-gray-500';
+    return colorMap[status] || 'bg-slate-100 text-slate-700 border-slate-200';
   };
 
   const getStatusIcon = (status: string) => {
@@ -314,7 +310,7 @@ export default function OrdersPage() {
       pending: Clock,
       confirmed: Package,
       preparing: Package,
-      on_way: Package,
+      on_way: Bike,
       delivered: CheckCircle,
       cancelled: XCircle,
       scheduled: Clock,
@@ -373,18 +369,18 @@ export default function OrdersPage() {
   };
 
   const tabs = [
-    { id: 'all', label: language === 'ar' ? 'جميع الطلبات' : 'All Orders', count: displayOrders.length },
-    { id: 'active', label: language === 'ar' ? 'النشطة' : 'Active', count: displayOrders.filter(o => ['pending', 'confirmed', 'preparing', 'on_way', 'scheduled'].includes(o.status)).length },
-    { id: 'completed', label: language === 'ar' ? 'المكتملة' : 'Completed', count: displayOrders.filter(o => o.status === 'delivered').length },
-    { id: 'cancelled', label: language === 'ar' ? 'الملغية' : 'Cancelled', count: displayOrders.filter(o => o.status === 'cancelled').length }
+    { id: 'all', label: language === 'ar' ? 'الكل' : 'All', count: displayOrders.length },
+    { id: 'active', label: language === 'ar' ? 'قيد التنفيذ' : 'Active', count: displayOrders.filter(o => ['pending', 'confirmed', 'preparing', 'on_way', 'scheduled'].includes(o.status)).length },
+    { id: 'completed', label: language === 'ar' ? 'تم التسليم' : 'Delivered', count: displayOrders.filter(o => o.status === 'delivered').length },
+    { id: 'cancelled', label: language === 'ar' ? 'ملغي' : 'Cancelled', count: displayOrders.filter(o => o.status === 'cancelled').length }
   ];
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F4F8FF] flex items-center justify-center">
         <div className="text-center">
-          <Loader className="h-8 w-8 animate-spin mx-auto mb-4 text-[#FF5722]" />
-          <p className="text-gray-600">{t('loading')}</p>
+          <Loader className="h-8 w-8 animate-spin mx-auto mb-4 text-[#0B5ED7]" />
+          <p className="text-slate-600 font-bold">{t('loading')}</p>
         </div>
       </div>
     );
@@ -392,11 +388,11 @@ export default function OrdersPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <XCircle className="h-8 w-8 mx-auto mb-4 text-red-500" />
-          <p className="text-red-600 mb-4">{language === 'ar' ? 'حدث خطأ في تحميل الطلبات' : 'Error loading orders'}</p>
-          <Button onClick={() => window.location.reload()} className="bg-[#FF5722] hover:bg-[#E64A19] text-white">
+      <div className="min-h-screen bg-[#F4F8FF] flex items-center justify-center">
+        <div className="text-center p-6 bg-white rounded-3xl border border-blue-100 shadow-sm">
+          <XCircle className="h-8 w-8 mx-auto mb-4 text-rose-500" />
+          <p className="text-rose-600 font-bold mb-4">{language === 'ar' ? 'حدث خطأ في تحميل الطلبات' : 'Error loading orders'}</p>
+          <Button onClick={() => window.location.reload()} className="bg-[#0B5ED7] hover:bg-[#0950BA] text-white rounded-full">
             {language === 'ar' ? 'إعادة المحاولة' : 'Try Again'}
           </Button>
         </div>
@@ -405,26 +401,34 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/70 pb-16">
-      {/* رأس الصفحة */}
-      <div className="bg-gradient-to-r from-[#FF6E40] via-[#FF5722] to-[#E64A19] text-white shadow-md rounded-b-[28px] sticky top-0 z-10">
-        <div className="max-w-2xl mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:bg-white/20 rounded-2xl"
-              onClick={() => setLocation('/')}
-              data-testid="button-back"
-            >
-              <ArrowRight className={`h-5 w-5 ${language === 'en' ? 'rotate-180' : ''}`} />
-            </Button>
-            <div>
-              <h1 className="text-xl font-black text-white">{t('my_orders')}</h1>
-              <p className="text-xs text-orange-100 font-bold">
-                {language === 'ar' ? 'تتبع ومراجعة طلباتك السابقة والحالية' : 'Track and review your past and active orders'}
-              </p>
+    <div className="min-h-screen bg-[#F4F8FF] pb-24">
+      {/* Al-Saidi Hero Header */}
+      <div className="relative bg-gradient-to-br from-[#0B5ED7] via-[#0950BA] to-[#003B99] text-white shadow-lg rounded-b-[2.25rem] sticky top-0 z-10 overflow-hidden">
+        <div className="absolute -bottom-1 left-0 right-0 h-2.5 bg-gradient-to-r from-[#FF6B00] via-[#FF8533] to-[#FF6B00]" />
+        <div className="max-w-2xl mx-auto px-4 pt-4 pb-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white bg-white/15 hover:bg-white/25 rounded-full backdrop-blur-sm"
+                onClick={() => setLocation('/')}
+                data-testid="button-back"
+              >
+                <ArrowRight className={`h-5 w-5 ${language === 'en' ? 'rotate-180' : ''}`} />
+              </Button>
+              <div>
+                <h1 className="text-xl font-black text-white">{language === 'ar' ? 'أحدث الطلبات' : t('my_orders')}</h1>
+                <p className="text-xs text-blue-100 font-semibold">
+                  {language === 'ar' ? 'كل طلباتك في مكان واحد • الصايدي توصيل' : 'All your orders in one place • Al-Saidi Delivery'}
+                </p>
+              </div>
             </div>
+            <img
+              src="/assets/saidi-parcel-badge.jpg"
+              alt="طلبات الصايدي"
+              className="w-12 h-12 rounded-2xl object-cover border-2 border-white/30 shadow-md hidden sm:block"
+            />
           </div>
         </div>
       </div>
@@ -432,17 +436,17 @@ export default function OrdersPage() {
       {/* التبويبات */}
       <div className="max-w-2xl mx-auto p-4">
         <Tabs value={selectedTab} onValueChange={(value) => setSelectedTab(value as any)}>
-          <TabsList className="grid w-full grid-cols-4 mb-5 p-1 bg-white border border-orange-100/80 rounded-2xl shadow-xs">
+          <TabsList className="grid w-full grid-cols-4 mb-5 p-1.5 bg-white border border-blue-100/80 rounded-full shadow-xs h-auto">
             {tabs.map((tab) => (
               <TabsTrigger 
                 key={tab.id} 
                 value={tab.id}
-                className="text-xs font-black rounded-xl py-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#FF6E40] data-[state=active]:to-[#FF5722] data-[state=active]:text-white relative"
+                className="text-xs font-black rounded-full py-2.5 px-2 data-[state=active]:bg-[#0B5ED7] data-[state=active]:text-white text-slate-600 relative transition-all"
                 data-testid={`tab-${tab.id}`}
               >
-                {tab.label}
+                <span className="truncate">{tab.label}</span>
                 {tab.count > 0 && (
-                  <Badge variant="secondary" className="absolute -top-1.5 -right-1.5 h-4 min-w-4 px-1 rounded-full text-[10px] font-black bg-[#FF5722] text-white border border-white">
+                  <Badge variant="secondary" className="mr-1 h-4 min-w-4 px-1 rounded-full text-[10px] font-black bg-[#FF6B00] text-white border-none">
                     {tab.count}
                   </Badge>
                 )}
@@ -452,10 +456,10 @@ export default function OrdersPage() {
 
           <TabsContent value={selectedTab} className="space-y-4">
             {filteredOrders.length === 0 ? (
-              <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden bg-white">
+              <Card className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
                 <CardContent className="text-center py-12">
-                  <div className="w-16 h-16 rounded-3xl bg-orange-50 border border-orange-100 flex items-center justify-center mx-auto mb-4 text-[#FF5722]">
-                    <Package className="h-8 w-8 text-[#FF5722]" />
+                  <div className="w-16 h-16 rounded-3xl bg-[#EEF5FF] border border-blue-100 flex items-center justify-center mx-auto mb-4 text-[#0B5ED7]">
+                    <Package className="h-8 w-8 text-[#0B5ED7]" />
                   </div>
                   <h3 className="text-base font-black text-slate-900 mb-1">{t('no_orders')}</h3>
                   <p className="text-xs text-slate-400 font-bold mb-4">
@@ -464,7 +468,7 @@ export default function OrdersPage() {
                   <Button 
                     onClick={() => setLocation('/')} 
                     data-testid="button-start-ordering"
-                    className="bg-gradient-to-r from-[#FF6E40] to-[#FF5722] hover:from-[#FF5722] hover:to-[#E64A19] text-white font-black rounded-2xl px-6 py-2.5 shadow-md shadow-orange-500/20"
+                    className="bg-[#FF6B00] hover:bg-[#E55E00] text-white font-black rounded-full px-7 py-2.5 shadow-md shadow-orange-500/20"
                   >
                     {t('start_ordering')}
                   </Button>
@@ -475,17 +479,27 @@ export default function OrdersPage() {
                 const StatusIcon = getStatusIcon(order.status);
                 
                 return (
-                  <Card key={order.id} className="rounded-3xl border border-orange-100/70 shadow-[0_4px_16px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_20px_rgba(255,87,34,0.07)] transition-all overflow-hidden bg-white">
-                    <CardHeader className="pb-3 bg-orange-50/30 border-b border-orange-100/50">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <CardTitle className="text-base font-black text-slate-900">{order.restaurantName || (language === 'ar' ? 'طلب سريع ون' : 'Saree One Order')}</CardTitle>
-                          <p className="text-xs text-slate-400 font-bold mt-0.5">
-                            {language === 'ar' ? 'طلب رقم:' : 'Order #:'} {order.orderNumber}
-                          </p>
+                  <Card key={order.id} className="rounded-3xl border border-blue-100/80 shadow-[0_6px_20px_rgba(11,94,215,0.05)] hover:shadow-[0_10px_28px_rgba(11,94,215,0.1)] transition-all overflow-hidden bg-white">
+                    <CardHeader className="pb-3 bg-[#F4F8FF]/70 border-b border-blue-100/60">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <img
+                            src="/assets/saidi-parcel-badge.jpg"
+                            alt=""
+                            className="w-11 h-11 rounded-2xl object-cover border border-blue-100 shrink-0"
+                          />
+                          <div className="min-w-0">
+                            <CardTitle className="text-base font-black text-slate-900 truncate">
+                              {order.restaurantName || (language === 'ar' ? 'طلب الصايدي توصيل' : 'Al-Saidi Delivery Order')}
+                            </CardTitle>
+                            <p className="text-xs text-[#0B5ED7] font-black mt-0.5">
+                              #{order.orderNumber}
+                            </p>
+                          </div>
                         </div>
                         <Badge 
-                          className={`${getStatusColor(order.status)} text-white font-black text-xs px-2.5 py-1 rounded-xl shadow-xs`}
+                          variant="outline"
+                          className={`${getStatusBadgeClasses(order.status)} font-black text-xs px-3 py-1 rounded-full shrink-0`}
                           data-testid={`badge-status-${order.status}`}
                         >
                           <StatusIcon className={`w-3.5 h-3.5 ${language === 'ar' ? 'ml-1' : 'mr-1'}`} />
@@ -496,7 +510,7 @@ export default function OrdersPage() {
                     
                     <CardContent className="space-y-4 pt-4">
                       {/* عناصر الطلب */}
-                      <div className="space-y-2 bg-slate-50/80 p-3 rounded-2xl border border-slate-100">
+                      <div className="space-y-2 bg-[#F4F8FF] p-3.5 rounded-2xl border border-blue-100/60">
                         {order.parsedItems?.map((item: OrderItem, index: number) => (
                           <div key={index} className="flex justify-between text-xs font-bold text-slate-700">
                             <span>{item.quantity}x {item.name}</span>
@@ -515,7 +529,7 @@ export default function OrdersPage() {
                           <span>
                             {language === 'ar' ? 'عدد الأصناف:' : 'Items count:'} {order.parsedItems?.reduce((sum: number, item: OrderItem) => sum + item.quantity, 0) || 0}
                           </span>
-                          <span className="text-[#FF5722] font-black text-sm">
+                          <span className="text-[#FF6B00] font-black text-sm">
                             {language === 'ar' ? 'المجموع:' : 'Total:'} {formatCurrency(order.totalAmount)}
                           </span>
                         </div>
@@ -524,23 +538,22 @@ export default function OrdersPage() {
                             {language === 'ar' ? 'تاريخ الطلب:' : 'Date:'} {formatDate(order.createdAt)} - {new Date(order.createdAt).toLocaleTimeString(language === 'ar' ? 'ar-YE' : 'en-US', { hour: '2-digit', minute: '2-digit' })}
                           </span>
                           {order.estimatedTime && (
-                            <span className="text-[#FF5722]">
+                            <span className="text-[#0B5ED7]">
                               {language === 'ar' ? 'الوقت المتوقع:' : 'Est. time:'} {order.estimatedTime}
                             </span>
                           )}
                         </div>
-                        <div className="flex justify-between text-[11px] text-slate-400 font-bold">
-                          <span>{t('delivery_address')}: {order.deliveryAddress}</span>
-                          <span>{t('payment_method')}: {order.paymentMethod === 'cash' ? t('cash_on_delivery') : t('online_payment')}</span>
+                        <div className="flex justify-between text-[11px] text-slate-500 font-bold gap-2">
+                          <span className="truncate">{t('delivery_address')}: {order.deliveryAddress}</span>
+                          <span className="shrink-0">{t('payment_method')}: {order.paymentMethod === 'cash' ? t('cash_on_delivery') : t('online_payment')}</span>
                         </div>
                       </div>
 
                       {/* أزرار الإجراءات */}
-                      <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-100">
+                      <div className="flex flex-wrap gap-2 pt-2 border-t border-blue-50">
                         <Button
-                          variant="outline"
                           size="sm"
-                          className="flex-1 rounded-xl font-black text-xs border-orange-200 hover:bg-orange-50 text-[#FF5722]"
+                          className="flex-1 rounded-full font-black text-xs bg-[#0B5ED7] hover:bg-[#0950BA] text-white shadow-xs"
                           onClick={() => handleViewOrder(order.id)}
                           data-testid={`button-view-order-${order.id}`}
                         >
@@ -548,12 +561,11 @@ export default function OrdersPage() {
                           {t('track_order')}
                         </Button>
 
-                        {/* زر الإلغاء - يظهر للطلبات النشطة القابلة للإلغاء */}
                         {canCancelOrder(order.status) && (
                           <Button
                             variant="outline"
                             size="sm"
-                            className="flex-1 rounded-xl font-black text-xs border-red-200 text-red-600 hover:bg-red-50"
+                            className="flex-1 rounded-full font-black text-xs border-rose-200 text-rose-600 hover:bg-rose-50"
                             onClick={() => openCancelDialog(order)}
                             data-testid={`button-cancel-order-${order.id}`}
                           >
@@ -566,7 +578,7 @@ export default function OrdersPage() {
                           <Button
                             variant="default"
                             size="sm"
-                            className="flex-1 rounded-xl font-black text-xs bg-amber-500 hover:bg-amber-600 text-white shadow-xs"
+                            className="flex-1 rounded-full font-black text-xs bg-[#FF6B00] hover:bg-[#E55E00] text-white shadow-xs"
                             onClick={() => handleRateOrder(order)}
                           >
                             <Star className={`w-3.5 h-3.5 fill-white ${language === 'ar' ? 'ml-1' : 'mr-1'}`} />
@@ -578,7 +590,7 @@ export default function OrdersPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="flex-1 rounded-xl font-black text-xs border-blue-400 text-blue-600 hover:bg-blue-50"
+                            className="flex-1 rounded-full font-black text-xs border-blue-200 text-[#0B5ED7] hover:bg-[#EEF5FF]"
                             onClick={() => window.location.href = `tel:${order.driverPhone}`}
                           >
                             <Phone className={`w-3.5 h-3.5 ${language === 'ar' ? 'ml-1' : 'mr-1'}`} />
@@ -590,7 +602,7 @@ export default function OrdersPage() {
                           <Button
                             size="sm"
                             variant="outline"
-                            className="flex-1 rounded-xl font-black text-xs border-slate-200 hover:bg-slate-50 text-slate-700"
+                            className="flex-1 rounded-full font-black text-xs border-blue-200 hover:bg-[#EEF5FF] text-[#0B5ED7]"
                             onClick={() => handleReorder(order)}
                             data-testid={`button-reorder-${order.id}`}
                           >
@@ -614,7 +626,7 @@ export default function OrdersPage() {
               setSelectedOrder(null);
             }}
             orderId={selectedOrder.id}
-            restaurantName={selectedOrder.restaurantName || (language === 'ar' ? "المطعم" : "Restaurant")}
+            restaurantName={selectedOrder.restaurantName || (language === 'ar' ? "المتجر" : "Store")}
             driverName={selectedOrder.driverName}
             customerId={selectedOrder.customerId || user?.id}
           />
@@ -624,9 +636,8 @@ export default function OrdersPage() {
       {/* نافذة إلغاء الطلب */}
       {showCancelDialog && cancellingOrder && (
         <div className="fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
-            {/* رأس النافذة */}
-            <div className="bg-red-500 px-5 py-4 text-white">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-blue-100">
+            <div className="bg-rose-600 px-5 py-4 text-white">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <XCircle className="h-5 w-5" />
@@ -646,9 +657,8 @@ export default function OrdersPage() {
               </p>
             </div>
 
-            {/* المحتوى */}
             <div className="px-5 py-4">
-              <p className="text-gray-700 font-bold text-sm mb-4">
+              <p className="text-slate-700 font-bold text-sm mb-4">
                 {language === 'ar' ? 'يرجى اختيار سبب الإلغاء:' : 'Please select cancellation reason:'}
               </p>
 
@@ -657,10 +667,10 @@ export default function OrdersPage() {
                   <button
                     key={reason}
                     onClick={() => setCancelReason(reason)}
-                    className={`w-full ${language === 'ar' ? 'text-right' : 'text-left'} px-4 py-3 rounded-xl border-2 transition-all text-sm font-bold ${
+                    className={`w-full ${language === 'ar' ? 'text-right' : 'text-left'} px-4 py-3 rounded-2xl border-2 transition-all text-sm font-bold ${
                       cancelReason === reason
-                        ? 'border-red-500 bg-red-50 text-red-700'
-                        : 'border-gray-100 hover:border-gray-300 text-gray-700'
+                        ? 'border-rose-500 bg-rose-50 text-rose-700'
+                        : 'border-blue-50 bg-[#F4F8FF] hover:border-blue-200 text-slate-700'
                     }`}
                   >
                     {reason}
@@ -673,7 +683,7 @@ export default function OrdersPage() {
                   placeholder={language === 'ar' ? "اكتب سبب الإلغاء..." : "Write cancellation reason..."}
                   value={customCancelReason}
                   onChange={(e) => setCustomCancelReason(e.target.value)}
-                  className="w-full p-3 border-2 rounded-xl text-sm focus:border-red-400 outline-none resize-none mb-4"
+                  className="w-full p-3 border-2 border-blue-100 rounded-2xl text-sm focus:border-rose-400 outline-none resize-none mb-4"
                   rows={3}
                 />
               )}
@@ -681,7 +691,7 @@ export default function OrdersPage() {
               <div className="flex gap-3">
                 <Button
                   variant="destructive"
-                  className="flex-1"
+                  className="flex-1 rounded-full font-black"
                   onClick={handleConfirmCancel}
                   disabled={cancelOrderMutation.isPending || !cancelReason || (cancelReason === otherReasonKey && !customCancelReason.trim())}
                 >
@@ -693,7 +703,7 @@ export default function OrdersPage() {
                 </Button>
                 <Button
                   variant="outline"
-                  className="flex-1"
+                  className="flex-1 rounded-full font-bold border-blue-200 text-[#0B5ED7]"
                   onClick={() => setShowCancelDialog(false)}
                   disabled={cancelOrderMutation.isPending}
                 >

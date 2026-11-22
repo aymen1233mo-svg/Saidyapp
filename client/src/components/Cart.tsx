@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Minus, Plus, Trash2, ShoppingBag, X, MapPin, Loader2, Calendar, Clock, AlertTriangle, Tag, CheckCircle } from 'lucide-react'; 
+import { Minus, Plus, Trash2, ShoppingBag, X, MapPin, Loader2, AlertTriangle, Tag, CheckCircle, Check, ChevronLeft } from 'lucide-react'; 
 import { useCart } from '../context/CartContext';
 import { useUserLocation as useGeoLocation } from '../context/LocationContext';
 import { GoogleMapsLocationPicker, LocationData } from './GoogleMapsLocationPicker';
@@ -34,7 +34,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
     paymentMethod: 'cash'
   });
 
-  // ملء الاسم ورقم الهاتف تلقائياً من حساب العميل مع السماح بالتعديل
   useEffect(() => {
     if (user || isOpen) {
       setCustomerInfo(prev => ({
@@ -45,11 +44,7 @@ export function Cart({ isOpen, onClose }: CartProps) {
     }
   }, [user, isOpen]);
 
-  // حالة تأكيد الإرسال المكرر
   const [showDuplicateConfirm, setShowDuplicateConfirm] = useState(false);
-  const [pendingOrderData, setPendingOrderData] = useState<any>(null);
-
-  // حالة الخروج عن نطاق التوصيل
   const [showOutOfZoneModal, setShowOutOfZoneModal] = useState(false);
   const [isOutsideZone, setIsOutsideZone] = useState(false);
   const [outOfZoneReason, setOutOfZoneReason] = useState('');
@@ -64,20 +59,17 @@ export function Cart({ isOpen, onClose }: CartProps) {
   } | null>(null);
   const [isCouponValidating, setIsCouponValidating] = useState(false);
 
-  // إعادة تعيين الكوبون عند تغيير محتوى السلة
   useEffect(() => {
     setCouponResult(null);
     setCouponCode('');
   }, [state.restaurantId]);
 
-  // طلب الموقع تلقائياً عند فتح السلة
   useEffect(() => {
     if (isOpen && !userGeoLocation.position && !userGeoLocation.isLoading && !userGeoLocation.error) {
       getCurrentLocation();
     }
   }, [isOpen, userGeoLocation.position, userGeoLocation.isLoading]);
 
-  // استخدام موقع GPS كافتراضي
   useEffect(() => {
     if (userGeoLocation.position && !selectedLocation && isOpen) {
       const { latitude, longitude } = userGeoLocation.position.coords;
@@ -90,7 +82,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
     }
   }, [userGeoLocation.position, selectedLocation, isOpen]);
 
-  // إعدادات الواجهة
   const { data: uiSettings } = useQuery<any[]>({
     queryKey: ['/api/ui-settings'],
   });
@@ -98,7 +89,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
   const getSetting = (key: string, def = '') => 
     uiSettings?.find((s: any) => s.key === key)?.value || def;
 
-  // طرق الدفع من الإدمن (ديناميكية)
   const { data: adminPaymentMethods = [] } = useQuery<any[]>({
     queryKey: ['/api/payment-methods'],
   });
@@ -106,7 +96,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
   const showCashPayment = getSetting('show_cash_payment', 'true') !== 'false';
   const showPaymentCards = getSetting('show_payment_cards', 'true') !== 'false';
   const showBankTransfer = getSetting('show_bank_transfer', 'false') === 'true';
-  const scheduledOrdersEnabled = false;
   const showCouponBoxAlways = getSetting('show_coupon_box_always', 'true') !== 'false';
   const couponMinOrderValue = parseFloat(getSetting('coupon_min_order_value', '0') || '0');
   const showCouponBox = showCouponBoxAlways || (couponMinOrderValue > 0 && state.subtotal >= couponMinOrderValue);
@@ -146,20 +135,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
       : [{ id: 'cash', name: 'نقداً عند الاستلام', icon: '💵' }];
   }, [adminPaymentMethods, showCashPayment, showPaymentCards, showBankTransfer, uiSettings]);
 
-  const openingTime = getSetting('opening_time', '08:00');
-  const closingTime = getSetting('closing_time', '23:00');
-  const storeStatus = getSetting('store_status', 'open');
-
-  const { data: appStatus } = useQuery({
-    queryKey: ['/api/app-status', openingTime, closingTime, storeStatus],
-    queryFn: async () => {
-      const res = await fetch(`/api/app-status?opening=${openingTime}&closing=${closingTime}&status=${storeStatus}`);
-      return res.json();
-    },
-    enabled: !!uiSettings
-  });
-
-  // بيانات المطعم لموقعه
   const { data: restaurant } = useQuery({
     queryKey: [`/api/restaurants/${state.restaurantId}`],
     enabled: !!state.restaurantId,
@@ -237,7 +212,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
     return undefined;
   };
 
-  // ─── التحقق من الكوبون ──────────────────────────────────────────────
   const handleValidateCoupon = async () => {
     if (!couponCode.trim()) return;
     setIsCouponValidating(true);
@@ -271,7 +245,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
   if (!isOpen) return null;
 
   const saveCustomerInfoToProfile = async () => {
-    // حفظ الاسم ورقم الهاتف محلياً ليتمكن العميل من رؤية طلباته في صفحة "طلباتي"
     try {
       if (customerInfo.phone) {
         localStorage.setItem('customer_phone', customerInfo.phone.trim().replace(/\s+/g, ''));
@@ -301,7 +274,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
     totalAmount: Math.max(0, state.subtotal + deliveryFee - appliedDiscount),
     total: Math.max(0, state.subtotal + deliveryFee - appliedDiscount),
     restaurantId: state.restaurantId,
-    // حقول الكوبون (تُرسل للخادم لتسجيل الاستخدام)
     couponCode: couponResult?.valid ? couponCode.trim().toUpperCase() : undefined,
     couponDiscount: appliedDiscount > 0 ? appliedDiscount : undefined,
     deliveryPreference: 'now',
@@ -323,7 +295,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
   };
 
   const handleCheckout = async () => {
-    // منع النقر المكرر أثناء الإرسال
     if (isSubmitting) {
       setShowDuplicateConfirm(true);
       return;
@@ -359,7 +330,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
       return;
     }
 
-    // التحقق من نطاق التوصيل
     if (isOutsideZone) {
       setShowOutOfZoneModal(true);
       return;
@@ -367,7 +337,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
 
     setIsSubmitting(true);
     try {
-      // إرسال الطلب مباشرة
       const orderData = buildOrderData();
       const result = await submitOrder(orderData);
 
@@ -405,7 +374,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
     }
   };
 
-  // إرسال الطلب مرة أخرى بعد التأكيد
   const handleConfirmResend = async () => {
     setShowDuplicateConfirm(false);
     if (!customerInfo.name || !customerInfo.phone || !selectedLocation) return;
@@ -436,148 +404,185 @@ export function Cart({ isOpen, onClose }: CartProps) {
     }
   };
 
+  const finalCalculatedTotal = Math.max(
+    0,
+    (selectedLocation ? state.subtotal + deliveryFee : state.subtotal) - appliedDiscount
+  );
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-end">
-      <div className="bg-white w-full max-w-md h-5/6 rounded-t-xl flex flex-col">
-        {/* رأس السلة */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <div className="flex items-center gap-2">
-            <div className="text-xl font-black tracking-tighter">
-              <span className="text-[#ec3714]">الس</span><span className="text-[#d32f2f]">ريع</span>
+    <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex justify-center items-end sm:items-center" dir="rtl">
+      <div className="bg-[#F4F8FF] w-full max-w-md h-[88vh] sm:h-[85vh] rounded-t-[2rem] sm:rounded-[2rem] flex flex-col overflow-hidden shadow-2xl border border-blue-100">
+        {/* رأس السلة بتصميم الصايدي توصيل */}
+        <div className="relative bg-gradient-to-br from-[#0B5ED7] via-[#0950BA] to-[#003B99] text-white px-5 pt-4 pb-6 shrink-0 overflow-hidden">
+          <div className="absolute -bottom-1 left-0 right-0 h-2 bg-gradient-to-r from-[#FF6B00] via-[#FF8533] to-[#FF6B00]" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center">
+                <ShoppingBag className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-black">سلة الطلبات</h2>
+                  {state.items.length > 0 && (
+                    <span className="bg-[#FF6B00] text-white text-xs font-black px-2 py-0.5 rounded-full">
+                      {state.items.length}
+                    </span>
+                  )}
+                </div>
+                <p className="text-[11px] text-blue-100 font-semibold">مراجعة طلبك قبل إتمامه</p>
+              </div>
             </div>
-            <h2 className="text-lg font-bold"> - السلة</h2>
-            {state.items.length > 0 && (
-              <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                {state.items.length}
-              </span>
-            )}
+            <button
+              onClick={onClose}
+              className="w-9 h-9 bg-white/15 hover:bg-white/25 rounded-full flex items-center justify-center transition-colors"
+              aria-label="إغلاق"
+            >
+              <X size={18} />
+            </button>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
-            <X size={20} />
-          </button>
         </div>
 
         {/* المحتوى */}
         <div className="flex-1 overflow-y-auto">
           {state.items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-gray-500">
-              <ShoppingBag size={64} className="mb-4 opacity-50" />
-              <p>سلة التسوق فارغة</p>
-              <p className="text-sm">أضف عناصر من المطاعم لتبدأ طلبك</p>
+            <div className="flex flex-col items-center justify-center h-full text-slate-500 p-6 text-center">
+              <div className="w-20 h-20 rounded-3xl bg-[#EEF5FF] border border-blue-100 flex items-center justify-center mb-4">
+                <ShoppingBag size={40} className="text-[#0B5ED7]" />
+              </div>
+              <p className="font-black text-slate-800 text-base">سلة الطلبات فارغة</p>
+              <p className="text-xs text-slate-400 mt-1">أضف منتجات من المتاجر والمطاعم لتبدأ طلبك</p>
             </div>
           ) : (userGeoLocation.isLoading || isCalculatingFee) && !selectedLocation ? (
-            <div className="flex flex-col items-center justify-center h-full text-gray-500 gap-4">
-              <Loader2 size={48} className="animate-spin text-primary" />
+            <div className="flex flex-col items-center justify-center h-full text-slate-500 gap-4 p-6">
+              <Loader2 size={44} className="animate-spin text-[#0B5ED7]" />
               <div className="text-center">
-                <p className="font-bold text-gray-800">جاري حساب رسوم التوصيل...</p>
-                <p className="text-xs">يرجى الانتظار قليلاً لنتمكن من تحديد موقعك</p>
+                <p className="font-black text-slate-800">جاري حساب رسوم التوصيل...</p>
+                <p className="text-xs text-slate-400 mt-1">يرجى الانتظار قليلاً لنتمكن من تحديد موقعك</p>
               </div>
             </div>
           ) : (
             <>
-              {/* اسم المطعم */}
               {state.restaurantName && (
-                <div className="p-4 bg-gray-50 border-b">
-                  <h3 className="font-medium text-gray-800">من {state.restaurantName}</h3>
+                <div className="mx-4 mt-4 px-4 py-2.5 bg-white border border-blue-100 rounded-2xl flex items-center justify-between shadow-xs">
+                  <span className="text-xs font-bold text-slate-500">الطلب من</span>
+                  <span className="text-sm font-black text-[#0B5ED7]">{state.restaurantName}</span>
                 </div>
               )}
 
               {/* عناصر السلة */}
-              <div className="p-4 space-y-4">
+              <div className="p-4 space-y-3">
                 {state.items.map((item) => (
-                  <div key={item.id} className="border rounded-lg p-3">
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-1">
-                        <h4 className="font-medium">{item.name}</h4>
-                        <p className="text-sm text-gray-600">{item.description}</p>
-                        <p className="text-red-500 font-medium">{formatCurrency(item.price)}</p>
+                  <div key={item.id} className="bg-white border border-blue-100/80 rounded-2xl p-3.5 shadow-xs space-y-2.5">
+                    <div className="flex items-center gap-3">
+                      {item.image && (
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-16 h-16 rounded-2xl object-cover border border-blue-50 shrink-0"
+                        />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-black text-slate-900 text-sm truncate">{item.name}</h4>
+                        {item.description && (
+                          <p className="text-xs text-slate-400 truncate mt-0.5">{item.description}</p>
+                        )}
+                        <p className="text-[#0B5ED7] font-black text-sm mt-1">{formatCurrency(item.price)}</p>
                       </div>
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="p-1 text-red-500 hover:bg-red-50 rounded"
+                        className="w-9 h-9 rounded-xl bg-rose-50 text-rose-500 hover:bg-rose-100 flex items-center justify-center shrink-0 transition-colors"
+                        aria-label="حذف"
                       >
                         <Trash2 size={16} />
                       </button>
                     </div>
 
                     {/* التحكم في الكمية */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between pt-1">
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="p-1 border rounded hover:bg-gray-50"
+                          className="w-8 h-8 rounded-full bg-[#0B5ED7] text-white hover:bg-[#0950BA] flex items-center justify-center shadow-xs transition-colors"
                         >
-                          <Minus size={16} />
+                          <Minus size={14} />
                         </button>
-                        <span className="px-3 py-1 bg-gray-100 rounded">{item.quantity}</span>
+                        <span className="min-w-[2.25rem] text-center px-2 py-1 bg-[#F4F8FF] border border-blue-100 rounded-xl font-black text-sm text-slate-800">
+                          {item.quantity}
+                        </span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="p-1 border rounded hover:bg-gray-50"
+                          className="w-8 h-8 rounded-full bg-[#0B5ED7] text-white hover:bg-[#0950BA] flex items-center justify-center shadow-xs transition-colors"
                         >
-                          <Plus size={16} />
+                          <Plus size={14} />
                         </button>
                       </div>
-                      <span className="font-medium">
+                      <span className="font-black text-sm text-slate-900">
                         {formatCurrency(parseFloat(item.price) * item.quantity)}
                       </span>
                     </div>
 
                     <textarea
-                      placeholder="ملاحظات خاصة بهذا العنصر"
+                      placeholder="ملاحظات خاصة بهذا العنصر (اختياري)"
                       value={item.notes || ''}
                       onChange={(e) => addNotes(item.id, e.target.value)}
-                      className="w-full mt-2 p-2 border rounded text-sm resize-none"
-                      rows={2}
+                      className="w-full p-2.5 bg-[#F4F8FF] border border-blue-100 rounded-xl text-xs resize-none focus:bg-white focus:border-[#0B5ED7] focus:outline-none"
+                      rows={1}
                     />
                   </div>
                 ))}
               </div>
 
-              {/* قسم الدفع */}
               {!showCheckout ? (
-                <div className="p-4 border-t">
-                  <div className="space-y-2 mb-4">
-                    <div className="flex justify-between">
-                      <span>المجموع الفرعي:</span>
-                      <span>{formatCurrency(state.subtotal)}</span>
+                <div className="px-4 pb-6 space-y-4">
+                  {/* ملخص الطلب */}
+                  <div className="bg-white rounded-3xl border border-blue-100/80 p-4 space-y-3 shadow-xs">
+                    <div className="flex items-center justify-between border-b border-blue-50 pb-2.5">
+                      <h3 className="font-black text-slate-900 text-sm">ملخص الطلب</h3>
                     </div>
-                    <div className="flex flex-col gap-2 p-3 bg-gray-50 rounded-xl border border-gray-100">
-                      <div className="flex justify-between items-center">
-                        <span className="text-sm text-gray-600 font-bold">رسوم التوصيل</span>
-                        <div className="text-left">
+
+                    <div className="flex justify-between text-xs font-bold text-slate-600">
+                      <span>المجموع الفرعي</span>
+                      <span className="text-slate-900 font-black">{formatCurrency(state.subtotal)}</span>
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex justify-between items-center text-xs font-bold text-slate-600">
+                        <span>رسوم التوصيل</span>
+                        <div>
                           {!selectedLocation ? (
-                            <span className="text-xs text-amber-600 font-black animate-pulse bg-amber-50 px-2 py-0.5 rounded">جاري تحديد الموقع...</span>
+                            <span className="text-[11px] text-[#FF6B00] font-black bg-orange-50 px-2.5 py-0.5 rounded-full">
+                              جاري تحديد الموقع...
+                            </span>
                           ) : isCalculatingFee ? (
-                            <Loader2 className="h-4 w-4 animate-spin text-primary inline" />
+                            <Loader2 className="h-4 w-4 animate-spin text-[#0B5ED7] inline" />
                           ) : (
-                            <div className="flex items-center gap-1">
-                              <span className={`text-sm font-black ${deliveryDetails?.isFreeDelivery ? "line-through text-gray-400" : "text-gray-900"}`}>
+                            <div className="flex items-center gap-1.5">
+                              <span className={`font-black ${deliveryDetails?.isFreeDelivery ? "line-through text-slate-400" : "text-slate-900"}`}>
                                 {formatCurrency(deliveryFee)}
                               </span>
                               {deliveryDetails?.isFreeDelivery && (
-                                <span className="bg-green-100 text-green-700 text-[10px] px-1.5 py-0.5 rounded font-black">مجاني</span>
+                                <span className="bg-emerald-100 text-emerald-700 text-[10px] px-2 py-0.5 rounded-full font-black">مجاني</span>
                               )}
                             </div>
                           )}
                         </div>
                       </div>
-                      
+
                       {selectedLocation && deliveryDetails && !isCalculatingFee && (
-                        <div className="grid grid-cols-2 gap-2 mt-1 pt-2 border-t border-gray-200/50">
-                          <div className="flex items-center gap-1.5">
-                            <MapPin className="h-3 w-3 text-primary" />
-                            <span className="text-[10px] text-gray-500 font-bold">المسافة: {deliveryDetails.distance.toFixed(1)} كم</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 justify-end">
-                            <span className="text-[10px] text-gray-500 font-bold">⏱ {deliveryDetails.estimatedTime}</span>
-                          </div>
+                        <div className="flex items-center justify-between text-[11px] text-slate-500 bg-[#F4F8FF] px-3 py-1.5 rounded-xl">
+                          <span className="flex items-center gap-1 font-bold">
+                            <MapPin className="h-3 w-3 text-[#0B5ED7]" />
+                            المسافة: {deliveryDetails.distance.toFixed(1)} كم
+                          </span>
+                          <span className="font-bold">⏱ {deliveryDetails.estimatedTime}</span>
                         </div>
                       )}
                     </div>
-                    <div className="flex justify-between font-bold text-lg border-t pt-2">
-                      <span>المجموع الكلي:</span>
-                      <span className="text-red-500">
-                        {formatCurrency(selectedLocation ? state.subtotal + deliveryFee : state.subtotal)}
+
+                    <div className="bg-[#EEF5FF] rounded-2xl px-4 py-3 flex justify-between items-center">
+                      <span className="font-black text-slate-900 text-sm">المجموع الكلي</span>
+                      <span className="text-lg font-black text-[#FF6B00]">
+                        {formatCurrency(finalCalculatedTotal)}
                       </span>
                     </div>
                   </div>
@@ -585,74 +590,69 @@ export function Cart({ isOpen, onClose }: CartProps) {
                   <Button
                     onClick={() => setShowCheckout(true)}
                     disabled={!selectedLocation || isCalculatingFee}
-                    className="w-full bg-red-600 text-white py-6 rounded-xl font-bold hover:bg-red-700 transition-all shadow-lg flex items-center justify-center gap-2"
+                    className="w-full h-14 bg-[#FF6B00] hover:bg-[#E55E00] text-white rounded-full font-black text-base shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2 transition-all"
                   >
                     {!selectedLocation ? (
                       <>
-                        <MapPin size={20} />
+                        <MapPin size={18} />
                         حدد الموقع للمتابعة
                       </>
                     ) : isCalculatingFee ? (
                       <>
-                        <Loader2 className="animate-spin" size={20} />
+                        <Loader2 className="animate-spin" size={18} />
                         جاري حساب التوصيل...
                       </>
                     ) : (
-                      'إتمام الطلب'
+                      <>
+                        إتمام الطلب
+                        <ChevronLeft size={18} />
+                      </>
                     )}
                   </Button>
                 </div>
               ) : (
-                <div className="p-4 border-t space-y-4">
+                <div className="px-4 pb-6 space-y-4">
                   {/* معلومات العميل */}
-                  <div>
-                    <h3 className="font-medium mb-2">معلومات العميل</h3>
-                    <div className="space-y-3">
+                  <div className="bg-white rounded-3xl border border-blue-100/80 p-4 space-y-3 shadow-xs">
+                    <h3 className="font-black text-slate-900 text-sm">معلومات العميل</h3>
+                    <div className="space-y-2.5">
                       <input
                         type="text"
                         placeholder="الاسم *"
                         value={customerInfo.name}
-                        onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
-                        className="w-full p-3 border rounded-lg"
+                        onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-[#F4F8FF] border border-blue-100 rounded-2xl text-sm font-medium focus:bg-white focus:border-[#0B5ED7] focus:outline-none"
                       />
                       <input
                         type="tel"
                         placeholder="رقم الهاتف *"
                         value={customerInfo.phone}
-                        onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})}
-                        className="w-full p-3 border rounded-lg"
+                        onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
+                        className="w-full px-3.5 py-3 bg-[#F4F8FF] border border-blue-100 rounded-2xl text-sm font-medium focus:bg-white focus:border-[#0B5ED7] focus:outline-none"
                       />
                       <textarea
                         placeholder="ملاحظات إضافية"
                         value={customerInfo.notes}
-                        onChange={(e) => setCustomerInfo({...customerInfo, notes: e.target.value})}
-                        className="w-full p-3 border rounded-lg resize-none"
+                        onChange={(e) => setCustomerInfo({ ...customerInfo, notes: e.target.value })}
+                        className="w-full px-3.5 py-2.5 bg-[#F4F8FF] border border-blue-100 rounded-2xl text-sm resize-none focus:bg-white focus:border-[#0B5ED7] focus:outline-none"
                         rows={2}
                       />
                     </div>
                   </div>
 
                   {/* تحديد الموقع */}
-                  <div>
-                    <h3 className="font-medium mb-2">موقع التوصيل *</h3>
+                  <div className="bg-white rounded-3xl border border-blue-100/80 p-4 space-y-2.5 shadow-xs">
+                    <h3 className="font-black text-slate-900 text-sm">موقع التوصيل *</h3>
                     {selectedLocation ? (
-                      <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium text-green-800">{selectedLocation.area}</p>
-                            <p className="text-sm text-green-600">{selectedLocation.address}</p>
+                      <div className="p-3 bg-[#EEF5FF] border border-blue-200 rounded-2xl">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="min-w-0">
+                            <p className="font-black text-[#0B5ED7] text-xs">{selectedLocation.area}</p>
+                            <p className="text-xs text-slate-700 font-medium truncate">{selectedLocation.address}</p>
                             {deliveryDetails && (
-                              <div className="mt-1 space-y-0.5">
-                                {deliveryDetails.distance > 0 && (
-                                  <p className="text-xs text-green-600">
-                                    المسافة: {deliveryDetails.distance.toFixed(2)} كم
-                                  </p>
-                                )}
-                                {deliveryDetails.estimatedTime && (
-                                  <p className="text-xs text-green-600 font-medium">
-                                    الوقت المتوقع: {deliveryDetails.estimatedTime}
-                                  </p>
-                                )}
+                              <div className="mt-1 flex items-center gap-3 text-[11px] text-slate-600 font-bold">
+                                {deliveryDetails.distance > 0 && <span>المسافة: {deliveryDetails.distance.toFixed(2)} كم</span>}
+                                {deliveryDetails.estimatedTime && <span>⏱ {deliveryDetails.estimatedTime}</span>}
                               </div>
                             )}
                           </div>
@@ -660,6 +660,7 @@ export function Cart({ isOpen, onClose }: CartProps) {
                             variant="outline"
                             size="sm"
                             onClick={() => setShowLocationPicker(true)}
+                            className="rounded-full border-[#0B5ED7] text-[#0B5ED7] hover:bg-blue-50 font-bold shrink-0"
                           >
                             تغيير
                           </Button>
@@ -668,128 +669,130 @@ export function Cart({ isOpen, onClose }: CartProps) {
                     ) : (
                       <Button
                         variant="outline"
-                        className="w-full"
+                        className="w-full rounded-full border-[#0B5ED7] text-[#0B5ED7] hover:bg-blue-50 font-bold"
                         onClick={() => setShowLocationPicker(true)}
                         data-testid="button-select-location"
                       >
-                        <MapPin className="h-4 w-4 mr-2" />
+                        <MapPin className="h-4 w-4 ml-2" />
                         تحديد موقع التوصيل
                       </Button>
                     )}
                   </div>
 
-                  {/* طرق الدفع - ديناميكية من لوحة التحكم */}
+                  {/* طرق الدفع */}
                   {paymentMethods.length > 0 && (
-                    <div>
-                      <h3 className="font-medium mb-2 text-sm">طريقة الدفع *</h3>
+                    <div className="bg-white rounded-3xl border border-blue-100/80 p-4 space-y-2.5 shadow-xs">
+                      <h3 className="font-black text-slate-900 text-sm">طريقة الدفع *</h3>
                       <div className="grid grid-cols-2 gap-2">
                         {paymentMethods.map((method) => (
                           <button
                             key={method.id}
-                            onClick={() => setCustomerInfo({...customerInfo, paymentMethod: method.id})}
-                            className={`p-3 border rounded-xl flex flex-col items-center justify-center gap-1.5 transition-all duration-300 ${
+                            onClick={() => setCustomerInfo({ ...customerInfo, paymentMethod: method.id })}
+                            className={`p-3 border-2 rounded-2xl flex flex-col items-center justify-center gap-1.5 transition-all ${
                               customerInfo.paymentMethod === method.id 
-                                ? 'border-red-500 bg-red-50 text-red-700 shadow-sm' 
-                                : 'border-gray-100 hover:border-gray-300 hover:bg-gray-50'
+                                ? 'border-[#0B5ED7] bg-[#EEF5FF] text-[#0B5ED7] shadow-xs' 
+                                : 'border-blue-50 bg-[#F4F8FF] text-slate-700 hover:border-blue-200'
                             }`}
                           >
                             <span className="text-xl">{method.icon}</span>
-                            <span className="text-[10px] font-black">{method.name}</span>
+                            <span className="text-[11px] font-black">{method.name}</span>
                           </button>
                         ))}
                       </div>
                     </div>
                   )}
 
-                  {/* كوبون الخصم - يظهر حسب إعدادات لوحة التحكم */}
+                  {/* كوبون الخصم */}
                   {showCouponBox && (
-                    <div className="border rounded-xl p-3 bg-gray-50 space-y-2">
-                      <h3 className="font-medium text-sm flex items-center gap-1.5">
-                        <Tag className="h-4 w-4 text-orange-500" />
-                        كود الخصم
+                    <div className="bg-white rounded-3xl border border-dashed border-blue-300 p-3.5 space-y-2 shadow-xs">
+                      <h3 className="font-black text-xs text-[#0B5ED7] flex items-center gap-1.5">
+                        <Tag className="h-4 w-4 text-[#0B5ED7]" />
+                        استخدام كود خصم
                       </h3>
                       {couponResult?.valid ? (
-                        <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                        <div className="flex items-center justify-between bg-emerald-50 border border-emerald-200 rounded-2xl px-3 py-2">
                           <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            <CheckCircle className="h-4 w-4 text-emerald-600" />
                             <div>
-                              <p className="text-sm font-bold text-green-700">{couponCode}</p>
-                              <p className="text-xs text-green-600">وفّرت {formatCurrency(couponResult.discount || 0)}</p>
+                              <p className="text-sm font-black text-emerald-700">{couponCode}</p>
+                              <p className="text-xs text-emerald-600 font-bold">وفّرت {formatCurrency(couponResult.discount || 0)}</p>
                             </div>
                           </div>
                           <button
                             onClick={() => { setCouponCode(''); setCouponResult(null); }}
-                            className="text-red-400 hover:text-red-600 text-xs font-bold"
+                            className="text-rose-500 hover:text-rose-700 text-xs font-black"
                           >
                             إزالة
                           </button>
                         </div>
                       ) : (
                         <div className="space-y-1">
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 items-center">
                             <input
                               type="text"
                               value={couponCode}
                               onChange={(e) => { setCouponCode(e.target.value.toUpperCase()); setCouponResult(null); }}
                               placeholder="أدخل كود الخصم"
-                              className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:outline-none focus:border-orange-400"
+                              className="flex-1 px-3.5 py-2.5 bg-[#F4F8FF] border border-blue-100 rounded-full text-sm font-mono focus:bg-white focus:outline-none focus:border-[#0B5ED7]"
                               dir="ltr"
                               onKeyDown={(e) => e.key === 'Enter' && handleValidateCoupon()}
                             />
                             <button
                               onClick={handleValidateCoupon}
                               disabled={isCouponValidating || !couponCode.trim()}
-                              className="px-3 py-2 bg-orange-500 text-white rounded-lg text-sm font-bold hover:bg-orange-600 disabled:opacity-50 flex items-center gap-1"
+                              className="w-10 h-10 rounded-full bg-[#0B5ED7] text-white hover:bg-[#0950BA] disabled:opacity-50 flex items-center justify-center shrink-0 shadow-sm"
+                              aria-label="تطبيق الكوبون"
                             >
-                              {isCouponValidating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'تطبيق'}
+                              {isCouponValidating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
                             </button>
                           </div>
                           {couponResult && !couponResult.valid && (
-                            <p className="text-xs text-red-500">{couponResult.message}</p>
+                            <p className="text-xs text-rose-500 font-bold">{couponResult.message}</p>
                           )}
                         </div>
                       )}
                     </div>
                   )}
 
-                  {/* إجمالي مع الخصم */}
                   {couponResult?.valid && (couponResult.discount || 0) > 0 && (
-                    <div className="border-t pt-2 space-y-1">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-500">المجموع</span>
+                    <div className="bg-[#EEF5FF] rounded-2xl p-3.5 space-y-1.5 border border-blue-200/70">
+                      <div className="flex justify-between text-xs font-bold text-slate-600">
+                        <span>المجموع</span>
                         <span>{formatCurrency(state.subtotal + deliveryFee)}</span>
                       </div>
-                      <div className="flex justify-between text-sm text-green-600 font-bold">
+                      <div className="flex justify-between text-xs text-emerald-600 font-black">
                         <span>خصم الكوبون</span>
                         <span>- {formatCurrency(couponResult.discount || 0)}</span>
                       </div>
-                      <div className="flex justify-between font-black text-base">
-                        <span>الإجمالي</span>
-                        <span className="text-red-600">{formatCurrency(Math.max(0, state.subtotal + deliveryFee - (couponResult.discount || 0)))}</span>
+                      <div className="flex justify-between font-black text-base pt-1 border-t border-blue-200">
+                        <span className="text-slate-900">الإجمالي</span>
+                        <span className="text-[#FF6B00]">{formatCurrency(finalCalculatedTotal)}</span>
                       </div>
                     </div>
                   )}
 
                   {/* أزرار الإجراء */}
-                  <div className="flex flex-col gap-3 pt-4 border-t mt-4">
+                  <div className="flex flex-col gap-2.5 pt-2">
                     <Button
                       onClick={handleCheckout}
                       disabled={isSubmitting}
-                      className="w-full bg-red-600 text-white py-7 rounded-2xl font-black text-lg hover:bg-red-700 transition-all shadow-xl flex items-center justify-center gap-2"
+                      className="w-full h-14 bg-[#FF6B00] hover:bg-[#E55E00] text-white rounded-full font-black text-base shadow-lg shadow-orange-500/25 flex items-center justify-center gap-2"
                     >
                       {isSubmitting ? (
                         <>
-                          <Loader2 className="animate-spin" size={24} />
+                          <Loader2 className="animate-spin" size={20} />
                           جاري إرسال الطلب...
                         </>
                       ) : (
-                        'تأكيد الطلب بنجاح'
+                        <>
+                          تأكيد الطلب ({formatCurrency(finalCalculatedTotal)})
+                        </>
                       )}
                     </Button>
                     <button
                       onClick={() => setShowCheckout(false)}
                       disabled={isSubmitting}
-                      className="w-full py-3 text-gray-500 font-bold hover:text-gray-700 transition-colors text-sm disabled:opacity-50"
+                      className="w-full py-2.5 text-[#0B5ED7] font-bold hover:underline transition-colors text-sm disabled:opacity-50"
                     >
                       رجوع لتعديل السلة
                     </button>
@@ -801,7 +804,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
         </div>
       </div>
 
-      {/* نافذة تحديد الموقع */}
       <GoogleMapsLocationPicker
         isOpen={showLocationPicker}
         onClose={() => setShowLocationPicker(false)}
@@ -809,34 +811,32 @@ export function Cart({ isOpen, onClose }: CartProps) {
         restaurantLocation={getRestaurantLocation()}
       />
 
-      {/* نافذة تأكيد الإرسال المكرر */}
       {showDuplicateConfirm && (
         <div className="fixed inset-0 bg-black/70 z-[300] flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
-            <div className="bg-amber-500 px-5 py-4 text-white">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-blue-100">
+            <div className="bg-[#FF6B00] px-5 py-4 text-white">
               <div className="flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5" />
                 <h3 className="font-black text-lg">تنبيه</h3>
               </div>
             </div>
-            <div className="px-5 py-4">
-              <p className="text-gray-700 font-bold text-base mb-1">
+            <div className="px-5 py-5">
+              <p className="text-slate-900 font-black text-base mb-1">
                 الطلب قيد الإرسال حالياً
               </p>
-              <p className="text-gray-500 text-sm mb-5">
+              <p className="text-slate-500 text-sm mb-5">
                 يبدو أن طلبك قد تم استلامه. هل أنت متأكد أنك تريد إرسال الطلب مرة أخرى؟
               </p>
               <div className="flex gap-3">
                 <Button
-                  variant="destructive"
-                  className="flex-1"
+                  className="flex-1 bg-[#FF6B00] hover:bg-[#E55E00] text-white rounded-full font-bold"
                   onClick={handleConfirmResend}
                 >
                   نعم، إرسال مجدداً
                 </Button>
                 <Button
                   variant="outline"
-                  className="flex-1"
+                  className="flex-1 rounded-full border-blue-200 text-[#0B5ED7] font-bold"
                   onClick={() => setShowDuplicateConfirm(false)}
                 >
                   إلغاء
@@ -847,7 +847,6 @@ export function Cart({ isOpen, onClose }: CartProps) {
         </div>
       )}
 
-      {/* نافذة التنبيه عند الخروج عن نطاق التوصيل */}
       <OutOfDeliveryZoneModal
         isOpen={showOutOfZoneModal}
         onClose={() => setShowOutOfZoneModal(false)}

@@ -228,7 +228,7 @@ export default function OrderChatMonitoring({ className = '' }: { className?: st
   // Quick intervention presets
   const quickInterventions = [
     { label: '⚠️ تنبيه سرعة التوصيل', text: 'نرجو من الكابتن سرعة التوجه للعميل وتسليم الطلب دون تأخير لضمان أعلى مستويات الخدمة.' },
-    { label: '🛡️ تأكيد المتابعة الإدارية', text: 'إدارة سريع ون تتابع هذا الطلب مباشرة وتؤكد التزامها بحقوق العميل والكابتن.' },
+    { label: '🛡️ تأكيد المتابعة الإدارية', text: 'إدارة الصايدي توصيل تتابع هذا الطلب مباشرة وتؤكد التزامها بحقوق العميل والكابتن.' },
     { label: '📞 تواصل هاتفي فوري', text: 'فريق العمليات يتواصل هاتفياً مع أطراف الطلب لتسهيل تسليم الشحنة بأسرع وقت.' },
     { label: '✅ تسوية واستفسار مالي', text: 'تم مراجعة الحساب وتأكيد المبلغ المطلوب، يرجى الالتزام بالقيمة المسجلة في التطبيق.' }
   ];
@@ -285,7 +285,7 @@ export default function OrderChatMonitoring({ className = '' }: { className?: st
         {/* ── الجانب الأيمن: قائمة محادثات الطلبات المراقبة ── */}
         <div className="w-full lg:w-[390px] border-l border-gray-200 flex flex-col bg-[#fdfaf7] shrink-0">
           
-          {/* ترويسة القائمة - نظام سريع ون البرتقالي المحمر */}
+          {/* ترويسة القائمة - نظام الصايدي توصيل */}
           <div className="p-3.5 bg-gradient-to-r from-orange-600 via-orange-500 to-red-600 text-white flex items-center justify-between shadow-sm">
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-5 w-5 text-amber-200" />
@@ -461,7 +461,7 @@ export default function OrderChatMonitoring({ className = '' }: { className?: st
                         </span>
                       </div>
                       <p className="text-xs text-gray-500 flex items-center gap-2 mt-0.5">
-                        <span>المتجر: {selectedOrder.storeName || 'سريع ون'}</span>
+                        <span>المتجر: {selectedOrder.storeName || 'الصايدي توصيل'}</span>
                         <span>•</span>
                         <span>الإجمالي: {selectedOrder.orderTotal} ر.ي</span>
                         {selectedOrder.deliveryAddress && (
@@ -596,7 +596,7 @@ export default function OrderChatMonitoring({ className = '' }: { className?: st
                           <div className="max-w-[90%] bg-gradient-to-r from-orange-600 via-amber-500 to-red-600 text-white p-3 rounded-2xl shadow-md border border-orange-300">
                             <div className="flex items-center gap-1.5 font-black text-xs mb-1">
                               <ShieldAlert className="h-4 w-4 text-amber-200" />
-                              <span>تدخل رقابي رسمي من إدارة سريع ون</span>
+                              <span>تدخل رقابي رسمي من إدارة الصايدي توصيل</span>
                             </div>
                             <p className="text-xs leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                             <span className="text-[10px] text-orange-100 block text-left mt-1 font-mono">{timeFormatted}</span>

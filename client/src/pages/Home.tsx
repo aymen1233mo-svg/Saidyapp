@@ -243,7 +243,7 @@ export default function Home() {
               key={product.id} 
               item={product} 
               restaurantId={product.restaurantId || ''} 
-              restaurantName="السريع ون"
+              restaurantName="الصايدي توصيل"
             />
           ))}
         </div>

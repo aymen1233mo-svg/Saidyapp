@@ -6,13 +6,13 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover"
     />
-    <title>السريع ون - Saree One</title>
-    <meta name="description" content="تطبيق السريع ون لتوصيل الطلبات والمتاجر والخدمات" />
-    <meta property="og:title" content="السريع ون - Saree One" />
-    <meta property="og:description" content="تطبيق السريع ون لتوصيل الطلبات والمتاجر والخدمات" />
-    <!-- ✅ توحيد لون الثيم مع لون الشريط العلوي للتطبيق -->
-    <meta name="theme-color" content="#F97316" />
-    <meta name="msapplication-navbutton-color" content="#F97316" />
+    <title>الصايدي توصيل - Al-Saidi Delivery</title>
+    <meta name="description" content="تطبيق الصايدي توصيل لتوصيل الطلبات والمتاجر والطرود بكل سرعة وثقة" />
+    <meta property="og:title" content="الصايدي توصيل - Al-Saidi Delivery" />
+    <meta property="og:description" content="تطبيق الصايدي توصيل لتوصيل الطلبات والمتاجر والطرود بكل سرعة وثقة" />
+    <!-- ✅ توحيد لون الثيم مع هوية الصايدي توصيل -->
+    <meta name="theme-color" content="#0B5ED7" />
+    <meta name="msapplication-navbutton-color" content="#0B5ED7" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
@@ -20,7 +20,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="السريع ون" />
+    <meta name="apple-mobile-web-app-title" content="الصايدي توصيل" />
     <!-- ✅ اختيار ملف PWA المناسب ديناميكياً حسب نوع التطبيق (عميل/سائق/إدارة) -->
     <script>
       (function () {
@@ -29,12 +29,12 @@
         var titleMeta = document.querySelector('meta[name="apple-mobile-web-app-title"]');
         if (path.indexOf('/admin') === 0) {
           manifestUrl = '/manifest-admin.json';
-          if (titleMeta) titleMeta.setAttribute('content', 'لوحة التحكم - السريع ون');
-          document.title = 'لوحة التحكم - السريع ون';
+          if (titleMeta) titleMeta.setAttribute('content', 'لوحة التحكم - الصايدي توصيل');
+          document.title = 'لوحة التحكم - الصايدي توصيل';
         } else if (path.indexOf('/driver') === 0) {
           manifestUrl = '/manifest-driver.json';
-          if (titleMeta) titleMeta.setAttribute('content', 'السائق - السريع ون');
-          document.title = 'السائق - السريع ون';
+          if (titleMeta) titleMeta.setAttribute('content', 'السائق - الصايدي توصيل');
+          document.title = 'السائق - الصايدي توصيل';
         }
         var link = document.createElement('link');
         link.rel = 'manifest';
@@ -45,7 +45,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&display=swap"
       rel="stylesheet"
     />
   </head>

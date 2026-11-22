@@ -110,7 +110,7 @@ export default function AdminNotifications() {
 
   // Form State
   const [form, setForm] = useState({
-    title: 'إدارة السريع ون',
+    title: 'إدارة الصايدي توصيل',
     message: '',
     type: 'info',
     recipientType: 'all', // 'all' | 'customer' | 'driver' | 'flutter'
@@ -339,7 +339,7 @@ export default function AdminNotifications() {
     enabled: true,
     enableForCustomer: true,
     enableForDriver: true,
-    welcomeMessage: "أهلاً بك في منصة سريع ون! يسعدنا تواصلك معنا، كيف يمكننا مساعدتك اليوم؟ 🛵✨",
+    welcomeMessage: "أهلاً بك في منصة الصايدي توصيل! يسعدنا تواصلك معنا، كيف يمكننا مساعدتك اليوم؟ 🛵✨",
     replies: [
       "شكراً لتواصلك معنا! إذا كان استفسارك بخصوص طلب معين، يرجى تزويدنا برقم الطلب لنتمكن من مساعدتك فوراً.",
       "تم استلام رسالتك وتوثيقها في النظام. هل ترغب في معرفة حالة التوصيل أو الاستفسار عن كابتن التوصيل؟",
@@ -352,7 +352,7 @@ export default function AdminNotifications() {
   });
 
   const [simulatedMessages, setSimulatedMessages] = useState<Array<{ sender: 'user' | 'bot'; text: string; time: string }>>([
-    { sender: 'bot', text: 'أهلاً بك في منصة سريع ون! يسعدنا تواصلك معنا، كيف يمكننا مساعدتك اليوم؟ 🛵✨', time: 'الآن' }
+    { sender: 'bot', text: 'أهلاً بك في منصة الصايدي توصيل! يسعدنا تواصلك معنا، كيف يمكننا مساعدتك اليوم؟ 🛵✨', time: 'الآن' }
   ]);
   const [simInput, setSimInput] = useState('');
   const [simCount, setSimCount] = useState(0);
@@ -528,7 +528,7 @@ export default function AdminNotifications() {
         body: JSON.stringify({
           message: data.message,
           senderType: 'admin',
-          senderName: 'إدارة السريع ون',
+          senderName: 'إدارة الصايدي توصيل',
         }),
       });
       if (!response.ok) throw new Error('فشل إرسال الرد');
@@ -1547,7 +1547,7 @@ export default function AdminNotifications() {
                       enabled: true,
                       enableForCustomer: true,
                       enableForDriver: true,
-                      welcomeMessage: "أهلاً بك في منصة سريع ون! يسعدنا تواصلك معنا، كيف يمكننا مساعدتك اليوم؟ 🛵✨",
+                      welcomeMessage: "أهلاً بك في منصة الصايدي توصيل! يسعدنا تواصلك معنا، كيف يمكننا مساعدتك اليوم؟ 🛵✨",
                       replies: [
                         "شكراً لتواصلك معنا! إذا كان استفسارك بخصوص طلب معين، يرجى تزويدنا برقم الطلب لنتمكن من مساعدتك فوراً.",
                         "تم استلام رسالتك وتوثيقها في النظام. هل ترغب في معرفة حالة التوصيل أو الاستفسار عن كابتن التوصيل؟",
@@ -1786,7 +1786,7 @@ export default function AdminNotifications() {
                         }`}
                       >
                         <div className="flex items-center justify-between gap-3 text-[10px] opacity-75 mb-1">
-                          <span className="font-bold">{msg.sender === 'user' ? 'العميل (تجربة)' : '🤖 بوت سريع ون'}</span>
+                          <span className="font-bold">{msg.sender === 'user' ? 'العميل (تجربة)' : '🤖 بوت الصايدي توصيل'}</span>
                           <span>{msg.time}</span>
                         </div>
                         <p>{msg.text}</p>

@@ -5,87 +5,87 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0 0% 100%);
-  --foreground: hsl(222.2 84% 4.9%);
+  --background: hsl(214 100% 98%);
+  --foreground: hsl(218 65% 15%);
   --card: hsl(0 0% 100%);
-  --card-foreground: hsl(222.2 84% 4.9%);
+  --card-foreground: hsl(218 65% 15%);
   --popover: hsl(0 0% 100%);
-  --popover-foreground: hsl(222.2 84% 4.9%);
-  --primary: hsl(18 90% 50%); /* Saree One orange-red */
+  --popover-foreground: hsl(218 65% 15%);
+  --primary: hsl(216 90% 45%); /* Al-Saidi Royal Blue */
   --primary-foreground: hsl(0 0% 100%);
-  --secondary: hsl(18 75% 15%); /* Saree One dark warm */
+  --secondary: hsl(25 100% 50%); /* Al-Saidi Vibrant Orange */
   --secondary-foreground: hsl(0 0% 100%);
-  --muted: hsl(18 15% 96%);
-  --muted-foreground: hsl(18 8% 46%);
-  --accent: hsl(18 90% 50%);
-  --accent-foreground: hsl(18 75% 15%);
+  --muted: hsl(214 75% 94%);
+  --muted-foreground: hsl(215 24% 46%);
+  --accent: hsl(25 100% 50%);
+  --accent-foreground: hsl(0 0% 100%);
   --destructive: hsl(0 84.2% 60.2%);
   --destructive-foreground: hsl(210 40% 98%);
-  --border: hsl(214.3 31.8% 91.4%);
-  --input: hsl(214.3 31.8% 91.4%);
-  --ring: hsl(18 90% 50%);
-  --chart-1: hsl(18 90% 50%);
-  --chart-2: hsl(18 75% 15%);
-  --chart-3: hsl(25 90% 58%);
-  --chart-4: hsl(12 88% 55%);
-  --chart-5: hsl(18 50% 30%);
-  --sidebar: hsl(18 8% 97%);
-  --sidebar-foreground: hsl(18 50% 8%);
-  --sidebar-primary: hsl(18 90% 50%);
+  --border: hsl(214 68% 90%);
+  --input: hsl(214 68% 90%);
+  --ring: hsl(216 90% 45%);
+  --chart-1: hsl(216 90% 45%);
+  --chart-2: hsl(25 100% 50%);
+  --chart-3: hsl(142 71% 45%);
+  --chart-4: hsl(217 91% 60%);
+  --chart-5: hsl(218 65% 24%);
+  --sidebar: hsl(214 80% 98%);
+  --sidebar-foreground: hsl(218 65% 15%);
+  --sidebar-primary: hsl(216 90% 45%);
   --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(18 40% 96%);
-  --sidebar-accent-foreground: hsl(18 90% 50%);
-  --sidebar-border: hsl(18 25% 90%);
-  --sidebar-ring: hsl(18 90% 50%);
-  --font-sans: 'Inter', 'Noto Sans Arabic', sans-serif;
+  --sidebar-accent: hsl(214 75% 94%);
+  --sidebar-accent-foreground: hsl(216 90% 45%);
+  --sidebar-border: hsl(214 60% 89%);
+  --sidebar-ring: hsl(216 90% 45%);
+  --font-sans: 'Cairo', 'Inter', 'Noto Sans Arabic', sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: Menlo, monospace;
   --radius: 0.75rem;
-  --shadow-2xs: 0px 2px 0px 0px hsl(18 90% 50% / 0.00);
-  --shadow-xs: 0px 2px 0px 0px hsl(18 90% 50% / 0.00);
-  --shadow-sm: 0px 2px 0px 0px hsl(18 90% 50% / 0.00), 0px 1px 2px -1px hsl(18 90% 50% / 0.00);
-  --shadow: 0px 2px 0px 0px hsl(18 90% 50% / 0.00), 0px 1px 2px -1px hsl(18 90% 50% / 0.00);
-  --shadow-md: 0px 2px 0px 0px hsl(18 90% 50% / 0.00), 0px 2px 4px -1px hsl(18 90% 50% / 0.00);
-  --shadow-lg: 0px 2px 0px 0px hsl(18 90% 50% / 0.00), 0px 4px 6px -1px hsl(18 90% 50% / 0.00);
-  --shadow-xl: 0px 2px 0px 0px hsl(18 90% 50% / 0.00), 0px 8px 10px -1px hsl(18 90% 50% / 0.00);
-  --shadow-2xl: 0px 2px 0px 0px hsl(18 90% 50% / 0.00);
+  --shadow-2xs: 0px 2px 0px 0px hsl(216 90% 45% / 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(216 90% 45% / 0.00);
+  --shadow-sm: 0px 2px 0px 0px hsl(216 90% 45% / 0.00), 0px 1px 2px -1px hsl(216 90% 45% / 0.00);
+  --shadow: 0px 2px 0px 0px hsl(216 90% 45% / 0.00), 0px 1px 2px -1px hsl(216 90% 45% / 0.00);
+  --shadow-md: 0px 2px 0px 0px hsl(216 90% 45% / 0.00), 0px 2px 4px -1px hsl(216 90% 45% / 0.00);
+  --shadow-lg: 0px 2px 0px 0px hsl(216 90% 45% / 0.00), 0px 4px 6px -1px hsl(216 90% 45% / 0.00);
+  --shadow-xl: 0px 2px 0px 0px hsl(216 90% 45% / 0.00), 0px 8px 10px -1px hsl(216 90% 45% / 0.00);
+  --shadow-2xl: 0px 2px 0px 0px hsl(216 90% 45% / 0.00);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 }
 
 .dark {
-  --background: hsl(18 60% 8%);
+  --background: hsl(220 45% 8%);
   --foreground: hsl(210 40% 98%);
-  --card: hsl(18 55% 10%);
+  --card: hsl(220 40% 11%);
   --card-foreground: hsl(210 40% 98%);
-  --popover: hsl(18 55% 10%);
+  --popover: hsl(220 40% 11%);
   --popover-foreground: hsl(210 40% 98%);
-  --primary: hsl(18 90% 50%);
-  --primary-foreground: hsl(18 75% 15%);
-  --secondary: hsl(18 50% 20%);
-  --secondary-foreground: hsl(210 40% 98%);
-  --muted: hsl(18 40% 18%);
-  --muted-foreground: hsl(18 15% 65%);
-  --accent: hsl(18 90% 50%);
-  --accent-foreground: hsl(18 75% 15%);
+  --primary: hsl(216 90% 54%);
+  --primary-foreground: hsl(0 0% 100%);
+  --secondary: hsl(25 95% 54%);
+  --secondary-foreground: hsl(0 0% 100%);
+  --muted: hsl(220 30% 18%);
+  --muted-foreground: hsl(215 20% 68%);
+  --accent: hsl(25 95% 54%);
+  --accent-foreground: hsl(0 0% 100%);
   --destructive: hsl(0 62.8% 30.6%);
   --destructive-foreground: hsl(210 40% 98%);
-  --border: hsl(18 40% 20%);
-  --input: hsl(18 40% 20%);
-  --ring: hsl(18 90% 50%);
-  --chart-1: hsl(18 90% 50%);
-  --chart-2: hsl(18 60% 30%);
-  --chart-3: hsl(25 90% 58%);
-  --chart-4: hsl(12 88% 55%);
-  --chart-5: hsl(18 50% 30%);
-  --sidebar: hsl(18 55% 10%);
+  --border: hsl(220 30% 20%);
+  --input: hsl(220 30% 20%);
+  --ring: hsl(216 90% 54%);
+  --chart-1: hsl(216 90% 54%);
+  --chart-2: hsl(25 95% 54%);
+  --chart-3: hsl(142 70% 45%);
+  --chart-4: hsl(200 90% 55%);
+  --chart-5: hsl(220 50% 35%);
+  --sidebar: hsl(220 40% 11%);
   --sidebar-foreground: hsl(210 40% 98%);
-  --sidebar-primary: hsl(18 90% 50%);
-  --sidebar-primary-foreground: hsl(18 75% 15%);
-  --sidebar-accent: hsl(18 40% 18%);
-  --sidebar-accent-foreground: hsl(18 90% 50%);
-  --sidebar-border: hsl(18 40% 20%);
-  --sidebar-ring: hsl(18 90% 50%);
+  --sidebar-primary: hsl(216 90% 54%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(220 30% 18%);
+  --sidebar-accent-foreground: hsl(216 90% 64%);
+  --sidebar-border: hsl(220 30% 20%);
+  --sidebar-ring: hsl(216 90% 54%);
 }
 
 @layer base {
@@ -103,42 +103,42 @@
 
 @layer components {
   .hero-banner {
-    background: linear-gradient(135deg, #F97316 0%, #EA580C 50%, #1A0600 100%);
+    background: linear-gradient(135deg, #0B5ED7 0%, #0046B8 55%, #002D80 100%);
   }
 
   .gradient-header {
-    background: linear-gradient(135deg, #1A0600 0%, #240A00 100%);
+    background: linear-gradient(135deg, #0B5ED7 0%, #003B99 100%);
   }
 
-  .logo-saree-one {
+  .logo-saidi {
     display: flex;
     align-items: center;
     font-weight: 900;
   }
 
-  .logo-saree-one .primary {
-    color: #F97316;
+  .logo-saidi .primary {
+    color: #0B5ED7;
   }
 
   .orange-gradient {
-    background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+    background: linear-gradient(135deg, #FF7B00 0%, #FF5500 100%);
   }
 
   .red-gradient {
-    background: linear-gradient(135deg, #F97316 0%, #C2410C 100%);
+    background: linear-gradient(135deg, #0B5ED7 0%, #003B99 100%);
   }
 
-  /* الشريط العلوي للجوال: تدرج برتقالي بلمسة كحلية لمطابقة الشعار */
+  /* الشريط العلوي للجوال: تدرج أزرق ملكي لهوية الصايدي توصيل */
   .header-gradient {
-    background: linear-gradient(135deg, #F97316 0%, #EA580C 60%, #1A0600 130%);
+    background: linear-gradient(135deg, #0B5ED7 0%, #064BB5 55%, #003B99 100%);
   }
 
   .primary-gradient {
-    background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+    background: linear-gradient(135deg, #1E75FF 0%, #0B5ED7 100%);
   }
 
   .navy-gradient {
-    background: linear-gradient(135deg, #1A0600 0%, #240A00 50%, #1E293B 100%);
+    background: linear-gradient(135deg, #081C3A 0%, #0D2954 50%, #003B99 100%);
   }
 
   /* ── Splash Screen Animations ─────────────────────────────────── */

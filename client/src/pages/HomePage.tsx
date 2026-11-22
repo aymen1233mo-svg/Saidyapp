@@ -160,24 +160,61 @@ export default function HomePage() {
   const currentOffer = activeOffers[offerIndex];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#F4F8FF]">
+
+      {/* ── Quick Delivery Hero Card (Al-Saidi Delivery Quick Action) ── */}
+      {showSection('show_wasalni_service') && (
+        <div className="px-4 pt-3 pb-1 max-w-6xl mx-auto">
+          <div
+            onClick={() => setLocation('/wasalni')}
+            className="relative overflow-hidden rounded-3xl saidi-blue-gradient text-white shadow-lg shadow-blue-900/15 cursor-pointer group border border-blue-400/20"
+          >
+            <div className="absolute -bottom-1 left-0 right-0 h-2.5 bg-[#FF6B00] opacity-95" />
+            <div className="flex items-center justify-between p-4 sm:p-5 gap-3 relative z-10">
+              <div className="flex-1 min-w-0">
+                <div className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/20 text-[10px] font-black px-2.5 py-0.5 rounded-full mb-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF8C00]" />
+                  <span>{language === 'ar' ? getS('wasalni_service_name', 'وصل لي السريع') : 'Express Delivery'}</span>
+                </div>
+                <h2 className="text-lg sm:text-xl font-black leading-tight mb-1">
+                  {language === 'ar' ? 'أطلب توصيل أي غرض أو مشوار' : 'Order Anything Delivered'}
+                </h2>
+                <p className="text-xs text-blue-100 font-medium line-clamp-1 mb-2.5">
+                  {language === 'ar' ? 'مطاعم، طرود، مستلزمات، أو متاجر — نوصلها لباب بيتك بسرعة وأمان' : 'Restaurants, parcels, groceries — delivered fast & safe'}
+                </p>
+                <span className="inline-flex items-center gap-1.5 saidi-orange-gradient text-white text-xs font-black px-4 py-1.5 rounded-full shadow-md group-hover:scale-105 transition-transform">
+                  <span>{language === 'ar' ? 'اطلب الآن' : 'Order Now'}</span>
+                  {language === 'ar' ? <ChevronLeft className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+                </span>
+              </div>
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-white/40 shadow-md shrink-0 bg-white">
+                <img
+                  src="/assets/saidi-courier-hero.jpg"
+                  alt="الصايدي توصيل"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Categories ─────────────────────────────────────────────────────── */}
       {showSection('show_categories') && (
-        <div className="bg-white border-b border-orange-100/60 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-          <div className="flex overflow-x-auto no-scrollbar px-4 py-3.5 gap-3.5 items-center">
+        <div className="bg-white/95 backdrop-blur-sm border-y border-blue-100/80 shadow-[0_2px_10px_rgba(11,94,215,0.04)] mt-2">
+          <div className="flex overflow-x-auto no-scrollbar px-4 py-3.5 gap-3.5 items-center max-w-6xl mx-auto">
             <div
               className="flex flex-col items-center gap-1.5 cursor-pointer shrink-0 min-w-[68px] group"
               onClick={() => { setSelectedCategory('all'); setSelectedTab('all'); }}
             >
               <div className={`w-16 h-16 rounded-2xl flex items-center justify-center border-2 transition-all duration-200 ${
                 selectedCategory === 'all' 
-                  ? 'border-[#FF5722] bg-gradient-to-br from-orange-50 to-orange-100/50 shadow-md shadow-orange-500/15 scale-105' 
-                  : 'bg-slate-50 border-slate-100 group-hover:bg-orange-50/40'
+                  ? 'border-[#0B5ED7] bg-gradient-to-br from-blue-50 to-blue-100/70 shadow-md shadow-blue-600/15 scale-105' 
+                  : 'bg-[#F4F8FF] border-blue-100/70 group-hover:bg-blue-50'
               }`}>
-                <Menu className={`h-6 w-6 transition-transform group-hover:scale-110 ${selectedCategory === 'all' ? 'text-[#FF5722]' : 'text-slate-600'}`} />
+                <Menu className={`h-6 w-6 transition-transform group-hover:scale-110 ${selectedCategory === 'all' ? 'text-[#0B5ED7]' : 'text-slate-600'}`} />
               </div>
-              <span className={`text-[11px] font-bold text-center leading-tight transition-colors ${selectedCategory === 'all' ? 'text-[#FF5722] font-black' : 'text-slate-700'}`}>
+              <span className={`text-[11px] font-bold text-center leading-tight transition-colors ${selectedCategory === 'all' ? 'text-[#0B5ED7] font-black' : 'text-slate-700'}`}>
                 {language === 'ar' ? getS('text_all_categories', 'كل التصنيفات') : t('all_categories')}
               </span>
             </div>
@@ -188,10 +225,10 @@ export default function HomePage() {
                 className="flex flex-col items-center gap-1.5 cursor-pointer shrink-0 min-w-[68px] group"
                 onClick={() => setLocation('/wasalni')}
               >
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center border-2 bg-gradient-to-br from-[#FF6E40] to-[#FF5722] border-transparent shadow-md shadow-orange-500/20 group-hover:scale-105 transition-all">
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center border-2 saidi-orange-gradient border-transparent shadow-md shadow-orange-500/20 group-hover:scale-105 transition-all">
                   <span className="text-2xl drop-shadow-sm">🛵</span>
                 </div>
-                <span className="text-[11px] font-black text-center leading-tight text-[#FF5722]">
+                <span className="text-[11px] font-black text-center leading-tight text-[#FF6B00]">
                   {language === 'ar' ? getS('wasalni_service_name', 'وصل لي') : 'Wasalni'}
                 </span>
               </div>
@@ -205,17 +242,17 @@ export default function HomePage() {
               >
                 <div className={`w-16 h-16 rounded-2xl flex items-center justify-center border-2 transition-all duration-200 overflow-hidden ${
                   selectedCategory === cat.id 
-                    ? 'border-[#FF5722] bg-gradient-to-br from-orange-50 to-orange-100/50 shadow-md shadow-orange-500/15 scale-105' 
-                    : 'bg-slate-50 border-slate-100 group-hover:bg-orange-50/40'
+                    ? 'border-[#0B5ED7] bg-gradient-to-br from-blue-50 to-blue-100/70 shadow-md shadow-blue-600/15 scale-105' 
+                    : 'bg-[#F4F8FF] border-blue-100/70 group-hover:bg-blue-50'
                 }`}>
                   {cat.image
                     ? <img src={cat.image} alt={cat.name} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
                     : cat.icon
-                      ? <i className={`${cat.icon} text-2xl ${selectedCategory === cat.id ? 'text-[#FF5722]' : 'text-slate-500'}`} />
-                      : <UtensilsCrossed className={`h-6 w-6 ${selectedCategory === cat.id ? 'text-[#FF5722]' : 'text-slate-500'}`} />
+                      ? <i className={`${cat.icon} text-2xl ${selectedCategory === cat.id ? 'text-[#0B5ED7]' : 'text-slate-500'}`} />
+                      : <UtensilsCrossed className={`h-6 w-6 ${selectedCategory === cat.id ? 'text-[#0B5ED7]' : 'text-slate-500'}`} />
                   }
                 </div>
-                <span className={`text-[11px] font-bold text-center leading-tight transition-colors ${selectedCategory === cat.id ? 'text-[#FF5722] font-black' : 'text-slate-700'}`}>
+                <span className={`text-[11px] font-bold text-center leading-tight transition-colors ${selectedCategory === cat.id ? 'text-[#0B5ED7] font-black' : 'text-slate-700'}`}>
                   {cat.name}
                 </span>
               </div>
@@ -226,32 +263,28 @@ export default function HomePage() {
 
       {/* ── Offers Slider ───────────────────────────────────────────────────── */}
       {showSection('show_hero_section') && activeOffers.length > 0 && currentOffer && (
-        <div className="px-4 pt-4 pb-2">
-          <div className="relative w-full rounded-3xl overflow-hidden shadow-lg border border-orange-100/60" style={{ height: activeOffers.length === 1 ? '200px' : '185px' }}>
-              {/* Image */}
+        <div className="px-4 pt-4 pb-2 max-w-6xl mx-auto">
+          <div className="relative w-full rounded-3xl overflow-hidden shadow-lg border border-blue-100" style={{ height: activeOffers.length === 1 ? '200px' : '185px' }}>
               {currentOffer.image
                 ? <img src={currentOffer.image} alt={currentOffer.title} className="w-full h-full object-cover" />
-                : <div className="w-full h-full bg-gradient-to-br from-[#FF5722] via-[#F4511E] to-[#D84315]" />
+                : <div className="w-full h-full saidi-blue-gradient" />
               }
 
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#002868]/90 via-black/35 to-transparent" />
 
-              {/* Badge top */}
               {currentOffer.showBadge !== false && (
                 <div className={`absolute top-3.5 ${language === 'ar' ? 'right-3.5' : 'left-3.5'} flex gap-1.5`}>
-                  <span className="bg-[#FF5722] text-white text-[10px] font-black px-3 py-1 rounded-full shadow-md">
+                  <span className="bg-[#FF6B00] text-white text-[10px] font-black px-3 py-1 rounded-full shadow-md">
                     {currentOffer.badgeText1 || (language === 'ar' ? 'عرض خاص' : 'Special Offer')}
                   </span>
                   {currentOffer.badgeText2 && (
-                    <span className="bg-white/25 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1 rounded-full">
+                    <span className="bg-[#0B5ED7]/80 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1 rounded-full">
                       {currentOffer.badgeText2}
                     </span>
                   )}
                 </div>
               )}
 
-              {/* Content bottom */}
               <div className={`absolute bottom-0 right-0 left-0 p-4 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                 <h3 className="text-white font-black text-base leading-snug line-clamp-2 mb-1 drop-shadow">
                   {currentOffer.title}
@@ -263,7 +296,7 @@ export default function HomePage() {
                 )}
                 <div className="flex items-center justify-between">
                   <button
-                    className="bg-white text-[#FF5722] hover:bg-orange-50 text-xs font-black px-4 py-2 rounded-2xl flex items-center gap-1 shadow-md transition-all active:scale-95"
+                    className="bg-white text-[#0B5ED7] hover:bg-blue-50 text-xs font-black px-4 py-2 rounded-full flex items-center gap-1 shadow-md transition-all active:scale-95"
                     onClick={() => {
                       if (currentOffer.restaurantId) {
                         setLocation(`/restaurant/${currentOffer.restaurantId}`);
@@ -278,7 +311,7 @@ export default function HomePage() {
                     {language === 'ar' ? <ChevronLeft className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
                   </button>
                   {(currentOffer.discountPercent || currentOffer.discountAmount) && (
-                    <span className="bg-[#FF5722] text-white text-[11px] font-black px-3 py-1 rounded-full shadow-sm">
+                    <span className="bg-[#FF6B00] text-white text-[11px] font-black px-3 py-1 rounded-full shadow-sm">
                       {currentOffer.discountPercent
                         ? (language === 'ar' ? `خصم ${currentOffer.discountPercent}%` : `${currentOffer.discountPercent}% OFF`)
                         : (language === 'ar' ? `خصم ${currentOffer.discountAmount} ر.ي` : `${currentOffer.discountAmount} YER OFF`)}
@@ -287,7 +320,6 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Arrows — only when multiple offers */}
               {activeOffers.length > 1 && (
                 <>
                   <button
@@ -303,18 +335,16 @@ export default function HomePage() {
                     <ChevronRight className="h-4 w-4" />
                   </button>
 
-                  {/* Dots */}
                   <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
                     {activeOffers.map((_, i) => (
                       <button
                         key={i}
                         onClick={() => { setOfferIndex(i); startSlider(); }}
-                        className={`rounded-full transition-all ${i === offerIndex ? 'w-5 h-1.5 bg-white shadow' : 'w-1.5 h-1.5 bg-white/50'}`}
+                        className={`rounded-full transition-all ${i === offerIndex ? 'w-5 h-1.5 bg-[#FF6B00] shadow' : 'w-1.5 h-1.5 bg-white/50'}`}
                       />
                     ))}
                   </div>
 
-                  {/* كل العروض */}
                   <button
                     className={`absolute top-3.5 ${language === 'ar' ? 'left-3.5' : 'right-3.5'} text-white text-[10px] font-bold flex items-center gap-0.5 bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-full hover:bg-black/60 transition-all`}
                     onClick={() => setLocation('/category/العروض')}
@@ -329,20 +359,18 @@ export default function HomePage() {
       )}
 
       {/* ── Restaurant List ─────────────────────────────────────────────────── */}
-      <div className="px-4 pt-3 pb-20">
-        {/* Section Header */}
+      <div className="px-4 pt-3 pb-24 max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-3.5">
-          <span className="text-xs text-slate-500 font-bold bg-orange-50/80 px-2.5 py-1 rounded-full border border-orange-100">
-            {filteredRestaurants.length} {language === 'ar' ? 'مطعم ومحل' : 'Stores & Restaurants'}
-          </span>
-          <span className="text-base font-black text-slate-900">
+          <span className="text-base font-black text-[#003B99]">
             {selectedCategory === 'all'
               ? (language === 'ar' ? 'جميع المطاعم والمحلات' : 'All Restaurants & Stores')
               : categories?.find(c => c.id === selectedCategory)?.name || (language === 'ar' ? 'المطاعم' : 'Restaurants')}
           </span>
+          <span className="text-xs text-[#0B5ED7] font-bold bg-white px-3 py-1 rounded-full border border-blue-100 shadow-2xs">
+            {filteredRestaurants.length} {language === 'ar' ? 'مطعم ومحل' : 'Stores & Restaurants'}
+          </span>
         </div>
 
-        {/* Nearest-tab: show location notice if no GPS */}
         {selectedTab === 'nearest' && !userLat && (
           <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-2xl px-4 py-2.5 mb-3.5 text-right shadow-sm">
             <Navigation className="h-4 w-4 text-amber-500 shrink-0" />
@@ -352,15 +380,15 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Tabs */}
-        <div className="flex bg-slate-100/90 p-1 rounded-2xl mb-4 gap-1">
+        {/* Tabs - Royal Blue segmented pill bar */}
+        <div className="flex bg-white p-1.5 rounded-2xl mb-4 gap-1 border border-blue-100 shadow-xs">
           {tabs.map(tab => (
             <button
               key={tab.key}
               className={`flex-1 py-2.5 font-bold text-xs rounded-xl transition-all ${
                 selectedTab === tab.key
-                  ? 'bg-white text-[#FF5722] font-black shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-[#0B5ED7] text-white font-black shadow-sm'
+                  : 'text-slate-600 hover:text-[#0B5ED7] hover:bg-blue-50/50'
               }`}
               onClick={() => setSelectedTab(tab.key)}
             >
@@ -369,7 +397,6 @@ export default function HomePage() {
           ))}
         </div>
 
-        {/* Global app closed banner */}
         {!appStatus.isOpen && (
           <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-2xl px-4 py-3 mb-3.5 text-right shadow-sm">
             <AlertCircle className="h-5 w-5 text-red-500 shrink-0" />
@@ -380,7 +407,7 @@ export default function HomePage() {
         )}
 
         {/* Cards */}
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {filteredRestaurants.map(restaurant => {
             const status = getRestaurantStatus(restaurant, appStatus.isOpen);
             const isFav = favorites.has(restaurant.id);
@@ -392,19 +419,18 @@ export default function HomePage() {
             return (
               <div
                 key={restaurant.id}
-                className="bg-white rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-orange-100/60 overflow-hidden hover:shadow-[0_8px_24px_rgba(255,87,34,0.12)] transition-all cursor-pointer active:scale-[0.99]"
+                className="bg-white rounded-3xl shadow-[0_4px_16px_rgba(11,94,215,0.06)] border border-blue-100/80 overflow-hidden hover:shadow-[0_8px_24px_rgba(11,94,215,0.14)] transition-all cursor-pointer active:scale-[0.99]"
                 onClick={() => setLocation(`/restaurant/${restaurant.id}`)}
               >
                 <div className="flex items-center p-3.5 gap-3.5">
-                  {/* Heart + Status badge */}
                   <div className="flex flex-col items-center gap-2 shrink-0">
                     <button
-                      className={`p-1.5 rounded-full transition-colors ${isFav ? 'text-[#FF5722] bg-orange-50' : 'text-slate-300 hover:text-[#FF5722]'}`}
+                      className={`p-1.5 rounded-full transition-colors ${isFav ? 'text-[#FF6B00] bg-orange-50' : 'text-slate-300 hover:text-[#FF6B00]'}`}
                       onClick={e => toggleFavorite(e, restaurant.id)}
                     >
-                      <Heart className={`h-5 w-5 ${isFav ? 'fill-[#FF5722]' : ''}`} />
+                      <Heart className={`h-5 w-5 ${isFav ? 'fill-[#FF6B00]' : ''}`} />
                     </button>
-                    <Badge className={`text-[10px] font-black px-2 py-0.5 rounded-lg border-0 shadow-none ${
+                    <Badge className={`text-[10px] font-black px-2.5 py-0.5 rounded-full border-0 shadow-none ${
                       status.isOpen
                         ? status.statusColor === 'yellow' ? 'bg-amber-500 text-white' : 'bg-emerald-500 text-white'
                         : 'bg-slate-700 text-white'
@@ -413,47 +439,45 @@ export default function HomePage() {
                     </Badge>
                   </div>
 
-                  {/* Info */}
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-black text-slate-900 text-base leading-tight mb-0.5">
+                    <h4 className="font-black text-[#003B99] text-base leading-tight mb-0.5 truncate">
                       {restaurant.name}
                     </h4>
                     {restaurant.description && (
                       <p className="text-xs text-slate-500 leading-tight mb-1 truncate">{restaurant.description}</p>
                     )}
                     {restaurant.categoryId && (
-                      <p className="text-xs text-slate-400 leading-tight mb-1 truncate">
+                      <p className="text-[11px] text-[#0B5ED7]/80 font-semibold leading-tight mb-1 truncate">
                         {categories?.find(c => c.id === restaurant.categoryId)?.name || ''}
                       </p>
                     )}
-                    <div className="flex items-center gap-2 text-[11px] text-slate-500 flex-wrap mt-1">
+                    <div className="flex items-center gap-2 text-[11px] text-slate-600 flex-wrap mt-1">
                       {restaurant.deliveryTime && (
-                        <span className="flex items-center gap-0.5 bg-slate-50 px-2 py-0.5 rounded-md">
-                          <Clock className="h-3 w-3 text-slate-400" />{restaurant.deliveryTime} {t('delivery_time')}
+                        <span className="flex items-center gap-0.5 bg-[#F4F8FF] border border-blue-100/70 px-2 py-0.5 rounded-full">
+                          <Clock className="h-3 w-3 text-[#0B5ED7]" />{restaurant.deliveryTime} {t('delivery_time')}
                         </span>
                       )}
                       {restaurant.deliveryFee !== undefined && (
-                        <span className="flex items-center gap-0.5 bg-slate-50 px-2 py-0.5 rounded-md font-bold">
-                          <Tag className="h-3 w-3 text-slate-400" />{restaurant.deliveryFee} {t('currency')}
+                        <span className="flex items-center gap-0.5 bg-[#F4F8FF] border border-blue-100/70 px-2 py-0.5 rounded-full font-bold text-[#003B99]">
+                          <Tag className="h-3 w-3 text-[#FF6B00]" />{restaurant.deliveryFee} {t('currency')}
                         </span>
                       )}
                       {dist !== null && (
-                        <span className="flex items-center gap-0.5 text-[#FF5722] font-bold bg-orange-50 px-2 py-0.5 rounded-md">
+                        <span className="flex items-center gap-0.5 text-[#0B5ED7] font-bold bg-blue-50 px-2 py-0.5 rounded-full">
                           <MapPin className="h-3 w-3" />{formatDistance(dist, language)}
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Logo + Stars */}
                   <div className="shrink-0 flex flex-col items-center gap-1.5">
-                    <div className="w-16 h-16 rounded-2xl overflow-hidden border border-orange-100/80 bg-orange-50/30 flex items-center justify-center shadow-inner">
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden border border-blue-100 bg-[#F4F8FF] flex items-center justify-center shadow-inner">
                       {restaurant.image
                         ? <img src={restaurant.image} alt={restaurant.name} className="w-full h-full object-cover" />
-                        : <UtensilsCrossed className="h-7 w-7 text-slate-300" />
+                        : <UtensilsCrossed className="h-7 w-7 text-blue-200" />
                       }
                     </div>
-                    <div className="flex items-center gap-1 bg-amber-50/80 px-2 py-0.5 rounded-lg border border-amber-200/60 shadow-xs">
+                    <div className="flex items-center gap-1 bg-amber-50/90 px-2 py-0.5 rounded-full border border-amber-200/70 shadow-2xs">
                       <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
                       <span className="text-[11px] font-black text-amber-950">
                         {parseFloat(restaurant.rating || '0') > 0 ? (Number(restaurant.rating) || 0).toFixed(1) : '5.0'}
@@ -468,18 +492,17 @@ export default function HomePage() {
             );
           })}
 
-          {/* Empty state */}
           {filteredRestaurants.length === 0 && (
-            <div className="text-center py-16">
-              <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="col-span-full text-center py-16 bg-white rounded-3xl border border-blue-100">
+              <div className="w-20 h-20 bg-[#F4F8FF] rounded-full flex items-center justify-center mx-auto mb-4">
                 {selectedTab === 'favorites'
-                  ? <Heart className="h-10 w-10 text-gray-300" />
+                  ? <Heart className="h-10 w-10 text-blue-200" />
                   : selectedTab === 'nearest'
-                    ? <Navigation className="h-10 w-10 text-gray-300" />
-                    : <UtensilsCrossed className="h-10 w-10 text-gray-300" />
+                    ? <Navigation className="h-10 w-10 text-blue-200" />
+                    : <UtensilsCrossed className="h-10 w-10 text-blue-200" />
                 }
               </div>
-              <p className="text-gray-500 font-bold text-lg">
+              <p className="text-gray-600 font-bold text-lg">
                 {selectedTab === 'favorites'
                   ? (language === 'ar' ? 'لا توجد مفضلات بعد' : 'No favorites yet')
                   : selectedTab === 'nearest'

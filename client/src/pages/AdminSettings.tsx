@@ -419,7 +419,7 @@ export default function AdminSettings() {
                   id="share_text" 
                   value={settings.share_text}
                   onChange={(e) => setSettings(prev => ({ ...prev, share_text: e.target.value }))}
-                  placeholder="تسوق عبر تطبيق السريع ون واستمتع بأسرع توصيل..."
+                  placeholder="تسوق عبر تطبيق الصايدي توصيل واستمتع بأسرع توصيل..."
                 />
               </div>
               <div className="space-y-2">
@@ -428,7 +428,7 @@ export default function AdminSettings() {
                   id="share_url" 
                   value={settings.share_url}
                   onChange={(e) => setSettings(prev => ({ ...prev, share_url: e.target.value }))}
-                  placeholder="https://saree.app"
+                  placeholder="https://alsaidi-delivery.com"
                 />
               </div>
             </div>

@@ -498,7 +498,7 @@ export default function AdminFinancialReports() {
                       <Area 
                         type="monotone" 
                         dataKey="amount" 
-                        stroke="#ec3714" 
+                        stroke="#0B5ED7" 
                         fillOpacity={1}
                         fill="url(#colorRevenue)"
                       />

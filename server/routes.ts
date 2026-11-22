@@ -991,7 +991,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         order: {
           ...orderData,
-          driverName: driverInfo?.name || orderData.driverName || (orderData.driverId ? "سائق سريع ون" : undefined),
+          driverName: driverInfo?.name || orderData.driverName || (orderData.driverId ? "كابتن الصايدي توصيل" : undefined),
           driverPhone: driverInfo?.phone || orderData.driverPhone || undefined,
           driverRating: driverInfo?.averageRating ? String(driverInfo.averageRating) : "4.9",
           driverVehiclePlate: driverInfo?.vehicleNumber || (orderData.driverId ? "أ س ن 8990" : undefined),
@@ -1312,7 +1312,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           if (score > 0) {
             const enrichedItem = {
               ...item,
-              restaurantName: parentRest?.name || 'متجر السريع ون',
+              restaurantName: parentRest?.name || 'متجر الصايدي توصيل',
               restaurantImage: parentRest?.image || null,
               restaurantRating: parentRest?.rating || '5.0',
               restaurantDeliveryTime: parentRest?.deliveryTime || '30-45 دقيقة',

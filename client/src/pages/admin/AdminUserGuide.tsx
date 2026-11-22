@@ -78,7 +78,7 @@ export default function AdminUserGuide() {
         title: selectedCategory !== 'all' 
           ? `دليل استخدام: ${GUIDE_CATEGORIES.find(c => c.id === selectedCategory)?.title}`
           : 'دليل استخدام النظام الكامل ولائحة العمليات',
-        appName: 'سريع ون'
+        appName: 'الصايدي توصيل'
       });
     } catch (err) {
       console.error('Error printing guide:', err);

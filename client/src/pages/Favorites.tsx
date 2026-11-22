@@ -95,12 +95,12 @@ export default function Favorites() {
   const isLoading = isProductsLoading || (isAuthenticated && isApiLoading);
 
   return (
-    <div className="bg-gradient-to-b from-slate-50/70 via-white to-slate-50/50 min-h-screen pb-24" dir="rtl">
+    <div className="bg-[#F4F8FF] min-h-screen pb-24" dir="rtl">
       <div className="container mx-auto px-4 py-6 md:py-10 max-w-7xl">
         
         {/* Top Header Card */}
-        <div className="bg-gradient-to-r from-[#FF5722] via-[#F4511E] to-[#E64A19] rounded-3xl p-6 md:p-8 text-white shadow-lg shadow-orange-500/15 mb-8 relative overflow-hidden">
-          {/* Background shapes */}
+        <div className="saidi-blue-gradient rounded-3xl p-6 md:p-8 text-white shadow-lg shadow-blue-900/15 mb-8 relative overflow-hidden">
+          <div className="absolute -bottom-1 left-0 right-0 h-2 bg-[#FF6B00]" />
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
           <div className="absolute -bottom-10 -left-10 w-36 h-36 bg-black/10 rounded-full blur-xl pointer-events-none" />
 
@@ -113,7 +113,7 @@ export default function Favorites() {
               <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">
                 {language === 'ar' ? 'وجباتك ومنتجاتك المفضلة' : 'My Favorite Items'}
               </h1>
-              <p className="text-xs md:text-sm text-white/85 font-medium">
+              <p className="text-xs md:text-sm text-blue-100 font-medium">
                 {language === 'ar' 
                   ? 'جميع الوجبات والمنتجات التي قمت بحفظها لطلبها بسرعة وسهولة' 
                   : 'All the meals and items you saved for fast and easy ordering'}
@@ -136,10 +136,10 @@ export default function Favorites() {
           <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none">
             <button
               onClick={() => setSelectedCategory('all')}
-              className={`px-4 py-2 rounded-2xl text-xs font-black transition-all shrink-0 ${
+              className={`px-4 py-2 rounded-full text-xs font-black transition-all shrink-0 ${
                 selectedCategory === 'all'
-                  ? 'bg-[#F05215] text-white shadow-md shadow-orange-500/20'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                  ? 'bg-[#0B5ED7] text-white shadow-md shadow-blue-600/20'
+                  : 'bg-white text-slate-600 border border-blue-100 hover:bg-blue-50'
               }`}
             >
               الكل ({displayFavorites.length})
@@ -150,10 +150,10 @@ export default function Favorites() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className={`px-4 py-2 rounded-2xl text-xs font-black transition-all shrink-0 ${
+                  className={`px-4 py-2 rounded-full text-xs font-black transition-all shrink-0 ${
                     selectedCategory === cat
-                      ? 'bg-[#F05215] text-white shadow-md shadow-orange-500/20'
-                      : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                      ? 'bg-[#0B5ED7] text-white shadow-md shadow-blue-600/20'
+                      : 'bg-white text-slate-600 border border-blue-100 hover:bg-blue-50'
                   }`}
                 >
                   {cat} ({count})
@@ -167,11 +167,11 @@ export default function Favorites() {
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-5">
             {Array(10).fill(0).map((_, i) => (
-              <div key={i} className="animate-pulse bg-white p-3 rounded-2xl border border-slate-100 shadow-xs space-y-3">
-                <div className="aspect-square bg-slate-100 rounded-xl" />
-                <div className="h-4 bg-slate-100 rounded w-3/4" />
-                <div className="h-3 bg-slate-100 rounded w-1/2" />
-                <div className="h-6 bg-slate-100 rounded-lg w-2/3" />
+              <div key={i} className="animate-pulse bg-white p-3 rounded-3xl border border-blue-50 shadow-xs space-y-3">
+                <div className="aspect-square bg-blue-50 rounded-2xl" />
+                <div className="h-4 bg-blue-50 rounded w-3/4" />
+                <div className="h-3 bg-blue-50 rounded w-1/2" />
+                <div className="h-6 bg-blue-50 rounded-lg w-2/3" />
               </div>
             ))}
           </div>
@@ -184,28 +184,28 @@ export default function Favorites() {
                   key={item.id} 
                   item={item} 
                   restaurantId={item.restaurantId || ''}
-                  restaurantName={store?.name || 'متجر السريع ون'}
+                  restaurantName={store?.name || 'متجر الصايدي توصيل'}
                 />
               );
             })}
           </div>
         ) : displayFavorites.length > 0 ? (
-          <div className="bg-white rounded-3xl p-12 text-center border border-slate-200 shadow-xs max-w-md mx-auto">
+          <div className="bg-white rounded-3xl p-12 text-center border border-blue-100 shadow-xs max-w-md mx-auto">
             <p className="text-slate-500 text-sm font-bold mb-4">لا توجد منتجات في هذا التصنيف</p>
             <Button 
               onClick={() => setSelectedCategory('all')} 
               variant="outline" 
-              className="rounded-2xl"
+              className="rounded-full border-blue-200 text-[#0B5ED7]"
             >
               عرض جميع المفضلات
             </Button>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white rounded-3xl border border-slate-200/80 shadow-xs max-w-xl mx-auto">
-            <div className="w-20 h-20 bg-orange-50 rounded-3xl flex items-center justify-center mb-4 text-[#F05215] shadow-xs">
-              <Heart className="h-10 w-10 text-[#F05215]/40" />
+          <div className="flex flex-col items-center justify-center py-20 px-4 text-center bg-white rounded-3xl border border-blue-100 shadow-xs max-w-xl mx-auto">
+            <div className="w-20 h-20 bg-blue-50 rounded-3xl flex items-center justify-center mb-4 text-[#0B5ED7] shadow-xs">
+              <Heart className="h-10 w-10 text-[#0B5ED7]/40" />
             </div>
-            <h3 className="text-xl font-black text-slate-800 mb-2">
+            <h3 className="text-xl font-black text-[#003B99] mb-2">
               {language === 'ar' ? 'قائمة مفضلاتك فارغة حالياً' : 'Your favorites list is empty'}
             </h3>
             <p className="text-slate-500 text-xs md:text-sm font-medium mb-6 max-w-sm leading-relaxed">
@@ -215,7 +215,7 @@ export default function Favorites() {
             </p>
             <Button 
               onClick={() => setLocation('/')} 
-              className="bg-gradient-to-r from-[#F05215] to-[#FF7840] hover:from-[#E64A19] hover:to-[#F4511E] text-white font-bold rounded-2xl h-12 px-8 shadow-md shadow-orange-500/20"
+              className="saidi-orange-gradient hover:brightness-105 text-white font-bold rounded-full h-12 px-8 shadow-md shadow-orange-500/20"
             >
               <ShoppingBag className="h-4 w-4 ml-2" />
               {language === 'ar' ? 'تصفح المطاعم والمنتجات' : 'Explore Menu'}

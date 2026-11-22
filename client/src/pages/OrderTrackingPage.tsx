@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useLocation } from 'wouter';
-import { ArrowRight, MapPin, Clock, Phone, CheckCircle, Truck, Package, User, Star, MessageCircle, Map as MapIcon, Loader2 as Loader, XCircle, AlertTriangle, ListFilter, Navigation } from 'lucide-react';
+import { ArrowRight, MapPin, Clock, Phone, Package, MessageCircle, Map as MapIcon, Loader2 as Loader, XCircle, AlertTriangle, ListFilter, Navigation, CheckCircle2, Bike, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -44,15 +44,13 @@ interface OrderDetails {
   createdAt: Date;
   scheduledDate?: string;
   scheduledTimeSlot?: string;
-  // Wasalni fields
-  isSareeOneLi?: boolean; // تم التصحيح: إزالة المسافة
+  isSareeOneLi?: boolean;
   pickupAddress?: string;
   pickupPhone?: string;
   pickupName?: string;
   waselLiItemType?: string;
 }
 
-// الحالات التي يُسمح فيها بالإلغاء (قبل الإرسال للمطعم أو التوصيل)
 const CANCELLABLE_STATUSES = ['pending', 'scheduled', 'confirmed'];
 
 export default function OrderTrackingPage() {
@@ -68,7 +66,6 @@ export default function OrderTrackingPage() {
   const [isCancelling, setIsCancelling] = useState(false);
   const { toast } = useToast();
   
-  // جلب إعدادات الدعم
   const { data: uiSettings } = useQuery<any[]>({
     queryKey: ['/api/ui-settings'],
   });
@@ -76,19 +73,16 @@ export default function OrderTrackingPage() {
   const supportPhone = uiSettings?.find(s => s.key === 'support_phone')?.value || '967777146387';
   const supportWhatsapp = uiSettings?.find(s => s.key === 'support_whatsapp')?.value || '967777146387';
 
-  // جلب بيانات الطلب الحقيقية من API مع تحديثات سريعة
   const { data: orderData, isLoading, error, refetch } = useQuery<{order: OrderDetails, tracking: OrderStatus[]}>({
     queryKey: [`/api/orders/${orderId}/track`],
     enabled: !!orderId,
     refetchInterval: (query) => {
-      // إذا كان الطلب مكتملاً أو ملغياً، نتوقف عن التحديث التلقائي
       const status = query.state.data?.order?.status;
       if (status === 'delivered' || status === 'cancelled') return false;
       return 15000;
     },
   });
 
-  // WebSocket support for real-time tracking
   useEffect(() => {
     if (!orderId) return;
 
@@ -110,7 +104,6 @@ export default function OrderTrackingPage() {
       ws.onmessage = (event) => {
         try {
           const message = JSON.parse(event.data);
-          // Check if this update belongs to our current order
           const isRelevantOrder = message.payload?.orderId === orderId || message.payload?.id === orderId;
           
           if ((message.type === 'order_status_changed' || message.type === 'order_update') && isRelevantOrder) {
@@ -118,7 +111,6 @@ export default function OrderTrackingPage() {
           } else if (message.type === 'driver_location' && message.payload.driverId === orderData?.order.driverId) {
             setDriverLocation([message.payload.latitude, message.payload.longitude]);
           } else if (message.type === 'settings_changed') {
-            // Refresh UI settings if they changed to ensure dynamic UI elements update
             queryClient.invalidateQueries({ queryKey: ['/api/ui-settings'] });
           }
         } catch (err) {
@@ -185,12 +177,12 @@ export default function OrderTrackingPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 p-4">
+      <div className="min-h-screen bg-[#F4F8FF] p-4">
         <div className="max-w-md mx-auto space-y-4">
-          <Skeleton className="h-8 w-3/4" />
-          <Skeleton className="h-32 w-full" />
-          <Skeleton className="h-48 w-full" />
-          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-8 w-3/4 rounded-2xl" />
+          <Skeleton className="h-32 w-full rounded-3xl" />
+          <Skeleton className="h-48 w-full rounded-3xl" />
+          <Skeleton className="h-24 w-full rounded-3xl" />
         </div>
       </div>
     );
@@ -198,17 +190,17 @@ export default function OrderTrackingPage() {
 
   if (error || !orderData) {
     return (
-      <div className="min-h-screen bg-slate-50 p-4">
-        <div className="max-w-md mx-auto">
-          <Card className="text-center p-6 rounded-3xl border border-orange-100">
-            <Package className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-            <h2 className="text-xl font-black text-gray-800 mb-2">
+      <div className="min-h-screen bg-[#F4F8FF] p-4 flex items-center justify-center">
+        <div className="max-w-md w-full">
+          <Card className="text-center p-8 rounded-3xl border border-blue-100 bg-white shadow-sm">
+            <Package className="h-12 w-12 mx-auto text-[#0B5ED7] mb-4" />
+            <h2 className="text-xl font-black text-slate-900 mb-2">
               {language === 'ar' ? 'الطلب غير موجود' : 'Order Not Found'}
             </h2>
-            <p className="text-gray-600 mb-4 font-medium">
+            <p className="text-slate-500 mb-5 font-medium text-sm">
               {language === 'ar' ? 'لم نتمكن من العثور على هذا الطلب' : 'We could not find this order'}
             </p>
-            <Button onClick={() => setLocation('/')} data-testid="button-back-home" className="bg-[#FF5722] hover:bg-[#E64A19] text-white rounded-2xl">
+            <Button onClick={() => setLocation('/')} data-testid="button-back-home" className="bg-[#0B5ED7] hover:bg-[#0950BA] text-white rounded-full px-8">
               {language === 'ar' ? 'العودة للرئيسية' : 'Back to Home'}
             </Button>
           </Card>
@@ -238,30 +230,30 @@ export default function OrderTrackingPage() {
   const getStatusColor = (status: string) => {
     const colorMap: Record<string, string> = {
       scheduled: 'bg-indigo-500',
-      pending: 'bg-yellow-500',
-      assigned: 'bg-cyan-500',
-      confirmed: 'bg-blue-500',
-      preparing: 'bg-orange-500',
+      pending: 'bg-amber-500',
+      assigned: 'bg-sky-500',
+      confirmed: 'bg-[#0B5ED7]',
+      preparing: 'bg-[#FF6B00]',
       ready: 'bg-teal-500',
-      picked_up: 'bg-violet-500',
-      on_way: 'bg-purple-500',
-      delivered: 'bg-green-500',
-      cancelled: 'bg-red-500',
+      picked_up: 'bg-[#0B5ED7]',
+      on_way: 'bg-[#0B5ED7]',
+      delivered: 'bg-emerald-500',
+      cancelled: 'bg-rose-500',
     };
-    return colorMap[status] || 'bg-gray-500';
+    return colorMap[status] || 'bg-slate-500';
   };
 
   const getStatusText = (status: string) => {
     const textMapAr: Record<string, string> = {
       scheduled: 'مجدول',
-      pending: 'في الانتظار',
+      pending: 'تم استلام الطلب',
       assigned: 'تم تعيين سائق',
       confirmed: 'مؤكد',
-      preparing: 'قيد التحضير',
+      preparing: 'قيد التجهيز',
       ready: 'جاهز للاستلام',
       picked_up: 'تم الاستلام',
-      on_way: 'في الطريق',
-      delivered: 'تم التوصيل',
+      on_way: 'قيد التوصيل',
+      delivered: 'تم التسليم',
       cancelled: 'ملغي',
     };
     const textMapEn: Record<string, string> = {
@@ -279,7 +271,20 @@ export default function OrderTrackingPage() {
     return (language === 'ar' ? textMapAr[status] : textMapEn[status]) || status;
   };
 
-  // 1. Live Interactive Ride/Order Tracking View (Exact Experience from the Video)
+  const activeStepIndex = (() => {
+    if (order.status === 'delivered') return 3;
+    if (['on_way', 'picked_up'].includes(order.status)) return 2;
+    if (['preparing', 'ready', 'confirmed', 'assigned'].includes(order.status)) return 1;
+    return 0;
+  })();
+
+  const stepperSteps = [
+    { label: language === 'ar' ? 'تم استلام الطلب' : 'Received', icon: ClipboardList },
+    { label: language === 'ar' ? 'قيد التجهيز' : 'Preparing', icon: Package },
+    { label: language === 'ar' ? 'قيد التوصيل' : 'On the way', icon: Bike },
+    { label: language === 'ar' ? 'تم التسليم' : 'Delivered', icon: CheckCircle2 },
+  ];
+
   if (viewMode === 'map') {
     return (
       <>
@@ -295,15 +300,14 @@ export default function OrderTrackingPage() {
         <div className="fixed top-6 left-16 z-30 pointer-events-auto">
           <button
             onClick={() => setViewMode('details')}
-            className="px-3 py-2 rounded-2xl bg-white/95 backdrop-blur-md shadow-lg border border-slate-200/80 text-xs font-black text-slate-800 hover:bg-slate-50 flex items-center gap-1.5 active:scale-95 transition-all"
+            className="px-3.5 py-2 rounded-full bg-white/95 backdrop-blur-md shadow-lg border border-blue-100 text-xs font-black text-[#0B5ED7] hover:bg-[#EEF5FF] flex items-center gap-1.5 active:scale-95 transition-all"
             title={language === 'ar' ? 'عرض تفاصيل الفاتورة' : 'View order details'}
           >
-            <ListFilter className="w-3.5 h-3.5 text-[#FF5722]" />
+            <ListFilter className="w-3.5 h-3.5 text-[#0B5ED7]" />
             <span>{language === 'ar' ? 'تفاصيل الطلب' : 'Details'}</span>
           </button>
         </div>
 
-        {/* Rating Dialog on completion */}
         {showRatingDialog && orderData && (
           <RatingDialog
             isOpen={showRatingDialog}
@@ -314,11 +318,10 @@ export default function OrderTrackingPage() {
           />
         )}
 
-        {/* Cancel Modal */}
         {showCancelDialog && (
           <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl border border-slate-100 animate-in zoom-in-95 duration-150">
-              <div className="bg-red-600 p-4 text-white flex items-center justify-between">
+            <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl border border-blue-100 animate-in zoom-in-95 duration-150">
+              <div className="bg-rose-600 p-4 text-white flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="w-5 h-5 text-white" />
                   <h3 className="font-black text-base">{language === 'ar' ? 'إلغاء الطلب' : 'Cancel Order'}</h3>
@@ -346,10 +349,10 @@ export default function OrderTrackingPage() {
                     <button
                       key={reason}
                       onClick={() => setCancelReason(reason)}
-                      className={`w-full text-start px-3 py-2 rounded-xl text-xs font-bold border transition-all ${
+                      className={`w-full text-start px-3.5 py-2.5 rounded-2xl text-xs font-bold border transition-all ${
                         cancelReason === reason
-                          ? 'border-red-500 bg-red-50 text-red-700'
-                          : 'border-slate-100 hover:border-slate-200 text-slate-700'
+                          ? 'border-rose-500 bg-rose-50 text-rose-700'
+                          : 'border-blue-100 bg-[#F4F8FF] hover:border-blue-200 text-slate-700'
                       }`}
                     >
                       {reason}
@@ -359,7 +362,7 @@ export default function OrderTrackingPage() {
                 <div className="flex gap-2 pt-2">
                   <Button
                     variant="outline"
-                    className="flex-1 rounded-xl text-xs font-bold"
+                    className="flex-1 rounded-full text-xs font-bold border-blue-200 text-[#0B5ED7]"
                     onClick={() => setShowCancelDialog(false)}
                     disabled={isCancelling}
                   >
@@ -367,7 +370,7 @@ export default function OrderTrackingPage() {
                   </Button>
                   <Button
                     variant="destructive"
-                    className="flex-1 rounded-xl text-xs font-bold"
+                    className="flex-1 rounded-full text-xs font-black"
                     onClick={handleCancelOrder}
                     disabled={isCancelling || !cancelReason.trim()}
                   >
@@ -383,29 +386,30 @@ export default function OrderTrackingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50/70 pb-16">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-[#FF6E40] via-[#FF5722] to-[#E64A19] text-white shadow-md rounded-b-[28px] sticky top-0 z-10 p-4">
+    <div className="min-h-screen bg-[#F4F8FF] pb-24">
+      {/* Header matching Al-Saidi Tracking Mockup */}
+      <header className="relative bg-gradient-to-br from-[#0B5ED7] via-[#0950BA] to-[#003B99] text-white shadow-lg rounded-b-[2.25rem] sticky top-0 z-10 px-4 pt-4 pb-6 overflow-hidden">
+        <div className="absolute -bottom-1 left-0 right-0 h-2.5 bg-gradient-to-r from-[#FF6B00] via-[#FF8533] to-[#FF6B00]" />
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/20 rounded-2xl"
+              className="text-white bg-white/15 hover:bg-white/25 rounded-full backdrop-blur-sm"
               onClick={() => setLocation('/orders')}
               data-testid="button-tracking-back"
             >
               <ArrowRight className={`h-5 w-5 ${language === 'en' ? 'rotate-180' : ''}`} />
             </Button>
             <div>
-              <h2 className="text-lg font-black text-white">{t('track_order')}</h2>
-              <p className="text-xs text-orange-100 font-bold">{language === 'ar' ? 'طلب #' : 'Order #'}{order.orderNumber || order.id}</p>
+              <h2 className="text-lg font-black text-white">{language === 'ar' ? 'متابعة الطلبات' : t('track_order')}</h2>
+              <p className="text-xs text-blue-100 font-semibold">{language === 'ar' ? 'تابع طلبك لحظة بلحظة • #' : 'Track your order live • #'}{order.orderNumber || order.id}</p>
             </div>
           </div>
 
           <Button
             onClick={() => setViewMode('map')}
-            className="bg-white/20 hover:bg-white/30 text-white rounded-2xl font-black text-xs px-3 py-1.5 flex items-center gap-1.5"
+            className="bg-[#FF6B00] hover:bg-[#E55E00] text-white rounded-full font-black text-xs px-4 py-2 flex items-center gap-1.5 shadow-md"
           >
             <Navigation className="w-3.5 h-3.5 text-white" />
             <span>{language === 'ar' ? 'الخريطة الحية' : 'Live Map'}</span>
@@ -414,33 +418,67 @@ export default function OrderTrackingPage() {
       </header>
 
       <section className="max-w-2xl mx-auto p-4 space-y-4">
-        {/* Order Status Card */}
-        <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden bg-white">
-          <CardHeader className="bg-orange-50/30 border-b border-orange-100/50 pb-3">
+        {/* Order Status Card with 4-step Stepper */}
+        <Card className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
+          <CardHeader className="bg-[#F4F8FF]/70 border-b border-blue-100/60 pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base font-black text-slate-900">{language === 'ar' ? 'طلب رقم #' : 'Order #'}{order.orderNumber || order.id}</CardTitle>
+              <div className="flex items-center gap-2">
+                <span className="bg-[#0B5ED7] text-white font-black text-xs px-3 py-1 rounded-full">
+                  #{order.orderNumber || order.id}
+                </span>
+              </div>
               <Badge 
-                className={`${getStatusColor(order.status)} text-white font-black text-xs px-2.5 py-1 rounded-xl shadow-xs`}
+                className={`${getStatusColor(order.status)} text-white font-black text-xs px-3 py-1 rounded-full shadow-xs`}
                 data-testid="order-status-badge"
               >
                 {getStatusText(order.status)}
               </Badge>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4 pt-4">
-            {/* Live Update Indicator */}
-            <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-3 py-1.5 rounded-full w-fit">
+          <CardContent className="space-y-5 pt-4">
+            {/* 4-Step Horizontal Stepper matching mockup a3af717f / 800a7534 */}
+            {order.status !== 'cancelled' && (
+              <div className="grid grid-cols-4 gap-1 relative pt-1">
+                {stepperSteps.map((st, idx) => {
+                  const Icon = st.icon;
+                  const isDone = idx < activeStepIndex;
+                  const isCurrent = idx === activeStepIndex;
+                  return (
+                    <div key={idx} className="flex flex-col items-center text-center relative z-10">
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center transition-all border-2 ${
+                          isCurrent
+                            ? 'bg-[#0B5ED7] border-blue-200 text-white shadow-md shadow-blue-500/30 ring-4 ring-blue-100'
+                            : isDone
+                              ? 'bg-emerald-500 border-emerald-200 text-white'
+                              : 'bg-[#F4F8FF] border-blue-100 text-slate-400'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" />
+                      </div>
+                      <span className={`text-[10px] mt-1.5 font-black leading-tight ${
+                        isCurrent ? 'text-[#0B5ED7]' : isDone ? 'text-emerald-600' : 'text-slate-400'
+                      }`}>
+                        {st.label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/70 px-3 py-1.5 rounded-full w-fit">
               <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
               <span>{language === 'ar' ? 'التحديث المباشر مفعل لحظة بلحظة' : 'Live Real-Time Updates Active'}</span>
             </div>
             
-            <div className="flex items-center gap-3 bg-orange-50/50 p-3 rounded-2xl border border-orange-100/60">
-              <div className="w-9 h-9 rounded-xl bg-white border border-orange-100 flex items-center justify-center text-[#FF5722]">
-                <Clock className="h-5 w-5 text-[#FF5722]" />
+            <div className="flex items-center gap-3 bg-[#F4F8FF] p-3.5 rounded-2xl border border-blue-100/70">
+              <div className="w-10 h-10 rounded-xl bg-white border border-blue-100 flex items-center justify-center text-[#0B5ED7]">
+                <Clock className="h-5 w-5 text-[#0B5ED7]" />
               </div>
               <div>
                 <span className="text-xs text-slate-500 font-bold">{language === 'ar' ? 'الوقت المتوقع للوصول: ' : 'Estimated Arrival: '}</span>
-                <span className="font-black text-sm text-[#FF5722] block" data-testid="estimated-time">
+                <span className="font-black text-sm text-[#0B5ED7] block" data-testid="estimated-time">
                   {order.estimatedTime}
                 </span>
               </div>
@@ -449,16 +487,15 @@ export default function OrderTrackingPage() {
             <div className="space-y-2">
               <div className="flex justify-between text-xs font-black">
                 <span className="text-slate-500">{language === 'ar' ? 'مرحلة التقدم' : 'Progress'}</span>
-                <span className="text-[#FF5722]">{getStatusProgress(order.status)}%</span>
+                <span className="text-[#0B5ED7]">{getStatusProgress(order.status)}%</span>
               </div>
               <Progress 
                 value={getStatusProgress(order.status)} 
-                className="h-2.5 rounded-full bg-orange-100 [&>div]:bg-gradient-to-r [&>div]:from-[#FF6E40] [&>div]:to-[#FF5722]"
+                className="h-2.5 rounded-full bg-[#EEF5FF] [&>div]:bg-gradient-to-r [&>div]:from-[#0B5ED7] [&>div]:to-[#FF6B00]"
                 data-testid="order-progress"
               />
             </div>
 
-            {/* معلومات الطلب المجدول */}
             {order.status === 'scheduled' && (order.scheduledDate || order.scheduledTimeSlot) && (
               <div className="flex items-start gap-3 bg-indigo-50 border border-indigo-200 rounded-2xl px-4 py-3">
                 <Clock className="h-5 w-5 text-indigo-600 mt-0.5 shrink-0" />
@@ -485,14 +522,14 @@ export default function OrderTrackingPage() {
 
         {/* Wasalni Pickup Info */}
         {order.isSareeOneLi && (
-          <Card className="rounded-3xl border border-orange-200/80 bg-orange-50/40 shadow-[0_4px_16px_rgba(0,0,0,0.02)] overflow-hidden">
+          <Card className="rounded-3xl border border-blue-200/80 bg-[#EEF5FF]/60 shadow-xs overflow-hidden">
             <CardContent className="p-4">
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-white border border-orange-200 flex items-center justify-center text-[#FF5722] shrink-0">
-                  <Package className="h-5 w-5 text-[#FF5722]" />
+                <div className="w-10 h-10 rounded-2xl bg-white border border-blue-200 flex items-center justify-center text-[#0B5ED7] shrink-0">
+                  <Package className="h-5 w-5 text-[#0B5ED7]" />
                 </div>
                 <div>
-                  <h4 className="font-black text-[#FF5722] text-sm mb-1">{language === 'ar' ? 'بيانات الاستلام (وصل لي)' : 'Pickup Details (Wasalni)'}</h4>
+                  <h4 className="font-black text-[#0B5ED7] text-sm mb-1">{language === 'ar' ? 'بيانات الاستلام (طلب خاص)' : 'Pickup Details'}</h4>
                   <p className="text-xs font-black text-slate-800 mb-1">
                     {order.pickupAddress}
                   </p>
@@ -503,7 +540,7 @@ export default function OrderTrackingPage() {
                     <p className="text-xs font-bold text-slate-500">{language === 'ar' ? 'الهاتف:' : 'Phone:'} {order.pickupPhone}</p>
                   )}
                   {order.waselLiItemType && (
-                    <Badge variant="outline" className="mt-2 bg-white text-[10px] font-black border-orange-200 text-[#FF5722]">
+                    <Badge variant="outline" className="mt-2 bg-white text-[10px] font-black border-blue-200 text-[#0B5ED7]">
                       {language === 'ar' ? 'نوع الغرض:' : 'Item Type:'} {order.waselLiItemType}
                     </Badge>
                   )}
@@ -516,10 +553,10 @@ export default function OrderTrackingPage() {
         {/* Driver Info & Map */}
         {(['confirmed', 'preparing', 'ready', 'picked_up', 'on_way'].includes(order.status)) && order.driverId && (
           <div className="space-y-4">
-            <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden bg-white">
-              <CardHeader className="pb-2 bg-orange-50/30 border-b border-orange-100/50">
+            <Card className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
+              <CardHeader className="pb-2 bg-[#F4F8FF]/70 border-b border-blue-100/60">
                 <CardTitle className="text-sm font-black flex items-center gap-2 text-slate-900">
-                  <MapIcon className="h-4 w-4 text-[#FF5722]" />
+                  <MapIcon className="h-4 w-4 text-[#0B5ED7]" />
                   {language === 'ar' ? 'تتبع الموقع المباشر' : 'Live Driver Tracking'}
                 </CardTitle>
               </CardHeader>
@@ -537,8 +574,8 @@ export default function OrderTrackingPage() {
                 />
                 {!driverLocation && (
                   <div className="absolute inset-0 bg-black/10 flex items-center justify-center backdrop-blur-[1px] z-[400]">
-                    <div className="bg-white px-4 py-2 rounded-2xl shadow-lg border border-orange-100 flex items-center gap-2">
-                      <Loader className="h-4 w-4 animate-spin text-[#FF5722]" />
+                    <div className="bg-white px-4 py-2 rounded-full shadow-lg border border-blue-100 flex items-center gap-2">
+                      <Loader className="h-4 w-4 animate-spin text-[#0B5ED7]" />
                       <span className="text-xs font-black text-slate-800">
                         {language === 'ar' ? 'في انتظار إشارة موقع السائق...' : 'Waiting for driver GPS location...'}
                       </span>
@@ -563,11 +600,11 @@ export default function OrderTrackingPage() {
         )}
 
         {/* Delivery Address */}
-        <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden bg-white">
+        <Card className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-orange-50 border border-orange-100 flex items-center justify-center text-[#FF5722] shrink-0">
-                <MapPin className="h-5 w-5 text-[#FF5722]" />
+              <div className="w-10 h-10 rounded-2xl bg-[#EEF5FF] border border-blue-100 flex items-center justify-center text-[#0B5ED7] shrink-0">
+                <MapPin className="h-5 w-5 text-[#0B5ED7]" />
               </div>
               <div>
                 <h4 className="font-black text-xs text-slate-400 mb-0.5">{t('delivery_address')}</h4>
@@ -580,13 +617,13 @@ export default function OrderTrackingPage() {
         </Card>
 
         {/* Order Items */}
-        <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden bg-white">
-          <CardHeader className="pb-3 bg-orange-50/30 border-b border-orange-100/50">
+        <Card className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
+          <CardHeader className="pb-3 bg-[#F4F8FF]/70 border-b border-blue-100/60">
             <CardTitle className="text-sm font-black text-slate-900">{t('order_summary')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 pt-3">
             {order.items.map((item, index) => (
-              <div key={index} className="flex justify-between items-center py-1.5 border-b border-slate-100 last:border-0">
+              <div key={index} className="flex justify-between items-center py-1.5 border-b border-blue-50 last:border-0">
                 <div className="flex-1">
                   <span className="text-slate-800 font-bold text-xs" data-testid={`item-name-${index}`}>
                     {item.name}
@@ -600,10 +637,10 @@ export default function OrderTrackingPage() {
                 </span>
               </div>
             ))}
-            <div className="border-t border-orange-100 pt-3 mt-2">
+            <div className="bg-[#EEF5FF] rounded-2xl px-4 py-3 mt-2">
               <div className="flex justify-between items-center font-black">
-                <span className="text-slate-700 text-sm">{t('total')}</span>
-                <span className="text-[#FF5722] text-base" data-testid="order-total">
+                <span className="text-slate-800 text-sm">{t('total')}</span>
+                <span className="text-[#FF6B00] text-base" data-testid="order-total">
                   {order.total} {t('currency_riyal')}
                 </span>
               </div>
@@ -612,8 +649,8 @@ export default function OrderTrackingPage() {
         </Card>
 
         {/* Order Timeline */}
-        <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden bg-white">
-          <CardHeader className="pb-3 bg-orange-50/30 border-b border-orange-100/50">
+        <Card className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
+          <CardHeader className="pb-3 bg-[#F4F8FF]/70 border-b border-blue-100/60">
             <CardTitle className="text-sm font-black text-slate-900">{language === 'ar' ? 'تاريخ ومراحل الطلب' : 'Order Timeline'}</CardTitle>
           </CardHeader>
           <CardContent className="pt-3">
@@ -643,7 +680,7 @@ export default function OrderTrackingPage() {
           <div className="grid grid-cols-2 gap-3">
             <Button 
               variant="outline" 
-              className="w-full flex items-center justify-center gap-2 border-green-600 text-green-600 hover:bg-green-50 rounded-2xl font-black text-xs py-3"
+              className="w-full flex items-center justify-center gap-2 border-emerald-500 text-emerald-600 hover:bg-emerald-50 rounded-full font-black text-xs py-3 h-11"
               onClick={() => safeOpenWhatsApp(supportWhatsapp, `${language === 'ar' ? 'السلام عليكم، أحتاج مساعدة بخصوص طلبي #' : 'Hello, I need help with order #'}${order.orderNumber || order.id}`)}
               data-testid="button-whatsapp-support"
             >
@@ -652,7 +689,7 @@ export default function OrderTrackingPage() {
             </Button>
             <Button 
               variant="outline" 
-              className="w-full flex items-center justify-center gap-2 border-blue-600 text-blue-600 hover:bg-blue-50 rounded-2xl font-black text-xs py-3"
+              className="w-full flex items-center justify-center gap-2 border-[#0B5ED7] text-[#0B5ED7] hover:bg-[#EEF5FF] rounded-full font-black text-xs py-3 h-11"
               onClick={() => safeTriggerPhoneCall(supportPhone)}
               data-testid="button-call-support"
             >
@@ -664,7 +701,7 @@ export default function OrderTrackingPage() {
           {CANCELLABLE_STATUSES.includes(order.status) && (
             <Button 
               variant="destructive" 
-              className="w-full flex items-center justify-center gap-2 rounded-2xl font-black text-xs py-3 shadow-md"
+              className="w-full flex items-center justify-center gap-2 rounded-full font-black text-xs py-3 h-12 shadow-md"
               data-testid="button-cancel-order"
               onClick={() => { setCancelReason(''); setShowCancelDialog(true); }}
             >
@@ -682,11 +719,10 @@ export default function OrderTrackingPage() {
         </div>
       </section>
 
-      {/* نافذة إلغاء الطلب */}
       {showCancelDialog && (
         <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden">
-            <div className="bg-red-600 px-5 py-4 text-white">
+          <div className="bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden border border-blue-100">
+            <div className="bg-rose-600 px-5 py-4 text-white">
               <div className="flex items-center gap-2">
                 <XCircle className="h-5 w-5" />
                 <h3 className="font-black text-lg">{language === 'ar' ? 'إلغاء الطلب' : 'Cancel Order'}</h3>
@@ -695,7 +731,7 @@ export default function OrderTrackingPage() {
             </div>
             <div className="px-5 py-4 space-y-4">
               <div>
-                <p className="text-sm font-bold text-gray-700 mb-2">{language === 'ar' ? 'لماذا تريد إلغاء الطلب؟' : 'Why do you want to cancel?'}</p>
+                <p className="text-sm font-bold text-slate-700 mb-2">{language === 'ar' ? 'لماذا تريد إلغاء الطلب؟' : 'Why do you want to cancel?'}</p>
                 <div className="space-y-2">
                   {(language === 'ar' ? [
                     'غيّرت رأيي',
@@ -713,10 +749,10 @@ export default function OrderTrackingPage() {
                     <button
                       key={reason}
                       onClick={() => setCancelReason(reason)}
-                      className={`w-full ${language === 'ar' ? 'text-right' : 'text-left'} px-3 py-2.5 rounded-xl text-sm border-2 transition-all ${
+                      className={`w-full ${language === 'ar' ? 'text-right' : 'text-left'} px-3.5 py-2.5 rounded-2xl text-sm border-2 transition-all ${
                         cancelReason === reason
-                          ? 'border-red-500 bg-red-50 text-red-700 font-bold'
-                          : 'border-gray-100 hover:border-gray-200 text-gray-700'
+                          ? 'border-rose-500 bg-rose-50 text-rose-700 font-bold'
+                          : 'border-blue-50 bg-[#F4F8FF] hover:border-blue-200 text-slate-700'
                       }`}
                     >
                       {reason}
@@ -727,7 +763,7 @@ export default function OrderTrackingPage() {
                   placeholder={language === 'ar' ? "سبب آخر (اختياري)..." : "Other reason (optional)..."}
                   value={cancelReason}
                   onChange={(e) => setCancelReason(e.target.value)}
-                  className="w-full mt-2 p-3 border-2 rounded-xl text-sm resize-none focus:border-red-400 outline-none"
+                  className="w-full mt-2 p-3 border-2 border-blue-100 rounded-2xl text-sm resize-none focus:border-rose-400 outline-none"
                   rows={2}
                 />
               </div>
@@ -735,7 +771,7 @@ export default function OrderTrackingPage() {
               <div className="flex gap-3 pt-1">
                 <Button
                   variant="outline"
-                  className="flex-1 rounded-2xl font-bold"
+                  className="flex-1 rounded-full font-bold border-blue-200 text-[#0B5ED7]"
                   onClick={() => setShowCancelDialog(false)}
                   disabled={isCancelling}
                 >
@@ -743,7 +779,7 @@ export default function OrderTrackingPage() {
                 </Button>
                 <Button
                   variant="destructive"
-                  className="flex-1 rounded-2xl font-bold"
+                  className="flex-1 rounded-full font-black"
                   onClick={handleCancelOrder}
                   disabled={isCancelling || !cancelReason.trim()}
                 >

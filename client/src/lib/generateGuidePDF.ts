@@ -11,7 +11,7 @@ export async function generateGuidePDF(options: GenerateGuidePDFOptions = {}): P
   const {
     tasks = GUIDE_TASKS,
     title = 'دليل الشامل لإدارة النظام ولائحة العمليات',
-    appName = 'سريع ون (Saree One)',
+    appName = 'الصايدي توصيل (Al-Saidi Delivery)',
     logoUrl = ''
   } = options;
 
@@ -208,7 +208,7 @@ export async function generateGuidePDF(options: GenerateGuidePDFOptions = {}): P
           <p class="header-subtitle">نظام إدارة ${appName} — دليل المشغل ولوحة التحكم الرسمية</p>
         </div>
         <div style="text-align: left;">
-          ${logoUrl ? `<img src="${logoUrl}" style="height: 50px; object-fit: contain; margin-bottom: 6px;" />` : `<div style="background: #0284c7; color: white; font-weight: 900; padding: 8px 16px; border-radius: 8px; font-size: 18px;">سريع</div>`}
+          ${logoUrl ? `<img src="${logoUrl}" style="height: 50px; object-fit: contain; margin-bottom: 6px;" />` : `<div style="background: #0B5ED7; color: white; font-weight: 900; padding: 8px 16px; border-radius: 8px; font-size: 18px;">الصايدي توصيل</div>`}
           <div style="font-size: 11px; color: #94a3b8;">التاريخ: ${currentDate}</div>
         </div>
       </div>

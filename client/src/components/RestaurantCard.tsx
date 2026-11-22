@@ -50,7 +50,7 @@ export default function RestaurantCard({ restaurant, onClick }: RestaurantCardPr
         {/* Featured Badge */}
         {restaurant.isFeatured && (
           <div className="absolute top-3 right-3">
-            <Badge className="bg-orange-500/90 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm border-0 shadow-lg">
+            <Badge className="bg-[#FF6B00] text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm border-0 shadow-lg">
               ⭐ مميز
             </Badge>
           </div>
@@ -60,7 +60,7 @@ export default function RestaurantCard({ restaurant, onClick }: RestaurantCardPr
       <CardContent className="p-5 space-y-4">
         {/* Header */}
         <div className="space-y-2">
-          <h4 className="font-bold text-lg text-gray-900 dark:text-white line-clamp-1 group-hover:text-orange-600 transition-colors" data-testid={`restaurant-name-${restaurant.id}`}>
+          <h4 className="font-bold text-lg text-[#003B99] dark:text-white line-clamp-1 group-hover:text-[#0B5ED7] transition-colors" data-testid={`restaurant-name-${restaurant.id}`}>
             {restaurant.name}
           </h4>
           
@@ -102,7 +102,7 @@ export default function RestaurantCard({ restaurant, onClick }: RestaurantCardPr
             
             {isFeatureEnabled('show_delivery_time') && (
               <div className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300">
-                <Clock className="h-4 w-4" />
+                <Clock className="h-4 w-4 text-[#0B5ED7]" />
                 <span data-testid={`restaurant-delivery-time-${restaurant.id}`}>
                   {restaurant.deliveryTime}
                 </span>
@@ -112,7 +112,7 @@ export default function RestaurantCard({ restaurant, onClick }: RestaurantCardPr
         </div>
         
         {/* Footer Info */}
-        <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-800">
+        <div className="flex items-center justify-between pt-2 border-t border-blue-50 dark:border-gray-800">
           <div className="space-y-1">
             {isFeatureEnabled('show_minimum_order') && (
               <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
@@ -122,8 +122,8 @@ export default function RestaurantCard({ restaurant, onClick }: RestaurantCardPr
           </div>
           
           <div className="flex items-center gap-1.5">
-            <MapPin className="h-4 w-4 text-orange-500" />
-            <span className="text-sm font-semibold text-orange-600 dark:text-orange-400">
+            <MapPin className="h-4 w-4 text-[#FF6B00]" />
+            <span className="text-sm font-bold text-[#0B5ED7] dark:text-blue-400">
               {restaurant.deliveryFee} ريال
             </span>
           </div>

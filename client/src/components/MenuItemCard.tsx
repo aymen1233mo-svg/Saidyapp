@@ -118,11 +118,11 @@ export default function MenuItemCard({
   return (
     <div 
       id={item.isBannerOffer ? `offer-${item.id}` : `product-${item.id}`}
-      className="group relative bg-white cursor-pointer border border-orange-100/70 rounded-2xl overflow-hidden hover:shadow-[0_10px_24px_rgba(255,87,34,0.12)] hover:border-primary/30 transition-all duration-300 flex flex-col justify-between h-full shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:-translate-y-1" 
+      className="group relative bg-white cursor-pointer border border-blue-100/80 rounded-3xl overflow-hidden hover:shadow-[0_10px_24px_rgba(11,94,215,0.12)] hover:border-[#0B5ED7]/40 transition-all duration-300 flex flex-col justify-between h-full shadow-[0_4px_16px_rgba(11,94,215,0.05)] hover:-translate-y-1" 
       onClick={handleClick}
     >
       {/* Product Image Container */}
-      <div className="relative aspect-[4/3] sm:aspect-square overflow-hidden bg-orange-50/40 w-full">
+      <div className="relative aspect-[4/3] sm:aspect-square overflow-hidden bg-[#F4F8FF] w-full">
         <img
           src={item.image || '/placeholder-food.png'}
           alt={item.name}
@@ -133,17 +133,17 @@ export default function MenuItemCard({
         {/* Badges Overlay */}
         <div className="absolute top-2 right-2 flex flex-col gap-1 z-10">
           {item.isBannerOffer && (
-            <Badge className="bg-amber-500 text-white border-none rounded-lg text-[10px] sm:text-xs px-2 py-0.5 font-black shadow-sm">
+            <Badge className="bg-[#0B5ED7] text-white border-none rounded-full text-[10px] sm:text-xs px-2.5 py-0.5 font-black shadow-sm">
               عرض خاص
             </Badge>
           )}
           {item.isFeatured && (
-            <Badge className="bg-[#FF5722] text-white border-none rounded-lg text-[10px] sm:text-xs px-2 py-0.5 font-black shadow-sm">
+            <Badge className="bg-[#FF6B00] text-white border-none rounded-full text-[10px] sm:text-xs px-2.5 py-0.5 font-black shadow-sm">
               مميز
             </Badge>
           )}
           {discountPercent > 0 && (
-            <Badge className="bg-red-600 text-white border-none rounded-lg text-[10px] sm:text-xs px-2 py-0.5 font-black shadow-sm">
+            <Badge className="bg-red-600 text-white border-none rounded-full text-[10px] sm:text-xs px-2.5 py-0.5 font-black shadow-sm">
               خصم {discountPercent}%
             </Badge>
           )}
@@ -157,7 +157,7 @@ export default function MenuItemCard({
             disabled={toggleFavorite.isPending}
             aria-label="المفضلة"
           >
-            <Heart className={`h-4 w-4 ${isItemFavorite ? 'text-[#FF5722] fill-[#FF5722]' : 'text-gray-400 hover:text-[#FF5722]'}`} />
+            <Heart className={`h-4 w-4 ${isItemFavorite ? 'text-[#FF6B00] fill-[#FF6B00]' : 'text-gray-400 hover:text-[#FF6B00]'}`} />
           </button>
         )}
 
@@ -174,7 +174,7 @@ export default function MenuItemCard({
       {/* Product Info & Action */}
       <div className="p-3 sm:p-4 flex flex-col flex-1 justify-between gap-2.5">
         <div>
-          <h3 className="text-xs sm:text-sm md:text-base font-black text-slate-800 group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+          <h3 className="text-xs sm:text-sm md:text-base font-black text-slate-800 group-hover:text-[#0B5ED7] transition-colors line-clamp-2 leading-snug">
             {item.name}
           </h3>
           {item.description && (
@@ -199,10 +199,10 @@ export default function MenuItemCard({
           </div>
 
           {/* Price & Add to Cart Button */}
-          <div className="flex items-center justify-between pt-2 border-t border-orange-50 gap-2">
+          <div className="flex items-center justify-between pt-2 border-t border-blue-50 gap-2">
             <div className="flex flex-col">
               <div className="flex items-baseline gap-1">
-                <span className="text-sm sm:text-base md:text-lg font-black text-[#FF5722]">
+                <span className="text-sm sm:text-base md:text-lg font-black text-[#0B5ED7]">
                   {item.price}
                 </span>
                 <span className="text-[10px] sm:text-xs font-bold text-slate-500">ر.ي</span>
@@ -216,7 +216,7 @@ export default function MenuItemCard({
 
             <Button 
               size="sm"
-              className="h-8 sm:h-9 px-3 bg-gradient-to-r from-[#FF6E40] to-[#FF5722] hover:from-[#FF5722] hover:to-[#E64A19] text-white font-black text-xs rounded-xl shadow-sm hover:shadow-md transition-all flex items-center gap-1 active:scale-95 shrink-0"
+              className="h-8 sm:h-9 px-3.5 saidi-orange-gradient hover:brightness-105 text-white font-black text-xs rounded-full shadow-sm hover:shadow-md transition-all flex items-center gap-1 active:scale-95 shrink-0"
               onClick={handleAddToCart}
               disabled={isOutOfStock || disabled}
               data-testid={`button-add-to-cart-${item.id}`}

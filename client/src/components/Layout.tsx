@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
-import { 
-  Home, 
-  Receipt, 
-  User, 
-  Settings, 
-  Shield, 
-  ShoppingCart,
+import {
+  Home,
+  Receipt,
+  User,
+  Settings,
+  Shield,
   Heart,
   PhoneCall,
   ChevronLeft,
@@ -17,8 +16,8 @@ import {
   X,
   Globe,
   MapPin,
-  Building2,
-  Bot
+  PlusCircle,
+  Clock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -44,10 +43,8 @@ interface LayoutProps {
 
 export default function Layout({ children }: LayoutProps) {
   const [location, setLocation] = useLocation();
-  const { state } = useCart();
   const { user } = useAuth();
   const { t, language, setLanguage, dir } = useLanguage();
-  const getItemCount = () => state.items.reduce((sum, item) => sum + item.quantity, 0);
   const { toast } = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [supportOpen, setSupportOpen] = useState(false);
@@ -91,14 +88,14 @@ export default function Layout({ children }: LayoutProps) {
   const whatsappLink = rawWa.startsWith('967') ? `https://wa.me/${rawWa}` : `https://wa.me/967${rawWa}`;
   const rawPhone = getS('support_phone', '967777146387').replace(/[^0-9]/g, '');
   const phoneLink = `tel:+${rawPhone}`;
-  const shareText = language === 'ar' ? getS('share_text', 'تسوق من السريع ون الآن!') : 'Shop from Saree One now!';
+  const shareText = language === 'ar' ? getS('share_text', 'اطلب الآن عبر تطبيق الصايدي توصيل!') : 'Order now with Al-Saidi Delivery!';
   const shareUrl = getS('share_url', window.location.origin);
-  const headerLogoUrl = getS('header_logo_url', '');
+  const headerLogoUrl = getS('header_logo_url', '') || '/assets/saidi-logo.png';
   const sidebarLogoUrl = getS('sidebar_logo_url', '') || headerLogoUrl;
-  const appName = getS('app_name', 'السريع ون');
-  const appSubtitle = getS('app_subtitle', 'السريع ون');
+  const appName = getS('app_name', 'الصايدي توصيل');
+  const appSubtitle = getS('app_subtitle', 'سرعة في التوصيل.. ثقة في التعامل');
   const appVersion = getS('app_version', '1.0.0');
-  const sidebarTagline = language === 'ar' ? getS('sidebar_tagline', 'خدمة التوصيل الأسرع في المملكة') : t('app_tagline');
+  const sidebarTagline = language === 'ar' ? getS('sidebar_tagline', 'سرعة في التوصيل.. ثقة في التعامل.') : t('app_tagline');
   const supportTitle = language === 'ar' ? getS('text_support_title', 'نحن معك..') : t('support_title');
 
   const showShareButton = getSetting('show_share_button') !== 'false';
@@ -115,7 +112,6 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   const handleShare = async () => {
-    // 1. Try Native Web Share API first
     if (typeof navigator !== 'undefined' && typeof navigator.share === 'function') {
       try {
         await navigator.share({
@@ -126,30 +122,31 @@ export default function Layout({ children }: LayoutProps) {
         return;
       } catch (err: any) {
         if (err?.name === 'AbortError') {
-          // User deliberately cancelled/closed native share sheet
           return;
         }
         console.warn('Native share failed or not allowed, opening share modal:', err);
       }
     }
-    
-    // 2. If navigator.share not supported or blocked/failed, open rich share modal
     setShareModalOpen(true);
   };
 
   const sidebarMenuItems: Array<{ icon: any; label: string; path?: string; action?: () => void; id: string }> = [
+    { id: 'home', icon: Home, label: t('home'), path: '/' },
+    { id: 'wasalni', icon: PlusCircle, label: t('quick_order'), path: '/wasalni' },
+    { id: 'orders', icon: Receipt, label: t('orders'), path: '/orders' },
+    { id: 'track', icon: Clock, label: t('track_nav'), path: '/track-orders' },
     { id: 'favorites', icon: Heart, label: t('favorites'), path: '/favorites' },
     { id: 'profile', icon: User, label: t('my_account'), path: user ? '/profile' : '/auth' },
     { id: 'settings', icon: Settings, label: t('settings'), path: '/settings' },
     ...(showPrivacyButton ? [{ id: 'privacy', icon: Shield, label: t('privacy_policy'), path: '/privacy' }] : []),
-    ...(showShareButton ? [{ 
-      id: 'share', 
-      icon: Share2, 
-      label: language === 'ar' ? 'مشاركة التطبيق' : 'Share App', 
+    ...(showShareButton ? [{
+      id: 'share',
+      icon: Share2,
+      label: language === 'ar' ? 'مشاركة التطبيق' : 'Share App',
       action: () => {
         setSidebarOpen(false);
         setTimeout(() => handleShare(), 150);
-      } 
+      }
     }] : []),
   ];
 
@@ -162,7 +159,6 @@ export default function Layout({ children }: LayoutProps) {
     setLanguage(language === 'ar' ? 'en' : 'ar');
   };
 
-  // Unread chat messages counter
   const effectiveUserId = user?.id || user?.phone || localStorage.getItem('customer_phone') || localStorage.getItem('customer_guest_id') || '';
 
   const { data: userConversationsData } = useQuery({
@@ -180,7 +176,7 @@ export default function Layout({ children }: LayoutProps) {
   const unreadChatCount = userConversationsData?.totalUnreadCount || 0;
 
   return (
-    <div className="bg-background min-h-screen flex flex-col pb-16 md:pb-0" dir={dir}>
+    <div className="bg-[#F4F8FF] min-h-screen flex flex-col pb-20 md:pb-0" dir={dir}>
       <TopBar />
       {location !== '/' && !location.startsWith('/restaurant/') && <Navbar />}
 
@@ -199,13 +195,13 @@ export default function Layout({ children }: LayoutProps) {
         <SheetTrigger asChild>
           <button id="sidebar-trigger" className="hidden" />
         </SheetTrigger>
-        <SheetContent side={language === 'ar' ? 'right' : 'left'} className="w-[320px] p-0 flex flex-col border-none shadow-2xl bg-gradient-to-b from-slate-50 to-white">
+        <SheetContent side={language === 'ar' ? 'right' : 'left'} className="w-[320px] p-0 flex flex-col border-none shadow-2xl bg-gradient-to-b from-[#F4F8FF] to-white">
 
-          {/* Hero header: orange gradient */}
-          <div className="relative bg-gradient-to-b from-[#FF5722] via-[#F4511E] to-[#E64A19] px-5 pt-8 pb-14 overflow-hidden">
-            {/* Decorative circles */}
+          {/* Hero header: Royal Blue gradient + subtle orange accent rim */}
+          <div className="relative bg-gradient-to-b from-[#0B5ED7] via-[#064BB5] to-[#003B99] px-5 pt-8 pb-14 overflow-hidden">
             <div className="absolute -top-10 -right-6 w-36 h-36 rounded-full bg-white/10 blur-xl pointer-events-none" />
-            <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-black/5 blur-xl pointer-events-none" />
+            <div className="absolute -bottom-8 -left-8 w-32 h-32 rounded-full bg-[#FF6B00]/25 blur-xl pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#FF6B00] via-[#FF8A00] to-[#0B5ED7]" />
 
             <button
               onClick={() => setSidebarOpen(false)}
@@ -215,36 +211,26 @@ export default function Layout({ children }: LayoutProps) {
               <X className="h-5 w-5" />
             </button>
 
-            {/* Logo + brand */}
-            <div className="relative flex items-center justify-center gap-3 mb-4">
-              <div className="relative">
-                {sidebarLogoUrl ? (
-                  <img src={sidebarLogoUrl} alt={appName} className="relative h-14 w-14 object-contain drop-shadow-md" />
-                ) : (
-                  <div className="relative h-14 w-14 flex items-center justify-center rounded-2xl bg-white/20 text-2xl font-black text-white shadow-inner">
-                    {appName.charAt(0)}
-                  </div>
-                )}
+            <div className="relative flex flex-col items-center justify-center gap-2 mb-3">
+              <div className="bg-white/95 px-4 py-2 rounded-2xl shadow-lg">
+                <img src={sidebarLogoUrl} alt={appName} className="h-12 w-auto object-contain" />
               </div>
-              <div className="flex flex-col leading-none">
-                <span className="text-2xl font-black text-white tracking-tight drop-shadow-sm">{appName}</span>
-                <span className="text-[10px] font-bold text-white/90 tracking-wider mt-1">{appSubtitle}</span>
-              </div>
+              <span className="text-[11px] font-bold text-white/90">{appSubtitle}</span>
             </div>
 
-            <p className="relative text-center text-xs font-bold text-white/80 leading-snug px-4">
+            <p className="relative text-center text-xs font-bold text-white/85 leading-snug px-4">
               {sidebarTagline}
             </p>
           </div>
 
-          {/* Profile card - overlaps the header */}
+          {/* Profile card - overlaps header */}
           <div className="relative -mt-8 px-5 z-10">
             <button
               onClick={() => navigate(user ? '/profile' : '/auth')}
-              className="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-orange-100 shadow-[0_8px_20px_-4px_rgba(255,87,34,0.12)] hover:shadow-[0_12px_28px_-4px_rgba(255,87,34,0.2)] transition-all active:scale-[0.99]"
+              className="w-full flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-blue-100 shadow-[0_8px_20px_-4px_rgba(11,94,215,0.16)] hover:shadow-[0_12px_28px_-4px_rgba(11,94,215,0.22)] transition-all active:scale-[0.99]"
               data-testid="button-profile-card"
             >
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#FF6E40] to-[#FF5722] flex items-center justify-center text-white font-black text-lg shadow-sm flex-shrink-0">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0B5ED7] to-[#003B99] flex items-center justify-center text-white font-black text-lg shadow-sm flex-shrink-0">
                 {user ? (user.name?.charAt(0) || user.phone?.charAt(0) || 'U') : <User className="h-6 w-6" />}
               </div>
               <div className={`flex-1 ${language === 'ar' ? 'text-right' : 'text-left'} min-w-0`}>
@@ -261,7 +247,7 @@ export default function Layout({ children }: LayoutProps) {
 
           {/* Menu Items */}
           <div className="flex-1 overflow-y-auto px-4 pt-5 pb-4">
-            <p className="px-2 mb-2 text-[10px] font-black text-slate-400 tracking-[0.3em] uppercase">
+            <p className="px-2 mb-2 text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">
               {t('menu')}
             </p>
             <div className="space-y-1">
@@ -278,60 +264,59 @@ export default function Layout({ children }: LayoutProps) {
                         navigate(item.path);
                       }
                     }}
-                    className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 ${
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl transition-all duration-200 ${
                       isActive
-                        ? 'bg-gradient-to-l from-[#F05215]/15 to-transparent ring-1 ring-[#F05215]/30'
-                        : 'hover:bg-slate-50'
+                        ? 'bg-gradient-to-l from-[#0B5ED7]/12 to-transparent ring-1 ring-[#0B5ED7]/30'
+                        : 'hover:bg-blue-50/70'
                     }`}
                     data-testid={`link-sidebar-${item.id}`}
                   >
                     <div className={`w-9 h-9 flex items-center justify-center rounded-xl flex-shrink-0 transition-colors ${
                       isActive
-                        ? 'bg-gradient-to-br from-[#F05215] to-[#FF7840] text-white shadow-md'
-                        : 'bg-slate-100 text-slate-600'
+                        ? 'bg-gradient-to-br from-[#0B5ED7] to-[#0046B8] text-white shadow-md'
+                        : 'bg-blue-50 text-[#0B5ED7]'
                     }`}>
                       <Icon className="h-4.5 w-4.5" />
                     </div>
-                    <span className={`text-sm flex-1 ${language === 'ar' ? 'text-right' : 'text-left'} ${isActive ? 'font-black text-slate-900' : 'font-bold text-slate-700'}`}>
+                    <span className={`text-sm flex-1 ${language === 'ar' ? 'text-right' : 'text-left'} ${isActive ? 'font-black text-[#0B5ED7]' : 'font-bold text-slate-700'}`}>
                       {item.label}
                     </span>
                     {isActive && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#F05215]" />
+                      <span className="w-2 h-2 rounded-full bg-[#FF6B00]" />
                     )}
                   </button>
                 );
               })}
             </div>
 
-            {/* Divider */}
-            <div className="my-4 h-px bg-slate-100" />
+            <div className="my-4 h-px bg-blue-100" />
 
-            <p className="px-2 mb-2 text-[10px] font-black text-slate-400 tracking-[0.3em] uppercase">
+            <p className="px-2 mb-2 text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">
               {t('preferences')}
             </p>
 
-            {/* City Selection Toggle / Change City */}
+            {/* City Selection Toggle */}
             {isCitySelectionEnabled && (
               <button
                 onClick={() => {
                   setSidebarOpen(false);
                   setCityModalOpen(true);
                 }}
-                className="w-full flex items-center gap-3 px-3 py-3 rounded-2xl transition-all duration-200 hover:bg-orange-50/90 bg-gradient-to-r from-orange-50/70 to-amber-50/40 border border-orange-200/80 mb-2 shadow-xs group"
+                className="w-full flex items-center gap-3 px-3 py-3 rounded-2xl transition-all duration-200 hover:bg-blue-50 bg-gradient-to-r from-blue-50/80 to-sky-50/40 border border-blue-200/80 mb-2 shadow-xs group"
                 data-testid="button-change-city"
               >
-                <div className="w-9 h-9 flex items-center justify-center rounded-xl flex-shrink-0 bg-gradient-to-br from-[#F05215] to-[#FF7840] text-white shadow-xs group-hover:scale-105 transition-transform">
+                <div className="w-9 h-9 flex items-center justify-center rounded-xl flex-shrink-0 bg-gradient-to-br from-[#0B5ED7] to-[#0046B8] text-white shadow-xs group-hover:scale-105 transition-transform">
                   <MapPin className="h-4.5 w-4.5" />
                 </div>
                 <div className={`flex-1 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
                   <span className="text-xs font-black text-slate-800 flex items-center gap-1">
-                    {language === 'ar' ? 'المدينة:' : 'City:'} <span className="text-[#F05215]">{currentSelectedCity}</span>
+                    {language === 'ar' ? 'المدينة:' : 'City:'} <span className="text-[#0B5ED7]">{currentSelectedCity}</span>
                   </span>
                   <span className="text-[10px] text-slate-500 font-bold block mt-0.5">
                     {language === 'ar' ? 'اضغط لتغيير السيرفر والمدينة' : 'Switch city & server'}
                   </span>
                 </div>
-                <span className="text-[10px] font-black bg-[#F05215] text-white px-2.5 py-1 rounded-lg shadow-xs">
+                <span className="text-[10px] font-black bg-[#FF6B00] text-white px-2.5 py-1 rounded-lg shadow-xs">
                   {language === 'ar' ? 'تغيير' : 'Change'}
                 </span>
               </button>
@@ -340,10 +325,10 @@ export default function Layout({ children }: LayoutProps) {
             {/* Language Toggle */}
             <button
               onClick={toggleLanguage}
-              className="w-full flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 hover:bg-slate-50"
+              className="w-full flex items-center gap-3 px-3 py-3 rounded-2xl transition-all duration-200 hover:bg-blue-50/60"
               data-testid="button-toggle-language"
             >
-              <div className="w-9 h-9 flex items-center justify-center rounded-xl flex-shrink-0 bg-slate-100 text-slate-600">
+              <div className="w-9 h-9 flex items-center justify-center rounded-xl flex-shrink-0 bg-blue-50 text-[#0B5ED7]">
                 <Globe className="h-4.5 w-4.5" />
               </div>
               <div className={`flex-1 ${language === 'ar' ? 'text-right' : 'text-left'}`}>
@@ -354,28 +339,28 @@ export default function Layout({ children }: LayoutProps) {
                   {language === 'ar' ? 'التبديل إلى English' : 'Switch to العربية'}
                 </span>
               </div>
-              <span className="text-[11px] font-black bg-[#F05215]/15 text-[#F05215] px-2.5 py-1 rounded-xl">
+              <span className="text-[11px] font-black bg-blue-100 text-[#0B5ED7] px-2.5 py-1 rounded-xl">
                 {language === 'ar' ? 'EN' : 'عربي'}
               </span>
             </button>
           </div>
 
           {/* Footer */}
-          <div className="px-5 py-4 border-t border-slate-100 bg-slate-50/50">
+          <div className="px-5 py-4 border-t border-blue-100 bg-white">
             <div className="flex items-center justify-center gap-3 mb-3">
               {showShareButton && (
                 <button
                   onClick={handleShare}
-                  className="w-11 h-11 flex items-center justify-center rounded-2xl bg-white border border-slate-200 hover:border-[#F05215]/40 hover:bg-[#F05215]/5 shadow-sm transition-all"
+                  className="w-11 h-11 flex items-center justify-center rounded-2xl bg-blue-50 border border-blue-100 hover:bg-blue-100 shadow-xs transition-all"
                   data-testid="button-share"
                 >
-                  <Share2 className="h-4.5 w-4.5 text-slate-600" />
+                  <Share2 className="h-4.5 w-4.5 text-[#0B5ED7]" />
                 </button>
               )}
               {showContactButton && (
                 <button
                   onClick={() => { setSidebarOpen(false); setSupportOpen(true); }}
-                  className="flex-1 max-w-[180px] h-11 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#F05215] to-[#FF7840] text-white font-black text-sm shadow-md hover:shadow-lg transition-all"
+                  className="flex-1 max-w-[190px] h-11 flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#FF8A00] to-[#FF5500] text-white font-black text-sm shadow-md hover:shadow-lg transition-all"
                   data-testid="button-contact-support"
                 >
                   <MessageCircle className="h-4 w-4" />
@@ -383,169 +368,198 @@ export default function Layout({ children }: LayoutProps) {
                 </button>
               )}
             </div>
-            <p className="text-[10px] text-center text-slate-400 font-bold tracking-[0.3em]">
+            <p className="text-[10px] text-center text-slate-400 font-bold tracking-[0.2em]">
               {appName} · V{appVersion}
             </p>
           </div>
-
         </SheetContent>
       </Sheet>
+
+      {/* Support Dialog (accessible from Sidebar, Profile, Support triggers) */}
+      <Dialog open={supportOpen} onOpenChange={setSupportOpen}>
+        <DialogContent className="sm:max-w-[425px] rounded-3xl border-none shadow-2xl overflow-hidden p-0">
+          <DialogTitle className="sr-only">{supportTitle}</DialogTitle>
+          <DialogDescription className="sr-only">{t('support_subtitle')}</DialogDescription>
+          <div className="h-28 bg-gradient-to-r from-[#0B5ED7] to-[#003B99] p-6 flex items-end relative overflow-hidden">
+            <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#FF8A00] to-[#FF5500]" />
+            <h2 className="text-2xl font-black text-white tracking-tight">{supportTitle}</h2>
+          </div>
+          <div className="p-6 space-y-4">
+            <p className="text-slate-500 font-bold text-center text-sm">{t('support_subtitle')}</p>
+            <div className="grid gap-3">
+              <Button
+                variant="outline"
+                className="h-18 flex items-center justify-between px-5 rounded-2xl border-2 border-emerald-100 hover:bg-emerald-50 hover:border-emerald-300 group transition-all"
+                onClick={() => { window.open(whatsappLink, '_blank'); setSupportOpen(false); }}
+              >
+                <div className="bg-emerald-100 p-2.5 rounded-xl group-hover:bg-emerald-200 transition-colors">
+                  <MessageCircle className="h-6 w-6 text-emerald-600" />
+                </div>
+                <div className={`flex-1 ${language === 'ar' ? 'text-right mr-4' : 'text-left ml-4'}`}>
+                  <p className="font-black text-lg text-slate-900">{t('whatsapp')}</p>
+                  <p className="text-xs text-slate-400 font-bold">{t('talk_directly')}</p>
+                </div>
+                {language === 'ar' ? <ChevronLeft className="h-5 w-5 text-slate-300" /> : <ChevronRight className="h-5 w-5 text-slate-300" />}
+              </Button>
+
+              <Button
+                variant="outline"
+                className="h-18 flex items-center justify-between px-5 rounded-2xl border-2 border-blue-100 hover:bg-blue-50 hover:border-blue-300 group transition-all"
+                onClick={() => { window.location.href = phoneLink; setSupportOpen(false); }}
+              >
+                <div className="bg-blue-100 p-2.5 rounded-xl group-hover:bg-blue-200 transition-colors">
+                  <PhoneCall className="h-6 w-6 text-[#0B5ED7]" />
+                </div>
+                <div className={`flex-1 ${language === 'ar' ? 'text-right mr-4' : 'text-left ml-4'}`}>
+                  <p className="font-black text-lg text-slate-900">{t('direct_call')}</p>
+                  <p className="text-xs text-slate-400 font-bold">{t('instant_call')}</p>
+                </div>
+                {language === 'ar' ? <ChevronLeft className="h-5 w-5 text-slate-300" /> : <ChevronRight className="h-5 w-5 text-slate-300" />}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Main Content */}
       <main className="flex-1">
         {children}
       </main>
 
-      {/* Mobile Bottom Navigation */}
+      {/* Mobile Bottom Navigation - Exact 5-item Al-Saidi design */}
       {bottomBarEnabled && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t z-50 md:hidden flex items-center justify-around h-16 px-4 pb-1 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]">
+        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-blue-100 z-50 md:hidden flex items-center justify-around h-17 px-2 pb-1 shadow-[0_-6px_24px_rgba(11,94,215,0.10)]">
+          {/* 1. الرئيسية */}
           <button
             onClick={() => setLocation('/')}
-            className={`flex flex-col items-center gap-0.5 transition-all duration-300 min-w-[52px] ${location === '/' ? 'text-primary scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+            className={`flex flex-col items-center justify-center gap-0.5 transition-all duration-200 min-w-[58px] py-1.5 ${
+              location === '/' ? 'text-[#0B5ED7]' : 'text-slate-400 hover:text-slate-600'
+            }`}
           >
-            <Home className={`h-6 w-6 ${location === '/' ? 'fill-current' : ''}`} />
-            <span className="text-[10px] font-black">{t('home')}</span>
-            {location === '/' && <div className="h-1 w-4 bg-primary rounded-full" />}
+            <Home className={`h-5.5 w-5.5 ${location === '/' ? 'fill-current' : ''}`} />
+            <span className="text-[11px] font-black leading-tight">{t('home')}</span>
+            {location === '/' && <div className="h-1 w-6 bg-[#0B5ED7] rounded-full mt-0.5" />}
           </button>
 
+          {/* 2. طلب جديد (Wasalni quick delivery) */}
+          <button
+            onClick={() => setLocation('/wasalni')}
+            className={`flex flex-col items-center justify-center gap-0.5 transition-all duration-200 min-w-[58px] py-1.5 ${
+              location === '/wasalni' ? 'text-[#0B5ED7]' : 'text-slate-400 hover:text-slate-600'
+            }`}
+          >
+            <PlusCircle className={`h-5.5 w-5.5 ${location === '/wasalni' ? 'text-[#FF6B00]' : ''}`} />
+            <span className="text-[11px] font-black leading-tight">{t('quick_order')}</span>
+            {location === '/wasalni' && <div className="h-1 w-6 bg-[#FF6B00] rounded-full mt-0.5" />}
+          </button>
+
+          {/* 3. طلباتي */}
           <button
             onClick={() => setLocation('/orders')}
-            className={`flex flex-col items-center gap-0.5 transition-all duration-300 min-w-[52px] ${location === '/orders' ? 'text-primary scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+            className={`flex flex-col items-center justify-center gap-0.5 transition-all duration-200 min-w-[58px] py-1.5 ${
+              location === '/orders' ? 'text-[#0B5ED7]' : 'text-slate-400 hover:text-slate-600'
+            }`}
           >
-            <Receipt className={`h-6 w-6 ${location === '/orders' ? 'fill-current' : ''}`} />
-            <span className="text-[10px] font-black">{t('orders')}</span>
-            {location === '/orders' && <div className="h-1 w-4 bg-primary rounded-full" />}
+            <Receipt className={`h-5.5 w-5.5 ${location === '/orders' ? 'fill-current' : ''}`} />
+            <span className="text-[11px] font-black leading-tight">{t('orders')}</span>
+            {location === '/orders' && <div className="h-1 w-6 bg-[#0B5ED7] rounded-full mt-0.5" />}
           </button>
 
-          {/* Support Center Button */}
-          <div className="relative -mt-8">
-            <Dialog open={supportOpen} onOpenChange={setSupportOpen}>
-              <DialogTrigger asChild>
-                <button className="flex flex-col items-center group">
-                  <div className="header-gradient text-white p-4 rounded-2xl shadow-lg shadow-primary/30 border-4 border-white transform transition-transform group-hover:scale-110 active:scale-95">
-                    <MessageCircle className="h-7 w-7" />
-                  </div>
-                </button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px] rounded-t-[2.5rem] border-none shadow-2xl overflow-hidden p-0">
-                <DialogTitle className="sr-only">{supportTitle}</DialogTitle>
-                <DialogDescription className="sr-only">{t('support_subtitle')}</DialogDescription>
-                <div className="h-32 header-gradient p-8 flex items-end">
-                  <h2 className="text-3xl font-black text-white italic tracking-tighter">{supportTitle}</h2>
-                </div>
-                <div className="p-8 space-y-4">
-                  <p className="text-gray-500 font-bold mb-6 text-center">{t('support_subtitle')}</p>
-                  <div className="grid gap-4">
-                    <Button
-                      variant="outline"
-                      className="h-20 flex items-center justify-between px-6 rounded-2xl border-2 border-orange-50 hover:bg-orange-50 hover:border-orange-200 group transition-all"
-                      onClick={() => { window.open(whatsappLink, '_blank'); setSupportOpen(false); }}
-                    >
-                      <div className="bg-orange-100 p-3 rounded-xl group-hover:bg-orange-200 transition-colors">
-                        <MessageCircle className="h-6 w-6 text-primary" />
-                      </div>
-                      <div className={`flex-1 ${language === 'ar' ? 'text-right mr-4' : 'text-left ml-4'}`}>
-                        <p className="font-black text-xl text-gray-900">{t('whatsapp')}</p>
-                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{t('talk_directly')}</p>
-                      </div>
-                      {language === 'ar' ? <ChevronLeft className="h-5 w-5 text-gray-300" /> : <ChevronRight className="h-5 w-5 text-gray-300" />}
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      className="h-20 flex items-center justify-between px-6 rounded-2xl border-2 border-blue-50 hover:bg-blue-50 hover:border-blue-200 group transition-all"
-                      onClick={() => { window.location.href = phoneLink; setSupportOpen(false); }}
-                    >
-                      <div className="bg-blue-100 p-3 rounded-xl group-hover:bg-blue-200 transition-colors">
-                        <PhoneCall className="h-6 w-6 text-blue-600" />
-                      </div>
-                      <div className={`flex-1 ${language === 'ar' ? 'text-right mr-4' : 'text-left ml-4'}`}>
-                        <p className="font-black text-xl text-gray-900">{t('direct_call')}</p>
-                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{t('instant_call')}</p>
-                      </div>
-                      {language === 'ar' ? <ChevronLeft className="h-5 w-5 text-gray-300" /> : <ChevronRight className="h-5 w-5 text-gray-300" />}
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-
+          {/* 4. متابعتي */}
           <button
-            onClick={() => setLocation('/favorites')}
-            className={`flex flex-col items-center gap-0.5 transition-all duration-300 min-w-[52px] ${location === '/favorites' ? 'text-primary scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+            onClick={() => setLocation('/track-orders')}
+            className={`flex flex-col items-center justify-center gap-0.5 transition-all duration-200 min-w-[58px] py-1.5 ${
+              location.startsWith('/track-orders') || location.startsWith('/order-tracking')
+                ? 'text-[#0B5ED7]'
+                : 'text-slate-400 hover:text-slate-600'
+            }`}
           >
-            <Heart className={`h-6 w-6 ${location === '/favorites' ? 'fill-current' : ''}`} />
-            <span className="text-[10px] font-black">{t('favorites')}</span>
-            {location === '/favorites' && <div className="h-1 w-4 bg-primary rounded-full" />}
+            <Clock className="h-5.5 w-5.5" />
+            <span className="text-[11px] font-black leading-tight">{t('track_nav')}</span>
+            {(location.startsWith('/track-orders') || location.startsWith('/order-tracking')) && (
+              <div className="h-1 w-6 bg-[#0B5ED7] rounded-full mt-0.5" />
+            )}
           </button>
 
+          {/* 5. حسابي */}
           <button
             onClick={() => setLocation(user ? '/profile' : '/auth')}
-            className={`flex flex-col items-center gap-0.5 transition-all duration-300 min-w-[52px] ${location === '/profile' ? 'text-primary scale-110' : 'text-gray-400 hover:text-gray-600'}`}
+            className={`flex flex-col items-center justify-center gap-0.5 transition-all duration-200 min-w-[58px] py-1.5 ${
+              location === '/profile' || location === '/auth' ? 'text-[#0B5ED7]' : 'text-slate-400 hover:text-slate-600'
+            }`}
           >
-            <User className={`h-6 w-6 ${location === '/profile' ? 'fill-current' : ''}`} />
-            <span className="text-[10px] font-black">{t('account')}</span>
-            {location === '/profile' && <div className="h-1 w-4 bg-primary rounded-full" />}
+            <User className={`h-5.5 w-5.5 ${location === '/profile' ? 'fill-current' : ''}`} />
+            <span className="text-[11px] font-black leading-tight">{t('account')}</span>
+            {(location === '/profile' || location === '/auth') && (
+              <div className="h-1 w-6 bg-[#0B5ED7] rounded-full mt-0.5" />
+            )}
           </button>
         </div>
       )}
 
       {/* Desktop Footer */}
-      <footer className="hidden md:block bg-white border-t py-12 mt-auto">
+      <footer className="hidden md:block bg-white border-t border-blue-100 py-10 mt-auto">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className={language === 'ar' ? 'text-right' : 'text-left'}>
-            <div className="text-3xl font-black tracking-tighter mb-2 text-primary">
-              {appName}
+            <div className="flex items-center gap-3 mb-2">
+              <img src="/assets/saidi-logo.png" alt={appName} className="h-11 w-auto object-contain" />
+              <div className="text-2xl font-black tracking-tight text-[#0B5ED7]">
+                {appName}
+              </div>
             </div>
-            <p className="text-sm text-gray-500">{sidebarTagline}</p>
+            <p className="text-sm text-slate-500 font-semibold">{sidebarTagline}</p>
           </div>
           <div className={language === 'ar' ? 'text-right' : 'text-left'}>
-            <h4 className="font-bold text-lg mb-4">{t('quick_links')}</h4>
-            <ul className="space-y-2 text-sm text-gray-600">
-              <li><button onClick={() => setLocation('/favorites')} className="hover:text-primary transition-colors">{t('favorites')}</button></li>
-              <li><button onClick={() => setLocation('/orders')} className="hover:text-primary transition-colors">{t('orders')}</button></li>
-              <li><button onClick={() => setLocation('/profile')} className="hover:text-primary transition-colors">{t('account')}</button></li>
-              <li><button onClick={() => setLocation('/privacy')} className="hover:text-primary transition-colors">{t('privacy_policy')}</button></li>
+            <h4 className="font-black text-base text-slate-900 mb-3">{t('quick_links')}</h4>
+            <ul className="space-y-2 text-sm text-slate-600 font-semibold">
+              <li><button onClick={() => setLocation('/wasalni')} className="hover:text-[#0B5ED7] transition-colors">{t('quick_order')}</button></li>
+              <li><button onClick={() => setLocation('/orders')} className="hover:text-[#0B5ED7] transition-colors">{t('orders')}</button></li>
+              <li><button onClick={() => setLocation('/track-orders')} className="hover:text-[#0B5ED7] transition-colors">{t('track_nav')}</button></li>
+              <li><button onClick={() => setLocation('/favorites')} className="hover:text-[#0B5ED7] transition-colors">{t('favorites')}</button></li>
+              <li><button onClick={() => setLocation('/profile')} className="hover:text-[#0B5ED7] transition-colors">{t('account')}</button></li>
+              <li><button onClick={() => setLocation('/privacy')} className="hover:text-[#0B5ED7] transition-colors">{t('privacy_policy')}</button></li>
             </ul>
           </div>
           <div className={language === 'ar' ? 'text-right' : 'text-left'}>
-            <h4 className="font-bold text-lg mb-4">{t('contact_us')}</h4>
+            <h4 className="font-black text-base text-slate-900 mb-3">{t('contact_us')}</h4>
             <div className={`flex gap-3 ${language === 'ar' ? 'justify-end' : 'justify-start'}`}>
-              <button onClick={handleShare} className="p-2.5 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
-                <Share2 className="h-5 w-5 text-gray-600" />
+              <button onClick={handleShare} className="p-2.5 bg-blue-50 hover:bg-blue-100 rounded-full transition-colors">
+                <Share2 className="h-5 w-5 text-[#0B5ED7]" />
               </button>
-              <button onClick={() => window.open(whatsappLink, '_blank')} className="p-2.5 bg-primary/10 hover:bg-primary/20 rounded-full transition-colors">
-                <MessageCircle className="h-5 w-5 text-primary" />
+              <button onClick={() => window.open(whatsappLink, '_blank')} className="p-2.5 bg-orange-50 hover:bg-orange-100 rounded-full transition-colors">
+                <MessageCircle className="h-5 w-5 text-[#FF6B00]" />
+              </button>
+              <button onClick={() => setSupportOpen(true)} className="px-4 py-2 bg-[#0B5ED7] hover:bg-[#0046B8] text-white text-xs font-black rounded-full transition-colors">
+                {t('support')}
               </button>
             </div>
           </div>
         </div>
-        <div className="container mx-auto px-4 mt-8 pt-6 border-t text-center space-y-1">
-          <p className="text-xs text-gray-500 font-bold">
+        <div className="container mx-auto px-4 mt-8 pt-6 border-t border-blue-50 text-center space-y-1">
+          <p className="text-xs text-slate-500 font-bold">
             © 2026 {appName} · {t('all_rights_reserved')}
           </p>
           <a
             href="https://wa.me/967777146387"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block text-xs text-gray-500 hover:text-primary transition-colors font-medium underline underline-offset-2 cursor-pointer"
+            className="inline-block text-xs text-slate-500 hover:text-[#0B5ED7] transition-colors font-medium underline underline-offset-2 cursor-pointer"
           >
             {language === 'ar' ? 'تصميم وبرمجة شركة اتقان سوفت' : 'Designed & Developed by ITQAN SOFT'}
           </a>
         </div>
       </footer>
 
-      {/* Floating Cart Button & Modal Drawer (Available on Mobile and Web) */}
+      {/* Floating Cart Button & Modal Drawer */}
       <CartButton />
 
       {/* City Selection Modal */}
-      <CitySelectionModal 
-        isOpen={cityModalOpen} 
-        onClose={() => setCityModalOpen(false)} 
+      <CitySelectionModal
+        isOpen={cityModalOpen}
+        onClose={() => setCityModalOpen(false)}
       />
 
-      {/* Floating Chat Icon (Mascot Assistant - Exactly matching screenshot) */}
+      {/* Floating Live Chat Mascot Assistant */}
       <div className="fixed bottom-20 right-4 z-[2000] md:bottom-8 md:right-8 pointer-events-auto">
         <button
           onClick={() => {
@@ -561,13 +575,12 @@ export default function Layout({ children }: LayoutProps) {
             setAdminChatOpen(true);
           }}
           className="group relative flex items-center justify-center p-0 bg-transparent border-0 outline-none hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer"
-          title={language === 'ar' ? 'مساعد سريع ون والمحادثات' : 'Saree One Live Chat'}
+          title={language === 'ar' ? 'مساعد الصايدي توصيل والمحادثات' : 'Al-Saidi Delivery Live Chat'}
         >
           <div className="relative">
-            <AssistantMascotIcon className="w-14 h-14 md:w-16 md:h-16" />
-            
+            <AssistantMascotIcon className="w-13 h-13 md:w-15 md:h-15" />
             {unreadChatCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[#ff2200] text-white text-[10px] font-black rounded-full min-w-[20px] h-[20px] px-1 flex items-center justify-center border-2 border-white shadow-md animate-pulse">
+              <span className="absolute -top-1 -right-1 bg-[#FF5500] text-white text-[10px] font-black rounded-full min-w-[20px] h-[20px] px-1 flex items-center justify-center border-2 border-white shadow-md animate-pulse">
                 {unreadChatCount > 9 ? '9+' : unreadChatCount}
               </span>
             )}
@@ -575,13 +588,12 @@ export default function Layout({ children }: LayoutProps) {
         </button>
       </div>
 
-      <ChatOverlay 
-        isOpen={adminChatOpen} 
-        onClose={() => setAdminChatOpen(false)} 
+      <ChatOverlay
+        isOpen={adminChatOpen}
+        onClose={() => setAdminChatOpen(false)}
         userType="customer"
       />
 
-      {/* Share App Modal */}
       <ShareAppModal
         isOpen={shareModalOpen}
         onClose={() => setShareModalOpen(false)}

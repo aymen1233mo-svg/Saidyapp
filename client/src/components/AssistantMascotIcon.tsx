@@ -13,7 +13,7 @@ export const AssistantMascotIcon: React.FC<AssistantMascotIconProps> = ({
 
   return (
     <div 
-      className={`relative flex items-center justify-center rounded-full bg-gradient-to-tr from-[#d83500] via-[#ff4500] to-[#ff6a1a] p-2.5 shadow-[0_8px_22px_rgba(255,69,0,0.45)] border-2 border-white/95 ring-4 ring-orange-500/20 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_10px_28px_rgba(255,69,0,0.6)] group-active:scale-95 ${className}`}
+      className={`relative flex items-center justify-center rounded-full bg-gradient-to-tr from-[#003B99] via-[#0B5ED7] to-[#2F84FF] p-2.5 shadow-[0_8px_22px_rgba(11,94,215,0.42)] border-2 border-white/95 ring-4 ring-[#FF6B00]/25 transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_10px_28px_rgba(11,94,215,0.55)] group-active:scale-95 ${className}`}
       style={style}
     >
       {/* Glossy top shine */}
@@ -36,8 +36,8 @@ export const AssistantMascotIcon: React.FC<AssistantMascotIconProps> = ({
         />
 
         {/* Headset Earcups */}
-        <rect x="7" y="21" width="4" height="8" rx="2" fill="white" />
-        <rect x="37" y="21" width="4" height="8" rx="2" fill="white" />
+        <rect x="7" y="21" width="4" height="8" rx="2" fill="#FF8A00" />
+        <rect x="37" y="21" width="4" height="8" rx="2" fill="#FF8A00" />
 
         {/* Mascot Head / Face Container */}
         <rect 
@@ -49,21 +49,21 @@ export const AssistantMascotIcon: React.FC<AssistantMascotIconProps> = ({
           fill="white" 
         />
 
-        {/* Friendly Eyes in Orange-Red */}
-        <circle cx="18.5" cy="22.5" r="2" fill="#e63900" />
-        <circle cx="29.5" cy="22.5" r="2" fill="#e63900" />
+        {/* Friendly Eyes in Royal Blue */}
+        <circle cx="18.5" cy="22.5" r="2" fill="#0B5ED7" />
+        <circle cx="29.5" cy="22.5" r="2" fill="#0B5ED7" />
         <circle cx="17.8" cy="21.8" r="0.7" fill="white" />
         <circle cx="28.8" cy="21.8" r="0.7" fill="white" />
 
         {/* Rosy/Warm Cheeks */}
-        <circle cx="15.5" cy="26" r="1.3" fill="#ffb499" />
-        <circle cx="32.5" cy="26" r="1.3" fill="#ffb499" />
+        <circle cx="15.5" cy="26" r="1.3" fill="#FFAB73" />
+        <circle cx="32.5" cy="26" r="1.3" fill="#FFAB73" />
 
         {/* Sweet Smile */}
         <path 
           d="M21 26.5 Q24 29.5 27 26.5" 
-          stroke="#e63900" 
-          strokeWidth="1.8" 
+          stroke="#FF6B00" 
+          strokeWidth="1.9" 
           strokeLinecap="round" 
           fill="none"
         />

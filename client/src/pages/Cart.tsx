@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useLocation as useWouterLocation } from 'wouter';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ArrowRight, Trash2, MapPin, Calendar, Clock, DollarSign, Plus, Minus, ShoppingCart, AlertCircle, WifiOff } from 'lucide-react';
+import { ArrowRight, Trash2, MapPin, Calendar, DollarSign, Plus, Minus, ShoppingCart, AlertCircle, WifiOff, ShoppingBag, ChevronLeft } from 'lucide-react';
 import { useNetworkStatus } from '@/hooks/useNetworkStatus';
 import { LocationPicker, LocationData } from '@/components/LocationPicker';
 import { Button } from '@/components/ui/button';
@@ -29,18 +29,8 @@ import { useLanguage } from '@/context/LanguageContext';
 import { apiRequest } from '@/lib/queryClient';
 import { formatCurrency } from '@/lib/utils';
 import { useUserLocation } from '@/context/LocationContext';
-import type { InsertOrder, Restaurant } from '@shared/schema';
+import type { Restaurant } from '@shared/schema';
 import { getAppStatus, getRestaurantStatus } from '@/utils/restaurantHours';
-
-function isDriverAvailable(driverStart: string, driverEnd: string): boolean {
-  const now = new Date();
-  const currentTime = now.toTimeString().slice(0, 5);
-  const toMins = (t: string) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
-  const cur = toMins(currentTime);
-  const start = toMins(driverStart);
-  const end = toMins(driverEnd);
-  return end > start ? (cur >= start && cur < end) : (cur >= start || cur < end);
-}
 
 export default function Cart() {
   const [, setLocation] = useWouterLocation();
@@ -53,7 +43,6 @@ export default function Cart() {
   const { isOnline } = useNetworkStatus();
 
   const [showConfirmOrder, setShowConfirmOrder] = useState(false);
-  const [pendingOrderData, setPendingOrderData] = useState<any>(null);
   const [showAppClosedOverlay, setShowAppClosedOverlay] = useState(false);
   const [showOutOfZoneModal, setShowOutOfZoneModal] = useState(false);
   const [outOfZoneReason, setOutOfZoneReason] = useState('');
@@ -70,7 +59,6 @@ export default function Cart() {
     locationData: null as LocationData | null,
   });
 
-  // ملء حقول الاسم والرقم تلقائياً من حساب العميل المسجل مع إمكانية التعديل قبل التأكيد
   useEffect(() => {
     if (user) {
       setOrderForm(prev => ({
@@ -83,7 +71,6 @@ export default function Cart() {
     }
   }, [user]);
 
-  // حساب الرسوم تلقائياً عند توفر الموقع
   useEffect(() => {
     if (userLocation.position && !orderForm.locationData) {
       const location = {
@@ -105,13 +92,11 @@ export default function Cart() {
     refetchInterval: 60000,
   });
 
-  // جلب طرق الدفع المُفعَّلة من لوحة التحكم
   const { data: activePaymentMethods = [], refetch: refetchPaymentMethods } = useQuery<any[]>({
     queryKey: ['/api/admin/payment-methods'],
     select: (data) => (data || []).filter((m: any) => m.isActive !== false),
   });
 
-  // الاستماع لتحديثات الإعدادات عبر WebSocket وتحديث السلة فوراً
   useEffect(() => {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}/ws`;
@@ -143,13 +128,6 @@ export default function Cart() {
     const closingTime = (settings as any[])?.find((s: any) => s.key === 'closing_time')?.value || '23:00';
     const storeStatus = (settings as any[])?.find((s: any) => s.key === 'store_status')?.value;
     return getAppStatus(openingTime, closingTime, storeStatus);
-  }, [settings]);
-
-  const driverHours = useMemo(() => {
-    const start = (settings as any[])?.find((s: any) => s.key === 'driver_start_time')?.value || '09:00';
-    const end = (settings as any[])?.find((s: any) => s.key === 'driver_end_time')?.value || '21:00';
-    const driverHoursEnabled = (settings as any[])?.find((s: any) => s.key === 'enable_driver_hours')?.value === 'true';
-    return { start, end, driverHoursEnabled, scheduledOrdersEnabled: false };
   }, [settings]);
 
   const restaurantStatus = useMemo(() => {
@@ -263,7 +241,6 @@ export default function Cart() {
         }
       }
 
-      // إذا كان موقع العميل خارج نطاق التوصيل، يتم عرض نافذة التنبيه المخصصة مع زر تغيير الموقع
       if (
         serverCode === 'OUT_OF_DELIVERY_ZONE' ||
         displayMsg.includes('خارج نطاق التوصيل') ||
@@ -276,7 +253,6 @@ export default function Cart() {
         return;
       }
 
-      // If server says app is closed, show the overlay instead of a toast
       if (
         serverCode === 'APP_CLOSED' ||
         displayMsg.includes('التطبيق مغلق') ||
@@ -328,7 +304,6 @@ export default function Cart() {
       return;
     }
 
-    // التحقق من تسجيل الدخول - يجب على الضيف التسجيل قبل الطلب
     const isGuest = localStorage.getItem('is_guest') === 'true';
     if (!user || isGuest) {
       toast({
@@ -336,7 +311,6 @@ export default function Cart() {
         description: language === 'ar' ? "يرجى تسجيل الدخول أو إنشاء حساب جديد لإتمام الطلب" : "Please login or create an account to place your order",
         variant: "destructive",
       });
-      // حفظ رابط العودة للسلة بعد تسجيل الدخول
       setTimeout(() => {
         setLocation('/auth');
       }, 1500);
@@ -366,7 +340,6 @@ export default function Cart() {
       return;
     }
 
-    // منع تأكيد الطلب إذا كان الموقع خارج نطاق التوصيل
     if (isOutsideZone) {
       setShowOutOfZoneModal(true);
       return;
@@ -387,7 +360,6 @@ export default function Cart() {
   const appOpeningTime = (settings as any[])?.find((s: any) => s.key === 'opening_time')?.value || '08:00';
   const appClosingTime = (settings as any[])?.find((s: any) => s.key === 'closing_time')?.value || '23:00';
 
-  // تحديد أي وقت فتح نستخدم (التطبيق أم المطعم)
   const effectiveOpeningTime = (!appStatus.isOpen) 
     ? appOpeningTime 
     : (restaurantStatus?.nextOpenTime || restaurant?.openingTime || '08:00');
@@ -397,7 +369,7 @@ export default function Cart() {
     : (restaurantStatus?.message || (language === 'ar' ? 'المطعم مغلق حالياً' : 'Store is currently closed'));
 
   return (
-    <div className="min-h-screen bg-white" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-[#F4F8FF] pb-24" dir={isRTL ? 'rtl' : 'ltr'}>
       {showAppClosedOverlay && (
         <AppClosedOverlay
           openingTime={effectiveOpeningTime}
@@ -410,18 +382,18 @@ export default function Cart() {
       )}
 
       <AlertDialog open={showConfirmOrder} onOpenChange={setShowConfirmOrder}>
-        <AlertDialogContent className="bg-white">
+        <AlertDialogContent className="bg-white rounded-3xl border border-blue-100">
           <AlertDialogHeader>
-            <AlertDialogTitle className={isRTL ? "text-right" : "text-left"}>{t('confirm_order_title')}</AlertDialogTitle>
-            <AlertDialogDescription className={isRTL ? "text-right" : "text-left"}>
+            <AlertDialogTitle className={isRTL ? "text-right font-black text-slate-900" : "text-left font-black text-slate-900"}>{t('confirm_order_title')}</AlertDialogTitle>
+            <AlertDialogDescription className={isRTL ? "text-right text-slate-600" : "text-left text-slate-600"}>
               {t('confirm_order_prompt')} {formatCurrency(subtotal + deliveryFee)}؟
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex-row gap-2 justify-end">
-            <AlertDialogCancel className="mt-0">{t('cancel')}</AlertDialogCancel>
+            <AlertDialogCancel className="mt-0 rounded-full border-blue-200 text-[#0B5ED7]">{t('cancel')}</AlertDialogCancel>
             <AlertDialogAction 
               onClick={confirmAndPlaceOrder}
-              className="bg-[#F05215] hover:bg-[#C03A0A] text-white"
+              className="bg-[#FF6B00] hover:bg-[#E55E00] text-white rounded-full font-black"
             >
               {t('confirm_and_send')}
             </AlertDialogAction>
@@ -435,43 +407,68 @@ export default function Cart() {
           {t('no_internet_warning')}
         </div>
       )}
-      <div className="container mx-auto px-4 py-6 max-w-5xl">
-        <div className="flex items-center justify-between mb-6 bg-white p-4 rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)]">
-          <div className="flex items-center gap-3">
-            <div className="text-2xl font-black tracking-tight flex items-center gap-2">
-              <span className="text-[#FF5722]">السريع ون</span>
-              <span className="text-[10px] font-black text-[#FF5722] tracking-wider bg-orange-50 border border-orange-200 rounded-lg px-2 py-0.5">SAREE ONE</span>
-            </div>
-            <h1 className="text-xl font-black text-slate-900"> - {t('my_cart')}</h1>
-          </div>
-          {items.length > 0 && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-slate-400 hover:text-[#FF5722] hover:bg-orange-50 rounded-xl font-bold gap-1.5 transition-colors"
-              onClick={clearCart}
-              data-testid="button-clear-cart"
-            >
-              <Trash2 className="h-4 w-4" /> {t('clear_cart')}
-            </Button>
-          )}
-        </div>
 
+      {/* Al-Saidi Curved Hero Header */}
+      <div className="relative bg-gradient-to-br from-[#0B5ED7] via-[#0950BA] to-[#003B99] text-white pt-4 pb-8 px-4 rounded-b-[2.25rem] shadow-lg overflow-hidden">
+        <div className="absolute -bottom-1 left-0 right-0 h-2.5 bg-gradient-to-r from-[#FF6B00] via-[#FF8533] to-[#FF6B00]" />
+        <div className="container mx-auto max-w-5xl">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setLocation('/')}
+                className="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center transition-colors backdrop-blur-sm"
+                aria-label="رجوع"
+              >
+                <ArrowRight className="h-5 w-5" />
+              </button>
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center">
+                  <ShoppingBag className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-black flex items-center gap-2">
+                    <span>{t('my_cart')}</span>
+                    {items.length > 0 && (
+                      <span className="bg-[#FF6B00] text-white text-xs px-2 py-0.5 rounded-full font-black">
+                        {items.length}
+                      </span>
+                    )}
+                  </h1>
+                  <p className="text-blue-100 text-xs font-semibold">مراجعة طلبك قبل إتمامه • الصايدي توصيل</p>
+                </div>
+              </div>
+            </div>
+
+            {items.length > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-white hover:text-white bg-white/15 hover:bg-white/25 rounded-full font-bold gap-1.5 transition-colors backdrop-blur-sm"
+                onClick={clearCart}
+                data-testid="button-clear-cart"
+              >
+                <Trash2 className="h-4 w-4" /> {t('clear_cart')}
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-6 max-w-5xl">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* القسم الأيمن - عناصر السلة والنماذج */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* عناصر السلة */}
+          <div className="lg:col-span-2 space-y-5">
             {items.length > 0 ? (
-              <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden">
-                <CardContent className="p-4">
+              <Card className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
+                <CardContent className="p-4 sm:p-5">
                   <div className="space-y-3">
                     {items.map((item) => (
-                      <div key={item.id} className="flex items-center gap-3.5 bg-orange-50/40 p-3 rounded-2xl border border-orange-100/60">
+                      <div key={item.id} className="flex items-center gap-3.5 bg-[#F4F8FF] p-3.5 rounded-2xl border border-blue-100/70">
                         <div className="relative shrink-0">
                           <img
                             src={item.image}
                             alt={item.name}
-                            className="w-14 h-14 rounded-2xl object-cover border border-orange-100"
+                            className="w-16 h-16 rounded-2xl object-cover border border-blue-100 bg-white"
                           />
                         </div>
                         
@@ -479,7 +476,7 @@ export default function Cart() {
                           <h4 className="font-black text-slate-900 text-sm truncate" data-testid={`cart-item-name-${item.id}`}>
                             {item.name}
                           </h4>
-                          <p className="text-xs font-black text-[#FF5722] mt-0.5" data-testid={`cart-item-price-${item.id}`}>
+                          <p className="text-xs font-black text-[#0B5ED7] mt-1" data-testid={`cart-item-price-${item.id}`}>
                             {formatCurrency(item.price)}
                           </p>
                         </div>
@@ -487,33 +484,31 @@ export default function Cart() {
                         <div className="flex items-center gap-1.5 shrink-0">
                           <Button
                             size="icon"
-                            variant="outline"
-                            className="w-7 h-7 rounded-xl border-orange-200 hover:bg-orange-100 text-slate-700"
+                            className="w-8 h-8 rounded-full bg-[#0B5ED7] hover:bg-[#0950BA] text-white shadow-xs"
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                             data-testid={`button-decrease-${item.id}`}
                           >
-                            <Minus className="h-3 w-3" />
+                            <Minus className="h-3.5 w-3.5" />
                           </Button>
-                          <span className="w-6 text-center text-xs font-black text-slate-800" data-testid={`cart-item-quantity-${item.id}`}>
+                          <span className="w-8 text-center text-sm font-black text-slate-900 bg-white border border-blue-100 rounded-xl py-1" data-testid={`cart-item-quantity-${item.id}`}>
                             {item.quantity}
                           </span>
                           <Button
                             size="icon"
-                            variant="outline"
-                            className="w-7 h-7 rounded-xl border-orange-200 bg-orange-50 hover:bg-orange-100 text-[#FF5722]"
+                            className="w-8 h-8 rounded-full bg-[#0B5ED7] hover:bg-[#0950BA] text-white shadow-xs"
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
                             data-testid={`button-increase-${item.id}`}
                           >
-                            <Plus className="h-3 w-3" />
+                            <Plus className="h-3.5 w-3.5" />
                           </Button>
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="w-7 h-7 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50"
+                            className="w-8 h-8 rounded-xl bg-rose-50 text-rose-500 hover:text-rose-600 hover:bg-rose-100 mr-1"
                             onClick={() => removeItem(item.id)}
                             data-testid={`button-remove-${item.id}`}
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
@@ -524,8 +519,8 @@ export default function Cart() {
             ) : null}
 
             {/* نموذج معلومات العميل */}
-            <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden">
-              <CardContent className="p-4">
+            <Card className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
+              <CardContent className="p-4 sm:p-5">
                 <h3 className="font-black text-slate-900 mb-3.5 text-sm">{t('customer_info')}</h3>
                 <div className="space-y-3">
                   <Input
@@ -533,31 +528,33 @@ export default function Cart() {
                     value={orderForm.customerName}
                     onChange={(e) => setOrderForm(prev => ({ ...prev, customerName: e.target.value }))}
                     data-testid="input-customer-name"
-                    className="rounded-xl border-slate-200 focus:border-[#FF5722]"
+                    className="h-12 rounded-2xl border-blue-100 bg-[#F4F8FF] focus:bg-white focus:border-[#0B5ED7]"
                   />
                   <Input
                     placeholder={t('phone_placeholder')}
                     value={orderForm.customerPhone}
                     onChange={(e) => setOrderForm(prev => ({ ...prev, customerPhone: e.target.value }))}
                     data-testid="input-customer-phone"
-                    className="rounded-xl border-slate-200 focus:border-[#FF5722]"
+                    className="h-12 rounded-2xl border-blue-100 bg-[#F4F8FF] focus:bg-white focus:border-[#0B5ED7]"
                   />
                   <Input
                     placeholder={t('email_placeholder')}
                     value={orderForm.customerEmail}
                     onChange={(e) => setOrderForm(prev => ({ ...prev, customerEmail: e.target.value }))}
                     data-testid="input-customer-email"
-                    className="rounded-xl border-slate-200 focus:border-[#FF5722]"
+                    className="h-12 rounded-2xl border-blue-100 bg-[#F4F8FF] focus:bg-white focus:border-[#0B5ED7]"
                   />
                 </div>
               </CardContent>
             </Card>
 
             {/* قسم العنوان مع منتقي الموقع */}
-            <Card id="delivery-location-section" className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden">
-              <CardContent className="p-4">
+            <Card id="delivery-location-section" className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
+              <CardContent className="p-4 sm:p-5">
                 <div className="flex items-center gap-2 mb-3.5">
-                  <MapPin className="h-5 w-5 text-[#FF5722]" />
+                  <div className="w-8 h-8 rounded-xl bg-[#EEF5FF] text-[#0B5ED7] flex items-center justify-center">
+                    <MapPin className="h-4 w-4" />
+                  </div>
                   <h3 className="font-black text-slate-900 text-sm">{t('delivery_address_header')}</h3>
                 </div>
                 
@@ -576,20 +573,19 @@ export default function Cart() {
                     onChange={(e) => setOrderForm(prev => ({ ...prev, deliveryAddress: e.target.value }))}
                     rows={3}
                     data-testid="input-delivery-address"
-                    className="rounded-xl border-slate-200 focus:border-[#FF5722] focus:ring-[#FF5722]"
+                    className="rounded-2xl border-blue-100 bg-[#F4F8FF] focus:bg-white focus:border-[#0B5ED7] focus:ring-[#0B5ED7]"
                   />
                 </div>
 
-                {/* تنبيه إذا كان الموقع خارج نطاق التوصيل المسموح به */}
                 {isOutsideZone && (
-                  <div className="mt-3 p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-900/60 rounded-2xl">
+                  <div className="mt-3 p-4 bg-red-50 border-2 border-red-300 rounded-2xl">
                     <div className="flex items-start gap-3">
                       <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
                       <div className="flex-1">
-                        <span className="text-sm font-bold text-red-700 dark:text-red-300 block">
+                        <span className="text-sm font-bold text-red-700 block">
                           {t('location_outside_zone_title')}
                         </span>
-                        <p className="text-xs text-red-600 dark:text-red-400 mt-1 leading-relaxed">
+                        <p className="text-xs text-red-600 mt-1 leading-relaxed">
                           {outOfZoneReason || (language === 'ar' ? 'نأسف، موقع التوصيل المحدد يقع خارج نطاق ومناطق التوصيل المعتمدة لدينا حالياً.' : 'Sorry, the selected delivery location is outside our approved zones.')}
                         </p>
                         <div className="mt-3 flex flex-wrap gap-2">
@@ -597,7 +593,7 @@ export default function Cart() {
                             type="button"
                             size="sm"
                             onClick={handleChangeLocation}
-                            className="bg-[#C73208] hover:bg-[#A92A06] text-white text-xs font-bold h-9 rounded-xl shadow-xs flex items-center gap-1.5"
+                            className="bg-red-600 hover:bg-red-700 text-white text-xs font-bold h-9 rounded-full shadow-xs flex items-center gap-1.5"
                             data-testid="button-banner-change-location"
                           >
                             <MapPin className="h-3.5 w-3.5" />
@@ -608,7 +604,7 @@ export default function Cart() {
                             size="sm"
                             variant="outline"
                             onClick={() => setShowOutOfZoneModal(true)}
-                            className="border-red-300 text-red-700 dark:text-red-300 text-xs font-bold h-9 rounded-xl"
+                            className="border-red-300 text-red-700 text-xs font-bold h-9 rounded-full"
                           >
                             {t('view_details')}
                           </Button>
@@ -619,15 +615,15 @@ export default function Cart() {
                 )}
 
                 {!isOutsideZone && orderForm.locationData && (
-                  <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="mt-3 p-3.5 bg-[#EEF5FF] border border-blue-200 rounded-2xl">
                     <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-green-600" />
-                      <span className="text-sm font-medium text-green-800">{t('location_accurate')}</span>
+                      <MapPin className="h-4 w-4 text-[#0B5ED7]" />
+                      <span className="text-sm font-black text-[#0B5ED7]">{t('location_accurate')}</span>
                     </div>
-                    <p className="text-xs text-green-700 mt-1">
+                    <p className="text-xs text-slate-600 mt-1 font-medium">
                       📍 {t('coordinates')}: {(Number(orderForm?.locationData?.lat) || 0).toFixed(6)}, {(Number(orderForm?.locationData?.lng) || 0).toFixed(6)}
                     </p>
-                    <p className="text-xs text-green-700">
+                    <p className="text-xs text-slate-600 font-medium">
                       {t('accurate_delivery_msg')}
                     </p>
                   </div>
@@ -636,10 +632,12 @@ export default function Cart() {
             </Card>
 
             {/* ملاحظات الطلب */}
-            <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden">
-              <CardContent className="p-4">
+            <Card className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
+              <CardContent className="p-4 sm:p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <Calendar className="h-5 w-5 text-[#FF5722]" />
+                  <div className="w-8 h-8 rounded-xl bg-orange-50 text-[#FF6B00] flex items-center justify-center">
+                    <Calendar className="h-4 w-4" />
+                  </div>
                   <h3 className="font-black text-slate-900 text-sm">{t('order_notes_title')}</h3>
                 </div>
                 <Textarea
@@ -648,19 +646,21 @@ export default function Cart() {
                   onChange={(e) => setOrderForm(prev => ({ ...prev, notes: e.target.value }))}
                   rows={2}
                   data-testid="input-order-notes"
-                  className="rounded-xl border-slate-200 focus:border-[#FF5722]"
+                  className="rounded-2xl border-blue-100 bg-[#F4F8FF] focus:bg-white focus:border-[#0B5ED7]"
                 />
               </CardContent>
             </Card>
           </div>
 
           {/* القسم الأيسر - ملخص الطلب والدفع */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             {/* طرق الدفع */}
-            <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden">
-              <CardContent className="p-4">
+            <Card className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
+              <CardContent className="p-4 sm:p-5">
                 <div className="flex items-center gap-2 mb-4">
-                  <DollarSign className="h-5 w-5 text-[#FF5722]" />
+                  <div className="w-8 h-8 rounded-xl bg-[#EEF5FF] text-[#0B5ED7] flex items-center justify-center">
+                    <DollarSign className="h-4 w-4" />
+                  </div>
                   <h3 className="font-black text-slate-900 text-sm">{t('payment_method_title')}</h3>
                 </div>
 
@@ -669,10 +669,9 @@ export default function Cart() {
                   onValueChange={(value) => setOrderForm(prev => ({ ...prev, paymentMethod: value }))}
                   className="space-y-2.5"
                 >
-                  {/* عرض طرق الدفع المُفعَّلة من لوحة التحكم ديناميكياً */}
                   {activePaymentMethods.length > 0 ? (
                     activePaymentMethods.map((method: any) => (
-                      <div key={method.id} className="flex items-center space-x-2 rtl:space-x-reverse border border-slate-200 rounded-2xl p-3 cursor-pointer hover:bg-orange-50/50 hover:border-orange-200 transition-all">
+                      <div key={method.id} className="flex items-center space-x-2 rtl:space-x-reverse border border-blue-100 bg-[#F4F8FF] rounded-2xl p-3 cursor-pointer hover:bg-[#EEF5FF] hover:border-[#0B5ED7] transition-all">
                         <RadioGroupItem value={method.provider || method.id} id={`pm-${method.id}`} />
                         <Label htmlFor={`pm-${method.id}`} className="flex-1 cursor-pointer flex items-center gap-2 font-black text-xs text-slate-800">
                           <span className="text-lg">
@@ -683,23 +682,22 @@ export default function Cart() {
                       </div>
                     ))
                   ) : (
-                    /* طرق دفع افتراضية إذا لم تُحدَّد من لوحة التحكم */
                     <>
-                      <div className="flex items-center space-x-2 rtl:space-x-reverse border border-slate-200 rounded-2xl p-3 cursor-pointer hover:bg-orange-50/50 hover:border-orange-200 transition-all">
+                      <div className="flex items-center space-x-2 rtl:space-x-reverse border border-blue-100 bg-[#F4F8FF] rounded-2xl p-3 cursor-pointer hover:bg-[#EEF5FF] hover:border-[#0B5ED7] transition-all">
                         <RadioGroupItem value="cash" id="cash" />
                         <Label htmlFor="cash" className="flex-1 cursor-pointer flex items-center gap-2 font-black text-xs text-slate-800">
                           <span className="text-lg">💵</span>
                           <span>{t('cash_on_del')}</span>
                         </Label>
                       </div>
-                      <div className="flex items-center space-x-2 rtl:space-x-reverse border border-slate-200 rounded-2xl p-3 cursor-pointer hover:bg-orange-50/50 hover:border-orange-200 transition-all">
+                      <div className="flex items-center space-x-2 rtl:space-x-reverse border border-blue-100 bg-[#F4F8FF] rounded-2xl p-3 cursor-pointer hover:bg-[#EEF5FF] hover:border-[#0B5ED7] transition-all">
                         <RadioGroupItem value="wallet" id="wallet" />
                         <Label htmlFor="wallet" className="flex-1 cursor-pointer flex items-center gap-2 font-black text-xs text-slate-800">
                           <span className="text-lg">👜</span>
                           <span>{t('e_wallet')}</span>
                         </Label>
                       </div>
-                      <div className="flex items-center space-x-2 rtl:space-x-reverse border border-slate-200 rounded-2xl p-3 cursor-pointer hover:bg-orange-50/50 hover:border-orange-200 transition-all">
+                      <div className="flex items-center space-x-2 rtl:space-x-reverse border border-blue-100 bg-[#F4F8FF] rounded-2xl p-3 cursor-pointer hover:bg-[#EEF5FF] hover:border-[#0B5ED7] transition-all">
                         <RadioGroupItem value="digital" id="digital" />
                         <Label htmlFor="digital" className="flex-1 cursor-pointer flex items-center gap-2 font-black text-xs text-slate-800">
                           <span className="text-lg">🌐</span>
@@ -713,8 +711,9 @@ export default function Cart() {
             </Card>
 
             {/* ملخص الطلب النهائي */}
-            <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden">
-              <CardContent className="p-4">
+            <Card className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
+              <CardContent className="p-4 sm:p-5">
+                <h3 className="font-black text-slate-900 text-sm mb-3 pb-2 border-b border-blue-50">ملخص الطلب</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center text-xs font-bold text-slate-600">
                     <span>{t('subtotal_label')}</span>
@@ -730,9 +729,9 @@ export default function Cart() {
                     </span>
                   </div>
                   
-                  <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+                  <div className="flex justify-between items-center bg-[#EEF5FF] rounded-2xl px-4 py-3">
                     <span className="text-slate-900 font-black text-sm">{t('total_label')}</span>
-                    <span className="text-xl font-black text-[#FF5722]" data-testid="text-total">
+                    <span className="text-xl font-black text-[#FF6B00]" data-testid="text-total">
                       {formatCurrency(subtotal + deliveryFee)}
                     </span>
                   </div>
@@ -768,52 +767,55 @@ export default function Cart() {
 
             {/* زر تأكيد الطلب */}
             {items.length > 0 && (
-              <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(255,87,34,0.08)] overflow-hidden">
-                <CardContent className="p-4 space-y-2">
-                  <Button 
-                    className={`w-full font-black py-3.5 text-sm rounded-2xl transition-all shadow-md active:scale-98 ${
-                      isOutsideZone 
-                        ? 'bg-red-600 hover:bg-red-700 text-white' 
-                        : canPlaceOrder 
-                          ? 'bg-gradient-to-r from-[#FF6E40] to-[#FF5722] hover:from-[#FF5722] hover:to-[#E64A19] text-white shadow-orange-500/25' 
-                          : 'bg-slate-300 text-slate-500 cursor-not-allowed'
-                    }`}
-                    onClick={isOutsideZone ? () => setShowOutOfZoneModal(true) : handlePlaceOrder}
-                    disabled={placeOrderMutation.isPending || !orderForm.locationData || !canPlaceOrder}
-                    data-testid="button-place-order"
-                  >
-                    {placeOrderMutation.isPending 
-                      ? t('confirming_order') 
-                      : isOutsideZone
-                        ? t('outside_zone_button')
-                        : !canPlaceOrder 
-                          ? (!appStatus.isOpen ? `🔒 ${t('app_closed_cart')}` : `🔒 ${t('store_closed_cart')}`)
-                          : !orderForm.locationData 
-                            ? t('select_location_to_continue') 
-                            : `${t('confirm_order_btn')} - ${formatCurrency(total)}`}
-                  </Button>
+              <div className="space-y-2">
+                <Button 
+                  className={`w-full h-14 font-black text-base rounded-full transition-all shadow-lg active:scale-[0.99] flex items-center justify-center gap-2 ${
+                    isOutsideZone 
+                      ? 'bg-red-600 hover:bg-red-700 text-white' 
+                      : canPlaceOrder 
+                        ? 'bg-[#FF6B00] hover:bg-[#E55E00] text-white shadow-orange-500/25' 
+                        : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                  }`}
+                  onClick={isOutsideZone ? () => setShowOutOfZoneModal(true) : handlePlaceOrder}
+                  disabled={placeOrderMutation.isPending || !orderForm.locationData || !canPlaceOrder}
+                  data-testid="button-place-order"
+                >
+                  {placeOrderMutation.isPending 
+                    ? t('confirming_order') 
+                    : isOutsideZone
+                      ? t('outside_zone_button')
+                      : !canPlaceOrder 
+                        ? (!appStatus.isOpen ? `🔒 ${t('app_closed_cart')}` : `🔒 ${t('store_closed_cart')}`)
+                        : !orderForm.locationData 
+                          ? t('select_location_to_continue') 
+                          : (
+                            <>
+                              <span>{t('confirm_order_btn')} - {formatCurrency(total)}</span>
+                              <ChevronLeft className="h-5 w-5" />
+                            </>
+                          )}
+                </Button>
 
-                  {isOutsideZone && (
-                    <p className="text-center text-xs text-red-600 dark:text-red-400 font-medium">
-                      {t('outside_zone_warning')}
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
+                {isOutsideZone && (
+                  <p className="text-center text-xs text-red-600 font-medium">
+                    {t('outside_zone_warning')}
+                  </p>
+                )}
+              </div>
             )}
             
             {/* رسالة السلة الفارغة */}
             {items.length === 0 && (
-              <Card className="rounded-3xl border border-orange-100/80 shadow-[0_4px_16px_rgba(0,0,0,0.03)] overflow-hidden">
+              <Card className="rounded-3xl border border-blue-100/80 shadow-[0_6px_24px_rgba(11,94,215,0.06)] overflow-hidden bg-white">
                 <CardContent className="p-10 text-center">
                   <div className="text-slate-500">
-                    <div className="w-20 h-20 rounded-3xl bg-orange-50 border border-orange-100 flex items-center justify-center mx-auto mb-4 text-[#FF5722]">
-                      <ShoppingCart className="h-10 w-10 text-[#FF5722]" />
+                    <div className="w-20 h-20 rounded-3xl bg-[#EEF5FF] border border-blue-100 flex items-center justify-center mx-auto mb-4 text-[#0B5ED7]">
+                      <ShoppingCart className="h-10 w-10 text-[#0B5ED7]" />
                     </div>
                     <h3 className="text-base font-black text-slate-900 mb-1">{t('cart_is_empty')}</h3>
                     <p className="text-xs text-slate-400 font-bold">{t('empty_cart_message')}</p>
                     <Button 
-                      className="mt-5 bg-gradient-to-r from-[#FF6E40] to-[#FF5722] hover:from-[#FF5722] hover:to-[#E64A19] text-white font-black rounded-2xl px-6 py-2.5 shadow-md shadow-orange-500/20"
+                      className="mt-5 bg-[#FF6B00] hover:bg-[#E55E00] text-white font-black rounded-full px-7 py-2.5 shadow-md shadow-orange-500/25"
                       onClick={() => setLocation('/')}
                       data-testid="button-continue-shopping"
                     >
@@ -827,7 +829,6 @@ export default function Cart() {
         </div>
       </div>
 
-      {/* نافذة التنبيه: خارج نطاق التوصيل مع زر تغيير الموقع والدعم الفني */}
       <OutOfDeliveryZoneModal
         isOpen={showOutOfZoneModal}
         onClose={() => setShowOutOfZoneModal(false)}

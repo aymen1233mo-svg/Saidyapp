@@ -1,6 +1,6 @@
 {
-  "name": "السريع ون - Saree One",
-  "description": "تطبيق السريع ون لتوصيل الطلبات والمتاجر والخدمات",
+  "name": "الصايدي توصيل - Al-Saidi Delivery",
+  "description": "تطبيق الصايدي توصيل لطلب وتوصيل الطعام والمتاجر والطرود والمشتريات بكل سرعة وثقة",
   "requestFramePermissions": [
     "geolocation"
   ],
